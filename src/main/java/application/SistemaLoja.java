@@ -29,7 +29,8 @@ import entities.Sistema;
 
 public class SistemaLoja {
 
-    public static void main(String[] args) {
+    @SuppressWarnings("serial")
+	public static void main(String[] args) {
     	Sistema sistema = new Sistema();
     	
         JFrame frmEletronicaPikachu = new JFrame("Eletronica Pikachu");
@@ -49,7 +50,8 @@ public class SistemaLoja {
         CardLayout cardLayout = new CardLayout();
         content.setLayout(cardLayout);
 
-      //tela inicial
+      //==========================================================================================
+      //tela inicial 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
         
@@ -100,6 +102,11 @@ public class SistemaLoja {
         adicionarProdutoPanel.setPreferredSize(new Dimension(600, 400));
         content.add(adicionarProdutoPanel, "ADICIONAR_PRODUTO_PANEL");
         
+        JPanel editarProdutoPanel = new JPanel(null);
+        editarProdutoPanel.setLayout(null);
+        editarProdutoPanel.setPreferredSize(new Dimension(600, 400));
+        content.add(editarProdutoPanel, "EDITAR_PRODUTO_PANEL");
+        
         //painel de remocao de produtos
         JPanel removerProdutoPanel = new JPanel(null);
         removerProdutoPanel.setPreferredSize(new Dimension(600, 400));
@@ -111,11 +118,17 @@ public class SistemaLoja {
         content.add(clientesPanel, "CLIENTES_PANEL");
         
         //======================================================================
-           //items
+           //componentes produtos
         
         // Tabela de produtos
-        DefaultTableModel model = new DefaultTableModel(new String[]{"SKU", "Nome", "Categoria", "Fornecedor", "Descrição", "Preço de Custo", "Preço de Venda", "Estoque"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new String[]{"SKU", "Nome", "Categoria", "Fornecedor", "Descrição", "Preço de Custo", "Preço de Venda", "Estoque Disponível"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;  // Isso faz com que nenhuma célula seja editável
+            }
+        };
         JTable table = new JTable(model);
+        table.setRowSelectionAllowed(false);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10, 10, 580, 300); 
         produtosPanel.add(scrollPane); 
@@ -130,6 +143,7 @@ public class SistemaLoja {
         columnModel.getColumn(6).setPreferredWidth(150); // Coluna Preço de Venda
         columnModel.getColumn(7).setPreferredWidth(100); // Coluna Estoque Disponível
       
+        //---------------os 3 botoes
         JButton btnAdicionar = new JButton("Adicionar");
         btnAdicionar.setBounds(120, 320, 100, 25);
         btnAdicionar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -139,7 +153,7 @@ public class SistemaLoja {
         btnAdicionar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         btnAdicionar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(content, "ADICIONAR_PRODUTO_PANEL"); //criar esse painel ainda
+                cardLayout.show(content, "ADICIONAR_PRODUTO_PANEL");
             }
         });
         produtosPanel.add(btnAdicionar);
@@ -171,6 +185,8 @@ public class SistemaLoja {
             }
         });
         produtosPanel.add(btnRemover);
+        
+        //----------------------------------------- componentes do adicionar
         
         JLabel lblSku = new JLabel("SKU:");
         lblSku.setBounds(100, 50, 100, 25);
@@ -245,7 +261,159 @@ public class SistemaLoja {
         cbFornecedor.setFont(new Font("Arial", Font.PLAIN, 12));
         adicionarProdutoPanel.add(cbFornecedor);
 
+        btnEditar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    Object sku = table.getValueAt(selectedRow, 0);
+                    Object nome = table.getValueAt(selectedRow, 1);
+                    Object descricao = table.getValueAt(selectedRow, 4);
+                    Object precoCusto = table.getValueAt(selectedRow, 5);
+                    Object precoVenda = table.getValueAt(selectedRow, 6);
+                    Object estoqueDisponivel = table.getValueAt(selectedRow, 7);
+                    Object categoria = table.getValueAt(selectedRow, 2);
+                    Object fornecedor = table.getValueAt(selectedRow, 3);
+
+                    txtSku.setText(sku.toString());
+                    txtNome.setText(nome.toString());
+                    txtDescricao.setText(descricao.toString());
+                    txtPrecoCusto.setText(precoCusto.toString());
+                    txtPrecoVenda.setText(precoVenda.toString());
+                    txtEstoqueDisponivel.setText(estoqueDisponivel.toString());
+                    cbCategoria.setSelectedItem(categoria);
+                    cbFornecedor.setSelectedItem(fornecedor);
+
+                    cardLayout.show(content, "EDITAR_PRODUTO_PANEL");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecione um produto para editar.");
+                }
+            }
+        });
         
+        JButton btnAdicionarVoltar= new JButton("Voltar");
+        btnAdicionarVoltar.setBounds(390, 364, 200, 25);
+        btnAdicionarVoltar.addActionListener(e -> {
+            cardLayout.show(content, "PRODUTOS_PANEL");
+        });
+        adicionarProdutoPanel.add(btnAdicionarVoltar);
+        
+        //--------------------- componentes do editar
+        
+        JLabel lblSkuEditar = new JLabel("SKU:");
+        lblSkuEditar.setBounds(100, 50, 100, 25);
+        editarProdutoPanel.add(lblSkuEditar);
+
+        JTextField txtSkuEditar = new JTextField();
+        txtSkuEditar.setBounds(200, 50, 200, 25);
+        editarProdutoPanel.add(txtSkuEditar);
+
+        JLabel lblNomeEditar = new JLabel("Nome:");
+        lblNomeEditar.setBounds(100, 80, 100, 25);
+        editarProdutoPanel.add(lblNomeEditar);
+
+        JTextField txtNomeEditar = new JTextField();
+        txtNomeEditar.setBounds(200, 80, 200, 25);
+        editarProdutoPanel.add(txtNomeEditar);
+        
+        JLabel lblDescricaoEditar = new JLabel("Descrição:");
+        lblDescricaoEditar.setBounds(100, 170, 100, 25);
+        editarProdutoPanel.add(lblDescricaoEditar);
+
+        JTextField txtDescricaoEditar = new JTextField();
+        txtDescricaoEditar.setBounds(200, 170, 200, 25);
+        editarProdutoPanel.add(txtDescricaoEditar);
+
+        JLabel lblPrecoCustoEditar = new JLabel("Preço de Custo:");
+        lblPrecoCustoEditar.setBounds(100, 200, 100, 25);
+        editarProdutoPanel.add(lblPrecoCustoEditar);
+
+        JTextField txtPrecoCustoEditar = new JTextField();
+        txtPrecoCustoEditar.setBounds(200, 200, 200, 25);
+        editarProdutoPanel.add(txtPrecoCustoEditar);
+
+        JLabel lblPrecoVendaEditar = new JLabel("Preço de Venda:");
+        lblPrecoVendaEditar.setBounds(100, 230, 100, 25);
+        editarProdutoPanel.add(lblPrecoVendaEditar);
+
+        JTextField txtPrecoVendaEditar = new JTextField();
+        txtPrecoVendaEditar.setBounds(200, 230, 200, 25);
+        editarProdutoPanel.add(txtPrecoVendaEditar);
+
+        JLabel lblEstoqueDisponivelEditar = new JLabel("Estoque Disponível:");
+        lblEstoqueDisponivelEditar.setBounds(100, 260, 100, 25);
+        editarProdutoPanel.add(lblEstoqueDisponivelEditar);
+
+        JTextField txtEstoqueDisponivelEditar = new JTextField();
+        txtEstoqueDisponivelEditar.setBounds(200, 260, 200, 25);
+        editarProdutoPanel.add(txtEstoqueDisponivelEditar);
+        
+        String[] categorias1 = {"Tablet", "Smartphone", "Notebook"};
+        JComboBox<String> cbCategoriaEditar = new JComboBox<>(categorias1);
+        cbCategoriaEditar.setBounds(200, 110, 200, 25);
+        editarProdutoPanel.add(cbCategoriaEditar);
+
+        String[] fornecedores1 = {"Xiaomi", "Samsung", "Apple"};
+        JComboBox<String> cbFornecedorEditar = new JComboBox<>(fornecedores1);
+        cbFornecedorEditar.setBounds(200, 140, 200, 25);
+        editarProdutoPanel.add(cbFornecedorEditar);
+
+        
+        JButton btnSalvarEdicoes = new JButton("Salvar Edições");
+        btnSalvarEdicoes.setBounds(200, 296, 200, 25);
+        btnSalvarEdicoes.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSalvarEdicoes.setBackground(new Color(64, 64, 64));
+        btnSalvarEdicoes.setForeground(Color.WHITE);
+        btnSalvarEdicoes.setFocusPainted(false);
+        btnSalvarEdicoes.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btnSalvarEdicoes.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Obtém os valores atualizados dos campos
+            	int selectedRow = table.getSelectedRow();
+                Integer skuAtualizado = Integer.valueOf(txtSku.getText());
+                String nomeAtualizado = txtNome.getText();
+                String descricaoAtualizada = txtDescricao.getText();
+                double precoCustoAtualizado = Double.valueOf(txtPrecoCusto.getText());
+                double precoVendaAtualizado = Double.valueOf(txtPrecoVenda.getText());
+                int estoqueDisponivelAtualizado = Integer.valueOf(txtEstoqueDisponivel.getText());
+                String categoriaAtualizada = (String) cbCategoria.getSelectedItem();
+                String fornecedorAtualizado = (String) cbFornecedor.getSelectedItem();
+
+                // Atualiza o produto
+                // Supondo que você tenha um método para atualizar o produto
+                sistema.atualizarProduto(skuAtualizado, nomeAtualizado, descricaoAtualizada, precoCustoAtualizado, precoVendaAtualizado, estoqueDisponivelAtualizado, categoriaAtualizada, fornecedorAtualizado);
+
+                // Atualiza a linha correspondente na tabela
+                model.setValueAt(skuAtualizado, selectedRow, 0);
+                model.setValueAt(nomeAtualizado, selectedRow, 1);
+                model.setValueAt(descricaoAtualizada, selectedRow, 4);
+                model.setValueAt(precoCustoAtualizado, selectedRow, 5);
+                model.setValueAt(precoVendaAtualizado, selectedRow, 6);
+                model.setValueAt(estoqueDisponivelAtualizado, selectedRow, 7);
+                model.setValueAt(categoriaAtualizada, selectedRow, 2);
+                model.setValueAt(fornecedorAtualizado, selectedRow, 3);
+
+                // Volta para o painel de produtos
+                cardLayout.show(content, "PRODUTO_PANEL");
+            }
+        });
+        editarProdutoPanel.add(btnSalvarEdicoes);
+        
+        JLabel lblCategoriaEditar = new JLabel("Categoria:");
+        lblCategoriaEditar.setBounds(100, 110, 100, 25);
+        editarProdutoPanel.add(lblCategoriaEditar);
+        
+        JLabel lblFornecedorEditar = new JLabel("Fornecedor:");
+        lblFornecedorEditar.setBounds(100, 140, 100, 25);
+        editarProdutoPanel.add(lblFornecedorEditar);
+        
+        JButton btnEditarVoltar = new JButton("Voltar");
+        btnEditarVoltar.setBounds(390, 364, 200, 25);
+        btnEditarVoltar.addActionListener(e -> {
+            cardLayout.show(content, "PRODUTOS_PANEL");
+        });
+        editarProdutoPanel.add(btnEditarVoltar);
+   
         JButton btnAdicionarConfirmar = new JButton("Adicionar");
         btnAdicionarConfirmar.setBounds(200, 296, 200, 25);
         btnAdicionarConfirmar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -282,13 +450,10 @@ public class SistemaLoja {
         adicionarProdutoPanel.add(btnAdicionarConfirmar);
 
         
-        JButton btnAdicionarVoltar= new JButton("Voltar");
-        btnAdicionarVoltar.setBounds(390, 364, 200, 25);
-        btnAdicionarVoltar.addActionListener(e -> {
-            cardLayout.show(content, "PRODUTOS_PANEL");
-        });
-        adicionarProdutoPanel.add(btnAdicionarVoltar);
-
+        
+        
+        //------------------------------ componentes do remover
+        
         JTextField txtSkuRemover = new JTextField();
         txtSkuRemover.setBounds(140, 100, 200, 25);
         removerProdutoPanel.add(txtSkuRemover);
@@ -341,6 +506,58 @@ public class SistemaLoja {
                 cardLayout.show(content, "PRODUTOS_PANEL");
             });
         removerProdutoPanel.add(btnVoltarRemover);
+        
+        //============================================================
+        //componentes clientes
+        
+        DefaultTableModel modelClientes = new DefaultTableModel(new String[]{"ID", "Nome", "Email", "Telefone"}, 0);
+        JTable tableClientes = new JTable(modelClientes);
+        JScrollPane scrollPaneClientes = new JScrollPane(tableClientes);  // Adicionando a tabela a um JScrollPane
+        scrollPaneClientes.setBounds(10, 10, 580, 300);
+        clientesPanel.add(scrollPaneClientes);  // Adicionando o JScrollPane ao painel
+        
+     // Botões para adicionar, editar e remover clientes
+        JButton btnAdicionarCliente = new JButton("Adicionar");
+        btnAdicionarCliente.setBounds(120, 320, 100, 25);
+        btnAdicionarCliente.setFont(new Font("Arial", Font.BOLD, 14));
+        btnAdicionarCliente.setBackground(new Color(64, 64, 64));
+        btnAdicionarCliente.setForeground(Color.WHITE);
+        btnAdicionarCliente.setFocusPainted(false);
+        btnAdicionarCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btnAdicionarCliente.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(content, "ADICIONAR_CLIENTE_PANEL");  // Supondo que este painel será criado
+            }
+        });
+        clientesPanel.add(btnAdicionarCliente);
+
+        JButton btnEditarCliente = new JButton("Editar");
+        btnEditarCliente.setBounds(250, 320, 100, 25);
+        btnEditarCliente.setFont(new Font("Arial", Font.BOLD, 14));
+        btnEditarCliente.setBackground(new Color(64, 64, 64));
+        btnEditarCliente.setForeground(Color.WHITE);
+        btnEditarCliente.setFocusPainted(false);
+        btnEditarCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btnEditarCliente.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Ação para editar cliente
+            }
+        });
+        clientesPanel.add(btnEditarCliente);
+
+        JButton btnRemoverCliente = new JButton("Remover");
+        btnRemoverCliente.setBounds(380, 320, 100, 25);
+        btnRemoverCliente.setFont(new Font("Arial", Font.BOLD, 14));
+        btnRemoverCliente.setBackground(new Color(64, 64, 64));
+        btnRemoverCliente.setForeground(Color.WHITE);
+        btnRemoverCliente.setFocusPainted(false);
+        btnRemoverCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        btnRemoverCliente.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Ação para remover cliente
+            }
+        });
+        clientesPanel.add(btnRemoverCliente);
         
       //==============================================================
         //labels do sidebar

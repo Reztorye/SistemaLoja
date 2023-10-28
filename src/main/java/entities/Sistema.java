@@ -29,6 +29,23 @@ public class Sistema {
 		return produto;
 	}
 
+	public void atualizarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda, int estoqueDisponivel, String NomeCategoria, String nomeFornecedor) {
+        for (Produto produto : produtos) {
+            if (produto.getSku().equals(sku)) {
+                produto.setNome(nome);
+                produto.setDescricao(descricao);
+                produto.setPrecoCusto(precoCusto);
+                produto.setPrecoVenda(precoVenda);
+                produto.setEstoqueDisponivel(estoqueDisponivel);
+                produto.getCategoria().setNome(NomeCategoria);
+                produto.getFornecedor().setNome(nomeFornecedor);
+                System.out.println("Produto atualizado: " + produto.getNome());
+                return;
+            }
+        }
+        System.out.println("Produto não encontrado: " + sku);
+    }
+	
 	public void removerProduto(int sku) {
 		for (int i = 0; i < produtos.size(); i++) {
 			Produto p = (Produto) produtos.get(i);
