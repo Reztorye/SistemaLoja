@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
+import entities.Cliente;
 import entities.Produto;
 import entities.Sistema;
 
@@ -33,7 +35,7 @@ public class ProjetoIndetado {
         JFrame frmEletronicaPikachu = new JFrame("Eletronica Pikachu");
         frmEletronicaPikachu.setTitle("Eletronica Pikachu");
         frmEletronicaPikachu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frmEletronicaPikachu.setSize(900, 436);
+        frmEletronicaPikachu.setSize(1036, 436);
         @SuppressWarnings("unused")
         Color defaultColor = Color.DARK_GRAY;
         Color highlightColor = Color.GRAY;
@@ -97,6 +99,10 @@ public class ProjetoIndetado {
         JPanel clientesPanel = new JPanel(null);
         clientesPanel.setPreferredSize(new Dimension(600, 400));
         content.add(clientesPanel, "CLIENTES_PANEL");
+        
+        JPanel clientesAdicionarPanel = new JPanel(null);
+        clientesAdicionarPanel.setPreferredSize(new Dimension(600, 400));
+        content.add(clientesAdicionarPanel, "CLIENTES_ADICONAR_PANEL");
         //======================================================================
         //componentes produtos
         // Tabela de produtos
@@ -109,7 +115,7 @@ public class ProjetoIndetado {
         	JTable table = new JTable(model);
         	table.setRowSelectionAllowed(false);
         	JScrollPane scrollPane = new JScrollPane(table);
-        	scrollPane.setBounds(10, 10, 580, 300);
+        	scrollPane.setBounds(10, 10, 800, 299);
         	produtosPanel.add(scrollPane);
         	TableColumnModel columnModel = table.getColumnModel();//pre-definir tamanho das colunas pois colunas com nome grande nao coubiam
         	columnModel.getColumn(0).setPreferredWidth(50);  // Coluna SKU
@@ -117,14 +123,14 @@ public class ProjetoIndetado {
         	columnModel.getColumn(2).setPreferredWidth(100); // Coluna Categoria
         	columnModel.getColumn(3).setPreferredWidth(110); // Coluna Fornecedor
         	columnModel.getColumn(4).setPreferredWidth(100); // Coluna Descrição
-        	columnModel.getColumn(5).setPreferredWidth(150); // Coluna Preço de Custo
-        	columnModel.getColumn(6).setPreferredWidth(150); // Coluna Preço de Venda
-        	columnModel.getColumn(7).setPreferredWidth(100); // Coluna Estoque Disponível
-        	
-        	sistema.adicionarProduto(1234, "Mi 8 lite", "descricao do produto 1", 999.90, 1499.99, 50, "Celular", "Xiaomi");
+        	columnModel.getColumn(5).setPreferredWidth(120); // Coluna Preço de Custo
+        	columnModel.getColumn(6).setPreferredWidth(120); // Coluna Preço de Venda
+        	columnModel.getColumn(7).setPreferredWidth(140); // Coluna Estoque Disponível
+        	model.addRow(new Object[]{1234, "Mi 8 lite", "Celular", "Xiaomi", "descricao do produto 1", 999.90, 1499.99, 50});
+        	model.addRow(new Object[]{1235, "Redmi note 12", "Tablet", "Xiaomi", "descricao do produto 2", 1999.90, 2499.95, 20});
         	//---------------os 3 botoes
         	JButton btnAdicionar = new JButton("Adicionar");
-        	btnAdicionar.setBounds(120, 320, 100, 25);
+        	btnAdicionar.setBounds(232, 320, 100, 25);
         	btnAdicionar.setFont(new Font("Arial", Font.BOLD, 14));
         	btnAdicionar.setBackground(new Color(64, 64, 64));
         	btnAdicionar.setForeground(Color.WHITE);
@@ -137,15 +143,16 @@ public class ProjetoIndetado {
         	});
         	produtosPanel.add(btnAdicionar);
         	JButton btnEditar = new JButton("Editar");
-        	btnEditar.setBounds(250, 320, 100, 25);
+        	btnEditar.setBounds(363, 320, 100, 25);
         	btnEditar.setFont(new Font("Arial", Font.BOLD, 14));
         	btnEditar.setBackground(new Color(64, 64, 64));
         	btnEditar.setForeground(Color.WHITE);
         	btnEditar.setFocusPainted(false);
-        	btnEditar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        	btnEditar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
+        	//actionlistener esta nos componentes do editar
         	produtosPanel.add(btnEditar);
         	JButton btnRemover = new JButton("Remover");
-        	btnRemover.setBounds(380, 320, 100, 25);
+        	btnRemover.setBounds(486, 320, 100, 25);
         	btnRemover.setFont(new Font("Arial", Font.BOLD, 14));
         	btnRemover.setBackground(new Color(64, 64, 64));
         	btnRemover.setForeground(Color.WHITE);
@@ -459,12 +466,16 @@ public class ProjetoIndetado {
                                             removerProdutoPanel.add(btnVoltarRemover);
                                             //============================================================
                                             //componentes clientes
-                                            DefaultTableModel modelClientes = new DefaultTableModel(new String[]{"ID", "Nome", "Email", "Telefone"}, 0);
+                                            DefaultTableModel modelClientes = new DefaultTableModel(new String[]{"Nome", "Endereco", "Email", "Telefone"}, 0);
                                             JTable tableClientes = new JTable(modelClientes);
-                                            JScrollPane scrollPaneClientes = new JScrollPane(tableClientes);  // Adicionando a tabela a um JScrollPane
-                                            scrollPaneClientes.setBounds(10, 10, 580, 300);
-                                            clientesPanel.add(scrollPaneClientes);  // Adicionando o JScrollPane ao painel
-                                            // Botões para adicionar, editar e remover clientes
+                                            JScrollPane scrollPaneClientes = new JScrollPane(tableClientes);
+                                            scrollPaneClientes.setBounds(10, 10, 800, 300);
+                                            clientesPanel.add(scrollPaneClientes); 
+                                            modelClientes.addRow(new Object[]{"Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
+                            						"(41) 99866-6332", "rodrigosrising@gmail.com"});
+                                            modelClientes.addRow(new Object[]{"Camila Sartori", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
+                            						"(41) 99633-9225", "camylla55@gmail.com"});                                         
+                                            // 3 BOTOES CRUD
                                             JButton btnAdicionarCliente = new JButton("Adicionar");
                                             btnAdicionarCliente.setBounds(120, 320, 100, 25);
                                             btnAdicionarCliente.setFont(new Font("Arial", Font.BOLD, 14));
@@ -504,6 +515,61 @@ public class ProjetoIndetado {
                                                         }
                                                           });
                                                         clientesPanel.add(btnRemoverCliente);
+                                                        
+                                                        //=============================================================
+                                                        //paineis dos botoes do crud clientes
+                                                        
+                                                        JLabel lblNomeCliente = new JLabel("Nome:");
+                                                        lblNomeCliente.setBounds(100, 50, 100, 25);
+                                                        clientesAdicionarPanel.add(lblNomeCliente);
+                                                        JTextField txtNomeCliente = new JTextField();
+                                                        txtNomeCliente.setBounds(200, 50, 200, 25);
+                                                        clientesAdicionarPanel.add(txtNomeCliente);
+                                                        
+                                                        JLabel lblEnderecoCliente = new JLabel("Endereco:");
+                                                        lblEnderecoCliente.setBounds(100, 110, 100, 25);
+                                                        clientesAdicionarPanel.add(lblEnderecoCliente);
+                                                        JTextField txtEnderecoCliente = new JTextField();
+                                                        txtEnderecoCliente.setBounds(200, 110, 200, 25);
+                                                        clientesAdicionarPanel.add(txtEnderecoCliente);
+                                                        
+                                                        JLabel lblTelefoneCliente = new JLabel("Telefone:");
+                                                        lblTelefoneCliente.setBounds(100, 80, 100, 25);
+                                                        clientesAdicionarPanel.add(lblTelefoneCliente);
+                                                        JTextField txtTelefoneCliente = new JTextField();
+                                                        txtTelefoneCliente.setBounds(200, 80, 200, 25);
+                                                        clientesAdicionarPanel.add(txtTelefoneCliente);                                        
+                                                        
+                                                        JLabel lblEmailCliente = new JLabel("Email:");
+                                                        lblEmailCliente.setBounds(100, 110, 100, 25);
+                                                        clientesAdicionarPanel.add(lblEmailCliente);
+                                                        JTextField txtEmailCliente = new JTextField();
+                                                        txtEmailCliente.setBounds(200, 110, 200, 25);
+                                                        clientesAdicionarPanel.add(txtEmailCliente);
+
+                                                        JButton btnAdicionarClienteConfirmar = new JButton("Adicionar Cliente");
+                                                        btnAdicionarClienteConfirmar.setBounds(200, 150, 200, 25);
+                                                        btnAdicionarClienteConfirmar.addActionListener(new ActionListener() {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                                String nome = txtNomeCliente.getText();
+                                                                String telefone = txtTelefoneCliente.getText();
+                                                                String endereco = txtEnderecoCliente.getText();
+                                                                String email = txtEmailCliente.getText();
+                                                                Cliente novoCliente = new Cliente(nome, telefone, endereco, email);
+                                                                sistema.adicionarCliente(novoCliente);
+                                                                
+                                                                modelClientes.addRow(new Object[]{novoCliente.getNome(), novoCliente.getEndereco(), novoCliente.getTelefone(), novoCliente.getEmail()});
+                                                                
+                                                                txtNomeCliente.setText("");
+                                                                txtTelefoneCliente.setText("");
+                                                                txtEmailCliente.setText("");
+                                                            }
+                                                        });
+                                                        clientesAdicionarPanel.add(btnAdicionarClienteConfirmar);
+
+                                                        content.add(clientesAdicionarPanel, "CLIENTES_ADICIONAR_PANEL");
+                                                        
+                                                        
                                                         //==============================================================
                                                         //labels do sidebar
                                                         JLabel label_telaPrincipal = new JLabel("Tela Principal", SwingConstants.CENTER);
