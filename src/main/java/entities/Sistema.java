@@ -225,4 +225,18 @@ public class Sistema {
 		}
 	}
 
+	public void atualizarCliente(String email, String nome, String endereco, String telefone) {
+	    for (Cliente cliente : clientes) {
+	        if (cliente.getEmail().equals(email)) {
+	            System.out.println("Cliente encontrado: " + cliente.getNome());  // Debug: Verifique se o cliente foi encontrado
+	            cliente.setNome(nome);
+	            cliente.setEndereco(endereco);
+	            cliente.setTelefone(telefone);
+	            System.out.println("Cliente atualizado: " + cliente.getNome());  // Debug: Verifique a atualização
+	            return;
+	        }
+	    }
+	    System.out.println("Cliente não encontrado: " + email);  // Debug: Verifique se o cliente não foi encontrado
+	}
+
 }

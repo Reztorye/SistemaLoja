@@ -99,10 +99,14 @@ public class ProjetoIndetado {
         JPanel clientesPanel = new JPanel(null);
         clientesPanel.setPreferredSize(new Dimension(600, 400));
         content.add(clientesPanel, "CLIENTES_PANEL");
-        
+        //painel de add clientes
         JPanel clientesAdicionarPanel = new JPanel(null);
         clientesAdicionarPanel.setPreferredSize(new Dimension(600, 400));
-        content.add(clientesAdicionarPanel, "CLIENTES_ADICONAR_PANEL");
+        content.add(clientesAdicionarPanel, "CLIENTES_ADICIONAR_PANEL");
+        //painel de editar clientes
+        JPanel clientesEditarPanel = new JPanel(null);
+        clientesEditarPanel.setPreferredSize(new Dimension(600, 400));
+        content.add(clientesEditarPanel, "CLIENTES_EDITAR_PANEL");
         //======================================================================
         //componentes produtos
         // Tabela de produtos
@@ -119,7 +123,7 @@ public class ProjetoIndetado {
         	produtosPanel.add(scrollPane);
         	TableColumnModel columnModel = table.getColumnModel();//pre-definir tamanho das colunas pois colunas com nome grande nao coubiam
         	columnModel.getColumn(0).setPreferredWidth(50);  // Coluna SKU
-        	columnModel.getColumn(1).setPreferredWidth(60); // Coluna Nome
+        	columnModel.getColumn(1).setPreferredWidth(110); // Coluna Nome
         	columnModel.getColumn(2).setPreferredWidth(100); // Coluna Categoria
         	columnModel.getColumn(3).setPreferredWidth(110); // Coluna Fornecedor
         	columnModel.getColumn(4).setPreferredWidth(100); // Coluna Descrição
@@ -276,6 +280,8 @@ public class ProjetoIndetado {
                     txtPrecoCusto.setText("");
                     txtPrecoVenda.setText("");
                     txtEstoqueDisponivel.setText("");
+                    
+                    JOptionPane.showMessageDialog(content, "Cliente adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 }
                 });
                 adicionarProdutoPanel.add(btnAdicionarConfirmar);
@@ -360,11 +366,8 @@ public class ProjetoIndetado {
                                     String categoriaAtualizada = (String) cbCategoriaEditar.getSelectedItem();
                                     String fornecedorAtualizado = (String) cbFornecedorEditar.getSelectedItem();
 
-                                    // Atualiza o produto
-                                    // Supondo que você tenha um método para atualizar o produto
                                     sistema.atualizarProduto(skuAtualizado, nomeAtualizado, descricaoAtualizada, precoVendaAtualizado, categoriaAtualizada, fornecedorAtualizado);
 
-                                    // Atualiza a linha correspondente na tabela
                                     model.setValueAt(skuAtualizado, selectedRow, 0);
                                     model.setValueAt(nomeAtualizado, selectedRow, 1);
                                     model.setValueAt(descricaoAtualizada, selectedRow, 4);
@@ -376,11 +379,12 @@ public class ProjetoIndetado {
                                     txtNomeEditar.setText("");
                                     txtDescricaoEditar.setText("");
                                     txtPrecoVendaEditar.setText("");
-                                } else {
-                                    // Opicional: Exibir uma mensagem de erro se nenhuma linha foi selecionada
+                                    JOptionPane.showMessageDialog(content, "Produto atualizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                                } else {          
                                     JOptionPane.showMessageDialog(editarProdutoPanel, "Nenhum produto selecionado para edição.", "Erro", JOptionPane.ERROR_MESSAGE);
                                 }
-                            }
+                                
+                            }    
                         });
                             editarProdutoPanel.add(btnSalvarEdicoes);
                             JLabel lblCategoriaEditar = new JLabel("Categoria:");
@@ -438,7 +442,7 @@ public class ProjetoIndetado {
                                     btnRemoverConfirmar.addActionListener(new ActionListener() {
                                         public void actionPerformed(ActionEvent e) {
                                             int sku = Integer.valueOf(txtSkuRemover.getText());
-                                            int resposta = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o produto com SKU: " + sku + "?", "Confirmação de Remoção", JOptionPane.YES_NO_OPTION);
+                                            int resposta = JOptionPane.showConfirmDialog(content, "Tem certeza que deseja remover o produto com SKU: " + sku + "?", "Confirmação de Remoção", JOptionPane.YES_NO_OPTION);
                                             if (resposta == JOptionPane.YES_OPTION) {
                                                 sistema.removerProduto(sku);
                                                 for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -449,6 +453,7 @@ public class ProjetoIndetado {
                                                 }
                                                 txtSkuRemover.setText("");
                                             }
+                                            JOptionPane.showMessageDialog(content, "Produto removido com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE); 
                                         }
                                         });
                                         removerProdutoPanel.add(btnRemoverConfirmar);
@@ -466,9 +471,15 @@ public class ProjetoIndetado {
                                             removerProdutoPanel.add(btnVoltarRemover);
                                             //============================================================
                                             //componentes clientes
-                                            DefaultTableModel modelClientes = new DefaultTableModel(new String[]{"Nome", "Endereco", "Email", "Telefone"}, 0);
+                                            DefaultTableModel modelClientes = new DefaultTableModel(new String[]{"Nome", "Endereco", "Telefone", "Email", }, 0);
                                             JTable tableClientes = new JTable(modelClientes);
                                             JScrollPane scrollPaneClientes = new JScrollPane(tableClientes);
+                                            TableColumnModel columnModelClientes = tableClientes.getColumnModel();//pre-definir tamanho das colunas pois colunas com nome grande nao coubiam
+                                        	columnModelClientes.getColumn(0).setPreferredWidth(30);  // Coluna Nome
+                                        	columnModelClientes.getColumn(1).setPreferredWidth(300); // Coluna Endereco
+                                        	columnModelClientes.getColumn(2).setPreferredWidth(20); // Coluna Telefone
+                                        	columnModelClientes.getColumn(3).setPreferredWidth(100); // Coluna Email
+               
                                             scrollPaneClientes.setBounds(10, 10, 800, 300);
                                             clientesPanel.add(scrollPaneClientes); 
                                             modelClientes.addRow(new Object[]{"Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
@@ -485,23 +496,18 @@ public class ProjetoIndetado {
                                             btnAdicionarCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                                             btnAdicionarCliente.addActionListener(new ActionListener() {
                                                 public void actionPerformed(ActionEvent e) {
-                                                    cardLayout.show(content, "ADICIONAR_CLIENTE_PANEL");  // Supondo que este painel será criado
+                                                    cardLayout.show(content, "CLIENTES_ADICIONAR_PANEL");  
                                                 }
                                                 });
                                                 clientesPanel.add(btnAdicionarCliente);
-                                                JButton btnEditarCliente = new JButton("Editar");
+                                                JButton btnEditarCliente = new JButton("Editar");                                               
                                                 btnEditarCliente.setBounds(250, 320, 100, 25);
                                                 btnEditarCliente.setFont(new Font("Arial", Font.BOLD, 14));
                                                 btnEditarCliente.setBackground(new Color(64, 64, 64));
                                                 btnEditarCliente.setForeground(Color.WHITE);
                                                 btnEditarCliente.setFocusPainted(false);
                                                 btnEditarCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                                                btnEditarCliente.addActionListener(new ActionListener() {
-                                                    public void actionPerformed(ActionEvent e) {
-                                                        // Ação para editar cliente
-                                                    }
-                                                    });
-                                                    clientesPanel.add(btnEditarCliente);
+                                                clientesPanel.add(btnEditarCliente);
                                                     JButton btnRemoverCliente = new JButton("Remover");
                                                     btnRemoverCliente.setBounds(380, 320, 100, 25);
                                                     btnRemoverCliente.setFont(new Font("Arial", Font.BOLD, 14));
@@ -527,17 +533,17 @@ public class ProjetoIndetado {
                                                         clientesAdicionarPanel.add(txtNomeCliente);
                                                         
                                                         JLabel lblEnderecoCliente = new JLabel("Endereco:");
-                                                        lblEnderecoCliente.setBounds(100, 110, 100, 25);
+                                                        lblEnderecoCliente.setBounds(100, 80, 100, 25);
                                                         clientesAdicionarPanel.add(lblEnderecoCliente);
                                                         JTextField txtEnderecoCliente = new JTextField();
-                                                        txtEnderecoCliente.setBounds(200, 110, 200, 25);
+                                                        txtEnderecoCliente.setBounds(200, 80, 200, 25);
                                                         clientesAdicionarPanel.add(txtEnderecoCliente);
                                                         
                                                         JLabel lblTelefoneCliente = new JLabel("Telefone:");
-                                                        lblTelefoneCliente.setBounds(100, 80, 100, 25);
+                                                        lblTelefoneCliente.setBounds(100, 141, 100, 25);
                                                         clientesAdicionarPanel.add(lblTelefoneCliente);
                                                         JTextField txtTelefoneCliente = new JTextField();
-                                                        txtTelefoneCliente.setBounds(200, 80, 200, 25);
+                                                        txtTelefoneCliente.setBounds(200, 141, 200, 25);
                                                         clientesAdicionarPanel.add(txtTelefoneCliente);                                        
                                                         
                                                         JLabel lblEmailCliente = new JLabel("Email:");
@@ -548,28 +554,149 @@ public class ProjetoIndetado {
                                                         clientesAdicionarPanel.add(txtEmailCliente);
 
                                                         JButton btnAdicionarClienteConfirmar = new JButton("Adicionar Cliente");
-                                                        btnAdicionarClienteConfirmar.setBounds(200, 150, 200, 25);
+                                                        btnAdicionarClienteConfirmar.setBounds(200, 177, 200, 25);
+                                                        btnAdicionarClienteConfirmar.setFont(new Font("Arial", Font.BOLD, 14));
+                                                        btnAdicionarClienteConfirmar.setBackground(new Color(64, 64, 64));
+                                                        btnAdicionarClienteConfirmar.setForeground(Color.WHITE);
+                                                        btnAdicionarClienteConfirmar.setFocusPainted(false);
+                                                        btnAdicionarClienteConfirmar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                                                         btnAdicionarClienteConfirmar.addActionListener(new ActionListener() {
                                                             public void actionPerformed(ActionEvent e) {
                                                                 String nome = txtNomeCliente.getText();
-                                                                String telefone = txtTelefoneCliente.getText();
                                                                 String endereco = txtEnderecoCliente.getText();
+                                                                String telefone = txtTelefoneCliente.getText();
                                                                 String email = txtEmailCliente.getText();
-                                                                Cliente novoCliente = new Cliente(nome, telefone, endereco, email);
+                                                                Cliente novoCliente = new Cliente(nome, endereco, telefone, email);
                                                                 sistema.adicionarCliente(novoCliente);
                                                                 
                                                                 modelClientes.addRow(new Object[]{novoCliente.getNome(), novoCliente.getEndereco(), novoCliente.getTelefone(), novoCliente.getEmail()});
                                                                 
                                                                 txtNomeCliente.setText("");
+                                                                txtEnderecoCliente.setText("");
                                                                 txtTelefoneCliente.setText("");
                                                                 txtEmailCliente.setText("");
+                                                                
+                                                                JOptionPane.showMessageDialog(content, "Cliente adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                                                             }
                                                         });
                                                         clientesAdicionarPanel.add(btnAdicionarClienteConfirmar);
 
                                                         content.add(clientesAdicionarPanel, "CLIENTES_ADICIONAR_PANEL");
                                                         
+                                                        JButton btnVoltarClientePanel = new JButton("Voltar");
+                                                        btnVoltarClientePanel.setBounds(400, 350, 100, 25);
+                                                        btnVoltarClientePanel.setFont(new Font("Arial", Font.BOLD, 14));
+                                                        btnVoltarClientePanel.setBackground(new Color(64, 64, 64));
+                                                        btnVoltarClientePanel.setForeground(Color.WHITE);
+                                                        btnVoltarClientePanel.setFocusPainted(false);
+                                                        btnVoltarClientePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                                                        btnVoltarClientePanel.setBounds(450, 300, 100, 30);
                                                         
+                                                        btnVoltarClientePanel.addActionListener(new ActionListener() {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                            	 cardLayout.show(content, "CLIENTES_PANEL");
+                                                            }
+                                                        });
+                                                        
+                                                        clientesAdicionarPanel.add(btnVoltarClientePanel);                                                       
+                                                        
+                                                        JLabel lblNomeClientesEditar = new JLabel("Nome:");
+                                                        lblNomeClientesEditar.setBounds(100, 50, 100, 25);
+                                                        clientesEditarPanel.add(lblNomeClientesEditar);
+
+                                                        JTextField txtNomeClientesEditar = new JTextField();
+                                                        txtNomeClientesEditar.setBounds(200, 50, 200, 25);
+                                                        clientesEditarPanel.add(txtNomeClientesEditar);
+                                                        
+                                                        JLabel lblEnderecoEditar = new JLabel("Endereco: ");
+                                                        lblEnderecoEditar.setBounds(100, 86, 100, 25);
+                                                        clientesEditarPanel.add(lblEnderecoEditar);
+                                                        
+                                                        JTextField txtEnderecoEditar = new JTextField();
+                                                        txtEnderecoEditar.setBounds(200, 86, 200, 25);
+                                                        clientesEditarPanel.add(txtEnderecoEditar);
+                                                        
+                                                        JLabel lblTelefoneEditar = new JLabel("Telefone:");
+                                                        lblTelefoneEditar.setBounds(100, 122, 100, 25);
+                                                        clientesEditarPanel.add(lblTelefoneEditar);
+
+                                                        JTextField txtTelefoneEditar = new JTextField();
+                                                        txtTelefoneEditar.setBounds(200, 122, 200, 25);
+                                                        clientesEditarPanel.add(txtTelefoneEditar);
+
+                                                        JLabel lblEmailEditar = new JLabel("Email:");
+                                                        lblEmailEditar.setBounds(100, 158, 100, 25);
+                                                        clientesEditarPanel.add(lblEmailEditar);
+
+                                                        JTextField txtEmailEditar = new JTextField();
+                                                        txtEmailEditar.setBounds(200, 158, 200, 25);
+                                                        clientesEditarPanel.add(txtEmailEditar);
+
+                                                        JButton btnSalvarEdicoesClientes = new JButton("Salvar Edições");
+                                                        btnSalvarEdicoesClientes.setBounds(200, 194, 200, 25);
+                                                        btnSalvarEdicoesClientes.setFont(new Font("Arial", Font.BOLD, 14));
+                                                        btnSalvarEdicoesClientes.setBackground(new Color(64, 64, 64));
+                                                        btnSalvarEdicoesClientes.setForeground(Color.WHITE);
+                                                        btnSalvarEdicoesClientes.setFocusPainted(false);
+                                                        btnSalvarEdicoesClientes.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                                                        btnSalvarEdicoesClientes.addActionListener(new ActionListener() {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                                int selectedRow = tableClientes.getSelectedRow();
+                                                                if (selectedRow != -1) { 
+                                                                    String nomeAtualizado = txtNomeClientesEditar.getText();
+                                                                    String enderecoAtualizado = txtEnderecoEditar.getText();
+                                                                    String telefoneAtualizado = txtTelefoneEditar.getText();
+                                                                    String email = txtEmailEditar.getText();
+                                                                    
+                                                                    System.out.println("Valores obtidos: " + nomeAtualizado + ", " + enderecoAtualizado + ", " + telefoneAtualizado + ", " + email);  // Debug: Verifique os valores obtidos
+
+                                                                    sistema.atualizarCliente(email, nomeAtualizado, enderecoAtualizado, telefoneAtualizado);
+                                                                    
+                                                                    // ... (restante do código)
+                                                                    JOptionPane.showMessageDialog(clientesEditarPanel, "Atualizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                                                                }
+                                                            }
+                                                        });
+                                                        clientesEditarPanel.add(btnSalvarEdicoesClientes);
+
+                                                        JButton btnEditarVoltarClientes = new JButton("Voltar");
+                                                        btnEditarVoltarClientes.setBounds(604, 364, 200, 25);
+                                                        btnEditarVoltarClientes.addActionListener(e -> {
+                                                            cardLayout.show(content, "CLIENTES_PANEL");
+                                                        });
+                                                        clientesEditarPanel.add(btnEditarVoltarClientes);
+                                                        
+                                                        btnEditarCliente.addActionListener(new ActionListener() {
+                                                            public void actionPerformed(ActionEvent e) {
+                                                                int selectedRow = tableClientes.getSelectedRow();
+                                                                if (selectedRow != -1) {  // Verificando se uma linha foi selecionada
+                                                                    // Obtém os valores diretamente do modelo da tabela
+                                                                	String nome = (String) modelClientes.getValueAt(selectedRow, 0);
+                                                                	System.out.println("Nome obtido: " + nome);  // Adicione esta linha para depuração
+                                                                    String endereco = (String) modelClientes.getValueAt(selectedRow, 1);  // Corrigido para obter o endereço
+                                                                    String telefone = (String) modelClientes.getValueAt(selectedRow, 2);
+                                                                    String email = (String) modelClientes.getValueAt(selectedRow, 3);  // Corrigido para obter o email
+
+                                                                    // Preenche os campos de texto com as informações do cliente
+                                                                    txtNomeClientesEditar.setText(nome);
+                                                                    txtEnderecoEditar.setText(endereco);  // Certifique-se de que txtEnderecoEditar foi declarado e inicializado
+                                                                    txtTelefoneEditar.setText(telefone);
+                                                                    txtEmailEditar.setText(email);
+
+                                                                    // Muda para o painel de edição
+                                                                    cardLayout.show(content, "CLIENTES_EDITAR_PANEL");
+                                                                    
+                                                                    
+                                                                }else {
+                                                                    JOptionPane.showMessageDialog(clientesEditarPanel, "Nenhum cliente selecionado para edição.", "Erro", JOptionPane.ERROR_MESSAGE);
+                                                                }
+                                                            }
+                                                            
+                                                            
+                                                        });
+
+                                                        
+                                            
                                                         //==============================================================
                                                         //labels do sidebar
                                                         JLabel label_telaPrincipal = new JLabel("Tela Principal", SwingConstants.CENTER);
