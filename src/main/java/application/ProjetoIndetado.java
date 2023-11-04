@@ -50,7 +50,7 @@ public class ProjetoIndetado {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
         JLabel notification = new JLabel("Notificação: Estoque baixo em alguns produtos.");
-        notification.setBounds(41, 46, 300, 25);
+        notification.setBounds(24, 29, 300, 25);
         mainPanel.add(notification);
         JPanel panel = new JPanel(null);
         panel.setBorder(BorderFactory.createTitledBorder("Painel de Resumo"));
@@ -281,7 +281,7 @@ public class ProjetoIndetado {
                     txtPrecoVenda.setText("");
                     txtEstoqueDisponivel.setText("");
                     
-                    JOptionPane.showMessageDialog(content, "Cliente adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(content, "Produto adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 }
                 });
                 adicionarProdutoPanel.add(btnAdicionarConfirmar);
@@ -379,11 +379,11 @@ public class ProjetoIndetado {
                                     txtNomeEditar.setText("");
                                     txtDescricaoEditar.setText("");
                                     txtPrecoVendaEditar.setText("");
-                                    JOptionPane.showMessageDialog(content, "Produto atualizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                                    
                                 } else {          
                                     JOptionPane.showMessageDialog(editarProdutoPanel, "Nenhum produto selecionado para edição.", "Erro", JOptionPane.ERROR_MESSAGE);
                                 }
-                                
+                                JOptionPane.showMessageDialog(content, "Produto atualizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                             }    
                         });
                             editarProdutoPanel.add(btnSalvarEdicoes);
