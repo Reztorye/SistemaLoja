@@ -29,13 +29,13 @@ public class MainFrame extends JFrame {
         
         ProductsPanel productsPanel = new ProductsPanel();
         content.add(productsPanel, "PRODUCTS_PANEL");
-        cardLayout.show(content, "MAIN_PANEL");
         
+        MainPanel mainPanel = new MainPanel();
+        content.add(mainPanel, "MAIN_PANEL");  
         
         getContentPane().add(sidebar);
         getContentPane().add(content);
-        
-      
+           
         // Mostrando o MainPanel inicialmente
         cardLayout.show(content, "MAIN_PANEL");
     }
