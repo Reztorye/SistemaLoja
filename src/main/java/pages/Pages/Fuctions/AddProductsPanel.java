@@ -2,10 +2,17 @@ package pages.Pages.Fuctions;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AddProductsPanel extends JPanel {
 
-    public AddProductsPanel() {
+	private CardLayout cardLayout;
+    private JPanel cardPanel;
+
+    public AddProductsPanel(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
         setLayout(null); // Usamos o layout nulo para um posicionamento mais preciso dos componentes
 
         // SKU
@@ -79,7 +86,14 @@ public class AddProductsPanel extends JPanel {
 
         // Botão Voltar
         JButton btnVoltar = new JButton("Voltar");
-        btnVoltar.setBounds(10, 325, 200, 30);
+        btnVoltar.setBounds(10, 360, 200, 25);
+        btnVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Usando cardLayout para voltar ao painel principal
+                cardLayout.show(cardPanel, "VIEW_PRODUCTS");
+            }
+        });
         add(btnVoltar);
     }
 }

@@ -61,7 +61,7 @@ public class ProductsPanel extends JPanel {
         add(contentProductsPanel, "PRODUCTS_PANEL");
 
         // Painel de adição de produtos
-        AddProductsPanel addProductsPanel = new AddProductsPanel();
+        AddProductsPanel addProductsPanel = new AddProductsPanel(cardLayout, this);
 
         // Adicionar painel de adição de produtos ao cardLayout
         add(addProductsPanel, "ADD_PRODUCTS");
