@@ -55,9 +55,9 @@ public class ProductsPanel extends JPanel {
 
         // Painel para os botões
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));	
-        btnAdd = new JButton("Adicionar");
-        btnEdit = new JButton("Editar");   
-        btnDelete = new JButton("Excluir");
+        btnAdd = new JButton("Adicionar Produto");
+        btnEdit = new JButton("Editar Produto");   
+        btnDelete = new JButton("Deletar Produto");
 
         buttonsPanel.add(btnAdd);
         buttonsPanel.add(btnEdit);

@@ -7,11 +7,7 @@ import java.awt.event.ActionListener;
 
 public class SidebarPanel extends JPanel {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -1666701738391775114L;
-	private CardLayout cardLayout;
+    private CardLayout cardLayout;
     private JPanel cardPanel; // O painel que usa CardLayout
 
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel) {

@@ -1,11 +1,10 @@
 package system;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import system.CRUDProducts.AddProductPanel;
 
 public class MainFrame extends JFrame {
     /**
@@ -39,8 +38,8 @@ public class MainFrame extends JFrame {
         ProductsPanel productsPanel = new ProductsPanel(cardLayout, cardPanel);
         cardPanel.add(productsPanel, "ProductsPanel");
         
-        AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, null); // produtos é a lista de produtos
-        cardPanel.add(addProductPanel, "AddProductPanel"); // Adicionando ao CardLayout
+        CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel);
+        cardPanel.add(customersPanel, "ClientsPanel");
         // Adiciona a barra lateral ao frame
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
         add(cardPanel);
