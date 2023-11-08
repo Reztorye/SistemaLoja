@@ -95,7 +95,20 @@ public class Sistema {
 	public void adicionarCliente(Cliente cliente) {
 		clientes.add(cliente);
 	}
-
+	
+	public void atualizarCliente(Cliente cliente) {
+	    // atualizar o cliente na lista de clientes
+	    // isso substitui a necessidade de passar todos os campos individualmente
+	    for (int i = 0; i < clientes.size(); i++) {
+	        if (clientes.get(i).getId().equals(cliente.getId())) {
+	            clientes.set(i, cliente);
+	            System.out.println("Cliente atualizado: " + cliente.getNome());
+	            return;
+	        }
+	    }
+	    System.out.println("Cliente não encontrado: " + cliente.getId());
+	}
+	
 	public void listarClientes() {
 		for (Cliente cliente : clientes) {
 			System.out.println(cliente);

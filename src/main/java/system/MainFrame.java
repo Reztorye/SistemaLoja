@@ -39,7 +39,9 @@ public class MainFrame extends JFrame {
         cardPanel.add(productsPanel, "ProductsPanel");
         
         CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel);
-        cardPanel.add(customersPanel, "ClientsPanel");
+        cardPanel.add(customersPanel, "CustomersPanel");
+        
+        
         // Adiciona a barra lateral ao frame
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
         add(cardPanel);

@@ -7,7 +7,11 @@ import java.awt.event.ActionListener;
 
 public class SidebarPanel extends JPanel {
 
-    private CardLayout cardLayout;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1666701738391775114L;
+	private CardLayout cardLayout;
     private JPanel cardPanel; // O painel que usa CardLayout
 
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel) {
@@ -22,7 +26,7 @@ public class SidebarPanel extends JPanel {
         addButton("Entrada", "EntryPanel");
         addButton("Promoções", "PromotionsPanel");
         addButton("Produtos", "ProductsPanel");
-        addButton("Clientes", "ClientsPanel");
+        addButton("Clientes", "CustomersPanel");
         addButton("Relatórios", "ReportsPanel");
 
         // Define o tamanho preferido da barra lateral se desejar
