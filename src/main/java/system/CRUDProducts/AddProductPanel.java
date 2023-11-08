@@ -26,6 +26,7 @@ public class AddProductPanel extends JPanel {
     private DefaultTableModel tableModel; // Modelo da tabela para adicionar os produtos
     private CardLayout cardLayout; // Layout dos cards
     private JPanel cardPanel; // Painel que contém os cards
+    private JButton btnVoltar;
 
     public AddProductPanel(CardLayout cardLayout, JPanel cardPanel, DefaultTableModel tableModel) {
         this.cardLayout = cardLayout;
@@ -99,7 +100,7 @@ public class AddProductPanel extends JPanel {
         add(comboFornecedor);
 
         btnConfirmar = new JButton("Confirmar");
-        btnConfirmar.setBounds(10, 270, 245, 25);
+        btnConfirmar.setBounds(10, 270, 255, 25);
         btnConfirmar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -141,5 +142,14 @@ public class AddProductPanel extends JPanel {
             }
         });
         add(btnConfirmar);
+        
+        btnVoltar = new JButton("Voltar");
+        btnVoltar.setBounds(351, 271, 89, 23);
+        btnVoltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "ProductsPanel");
+            }
+        });
+        add(btnVoltar);
     }
 }
