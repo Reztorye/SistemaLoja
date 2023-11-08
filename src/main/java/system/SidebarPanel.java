@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-@SuppressWarnings("serial")
+
 public class SidebarPanel extends JPanel {
 
-    private CardLayout cardLayout;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1666701738391775114L;
+	private CardLayout cardLayout;
     private JPanel cardPanel; // O painel que usa CardLayout
 
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel) {

@@ -1,22 +1,20 @@
 package system;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.util.ArrayList;
-import java.util.List;
-
-// MainFrame.java
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import entities.Produto;
 import system.CRUDProducts.AddProductPanel;
 
-@SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-    private CardLayout cardLayout;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6340235651217630471L;
+	private CardLayout cardLayout;
     private JPanel cardPanel; // Contém todos os painéis da aplicação
-    private List<Produto> produtos = new ArrayList<>();
+   
 
     public MainFrame() {
         // Configurações iniciais do JFrame

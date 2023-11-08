@@ -3,10 +3,15 @@ package system;
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("serial")
+
 public class MainPanel extends JPanel {
 
-    public MainPanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3228624175687997196L;
+
+	public MainPanel() {
         setBackground(new Color(245, 245, 245)); // Um fundo claro
         setLayout(new BorderLayout()); // Layout do tipo BorderLayout
 

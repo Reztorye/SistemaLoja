@@ -1,21 +1,37 @@
 package system;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import system.CRUDProducts.AddProductPanel;
-import system.CRUDProducts.EditProductPanel;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-@SuppressWarnings("serial")
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import entities.Sistema;
+import lombok.Getter;
+import lombok.Setter;
+import system.CRUDProducts.AddProductPanel;
+import system.CRUDProducts.DeleteProductPanel;
+import system.CRUDProducts.EditProductPanel;
+@Getter
+@Setter
+
 public class ProductsPanel extends JPanel {
-    private JTable table;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2448723614099966739L;
+	private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd, btnEdit, btnDelete;
     private CardLayout cardLayout;
-    private JPanel cardPanel;	
+    private JPanel cardPanel;
+    private Sistema sistema = new Sistema();
     private int selectedRow;
 
     public ProductsPanel(CardLayout cardLayout, JPanel cardPanel) {
@@ -93,7 +109,17 @@ public class ProductsPanel extends JPanel {
                 }
             }
         });
+        
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // A suposição aqui é que você tem uma instância válida do 'Sistema' chamada 'sistema'.
+                DeleteProductPanel deleteProductPanel = new DeleteProductPanel(tableModel, sistema);
+                cardPanel.add(deleteProductPanel, "DeleteProductPanel");
+                cardLayout.show(cardPanel, "DeleteProductPanel");
+            }
+        });
     }
-
+    //Scope end
     // Métodos adicionais, como atualizar a tabela, etc.
 }	

@@ -1,9 +1,9 @@
 package system.CRUDProducts;
 
 import java.awt.CardLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -12,14 +12,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import entities.Sistema;
 import entities.Produto;
+import entities.Sistema;
+import lombok.Getter;
+import lombok.Setter;
 
-// ... outras importações conforme necessário
 
-@SuppressWarnings("serial")
+@Getter
+@Setter
+
+
 public class AddProductPanel extends JPanel {
-    private Sistema sistema = new Sistema();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2862788884325913939L;
+	private Sistema sistema = new Sistema();
     private JTextField fieldSKU, fieldNome, fieldDescricao, fieldPrecoCusto, fieldPrecoVenda, fieldEstoqueDisponivel;
     private JComboBox<String> comboCategoria, comboFornecedor;
     private JButton btnConfirmar;

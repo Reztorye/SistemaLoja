@@ -1,6 +1,5 @@
 	package system.CRUDProducts;
 	import java.awt.CardLayout;
-import java.awt.GridLayout;
 	import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
 	
@@ -19,11 +18,16 @@ import java.awt.GridLayout;
 	@Getter
 	@Setter
 	public class EditProductPanel extends JPanel {
-	    private DefaultTableModel tableModel;
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 7065711491947376905L;
+		private DefaultTableModel tableModel;
 	    private int selectedRow;
 	    private JTextField txtSKU, txtNome, txtDescricao, txtPrecoVenda;
 	    private JComboBox<String> cbCategoria, cbFornecedor;
 	    private JButton btnSaveChanges;
+	    private JButton btnBack;
 	
 	    public EditProductPanel(CardLayout cardLayout, JPanel cardPanel) {
 	        setLayout(null); // Define o layout do painel como nulo
@@ -84,7 +88,7 @@ import java.awt.GridLayout;
 	
 	        // Botão para salvar alterações
 	        btnSaveChanges = new JButton("Salvar Alterações");
-	        btnSaveChanges.setBounds(10, 220, 255, 25);
+	        btnSaveChanges.setBounds(10, 264, 255, 25);
 	        btnSaveChanges.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -93,6 +97,16 @@ import java.awt.GridLayout;
 	            }
 	        });
 	        add(btnSaveChanges);
+	        
+	        btnBack = new JButton("Voltar");
+	        btnBack.setBounds(351, 266, 89, 23);
+	        btnBack.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                cardLayout.show(cardPanel, "ProductsPanel");
+	            }
+	        });
+	        add(btnBack);
 	    }
 	    private void saveChanges() {
 	        // Validação e lógica para salvar as alterações
