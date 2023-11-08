@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import system.CRUDCustomers.CustomersPanel;
+import system.CRUDProducts.ProductsPanel;
+
 public class MainFrame extends JFrame {
     /**
 	 * 

@@ -1,4 +1,4 @@
-package system;
+package system.CRUDCustomers;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -16,8 +16,6 @@ import entities.Cliente;
 import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
-import system.CRUDCustomers.AddCustomerPanel;
-import system.CRUDCustomers.EditCustomerPanel;
 @Getter
 @Setter	
 
@@ -91,7 +89,7 @@ public class CustomersPanel extends JPanel {
         });
 
         btnDelete.addActionListener(e -> {
-            JPanel deleteCustomerPanel = new JPanel();
+            DeleteCustomerPanel deleteCustomerPanel = new DeleteCustomerPanel(sistema, tableModel, cardLayout, cardPanel);
             cardPanel.add(deleteCustomerPanel, "DeleteCustomerPanel");
             cardLayout.show(cardPanel, "DeleteCustomerPanel");
         });

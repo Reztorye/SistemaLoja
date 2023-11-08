@@ -1,4 +1,4 @@
-package system;
+package system.CRUDProducts;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -15,9 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
-import system.CRUDProducts.AddProductPanel;
-import system.CRUDProducts.DeleteProductPanel;
-import system.CRUDProducts.EditProductPanel;
 @Getter
 @Setter
 
