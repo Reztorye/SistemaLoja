@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -12,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Produto;
 import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
@@ -117,7 +119,36 @@ public class ProductsPanel extends JPanel {
                 cardLayout.show(cardPanel, "DeleteProductPanel");
             }
         });
+    
     }
-    //Scope end
-    // Métodos adicionais, como atualizar a tabela, etc.
+    
+ // Dentro da classe ProductsPanel
+
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if (aFlag) {
+            atualizarTabelaProdutos();
+        }
+    }
+
+    
+    public void atualizarTabelaProdutos() {
+        tableModel.setRowCount(0); // Limpa a tabela
+        
+        
+        List<Produto> produtos = sistema.getProdutos();
+        for (Produto produto : produtos) {
+            tableModel.addRow(new Object[]{
+                produto.getSku(),
+                produto.getNome(),
+                produto.getCategoria().getNome(),
+                produto.getFornecedor().getNome(),
+                produto.getDescricao(),
+                produto.getPrecoCusto(),
+                produto.getPrecoVenda(),
+                produto.getEstoqueDisponivel()
+            });
+        }
+    }
 }	

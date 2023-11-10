@@ -1,5 +1,5 @@
 package system.Sales;
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent ;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entities.Categoria;
+import entities.Cliente;
 import entities.Fornecedor;
+import entities.ItemVenda;
 import entities.Produto;
 import entities.Sistema;
 import lombok.Getter;
@@ -24,7 +26,11 @@ import lombok.Setter;
 @Setter
 
 public class SalesPanel extends JPanel {
-    private JTextField txtSKU;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -391912408247070772L;
+	private JTextField txtSKU;
     private JTextField txtQuantity;
     private JTable tableCart;
     private DefaultTableModel tableModel;
@@ -106,12 +112,51 @@ public class SalesPanel extends JPanel {
             }
         });
 
-        btnFinalizeSale.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Logic to finalize sale
-                // Example: finalizeSale();
+	        btnFinalizeSale.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                Cliente cliente = obterClientePorID();
+	                if (cliente == null) {
+	                    JOptionPane.showMessageDialog(SalesPanel.this, "Nenhum cliente selecionado.", "Erro", JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	
+	                List<ItemVenda> itensVenda = new ArrayList<>();
+	                // Iterar sobre as linhas da tabela para coletar os produtos e quantidades
+	                for (int i = 0; i < tableModel.	getRowCount(); i++) {
+	                    Integer sku = (Integer) tableModel.getValueAt(i, 0); // Coluna do SKU
+	                    int quantidade = (Integer) tableModel.getValueAt(i, 3); // Coluna da Quantidade
+	                    Produto produto = sistema.buscarProdutoPorSku(sku);
+	                    if (produto != null) {
+	                        if (quantidade > produto.getEstoqueDisponivel()) {
+	                            JOptionPane.showMessageDialog(SalesPanel.this, "Quantidade solicitada para o produto '" + produto.getNome() + "' excede o estoque disponível.", "Erro de Estoque", JOptionPane.ERROR_MESSAGE);
+	                            return; // Interrompe o processo de finalização da venda
+	                        }
+	                        itensVenda.add(new ItemVenda(produto, quantidade));
+	                    }
+	                }
+	
+	                sistema.realizarVenda(cliente, itensVenda);
+	
+	                // Limpar o carrinho e atualizar a interface conforme necessário
+	                tableModel.setRowCount(0);
+	                JOptionPane.showMessageDialog(SalesPanel.this, "Venda finalizada com sucesso!", "Venda Concluída", JOptionPane.INFORMATION_MESSAGE);
+	            }
+	        });
+
+
+    }
+    
+    private Cliente obterClientePorID() {
+        String clienteIdStr = JOptionPane.showInputDialog(this, "Digite o ID do cliente:");
+        if (clienteIdStr != null && !clienteIdStr.trim().isEmpty()) {
+            try {
+                int clienteId = Integer.parseInt(clienteIdStr.trim());
+                return sistema.buscarClientePorId(clienteId);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, digite um número.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
             }
-        });
+        }
+        return null;
     }
     
     private Produto findProductBySKU(Integer sku) {

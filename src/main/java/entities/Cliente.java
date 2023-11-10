@@ -27,6 +27,8 @@ public class Cliente {
 	public void adicionarCompra(Venda venda) {
 		historicoDeCompras.add(venda);
 	}
+	
+
 
 	@Override
 	public String toString() {

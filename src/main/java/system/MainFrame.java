@@ -11,6 +11,7 @@ import entities.Sistema;
 import system.CRUDCustomers.CustomersPanel;
 import system.CRUDProducts.AddProductPanel;
 import system.CRUDProducts.ProductsPanel;
+import system.Promotion.PromotionsPanel;
 import system.Sales.SalesPanel;
 	
 	public class MainFrame extends JFrame {
@@ -24,7 +25,8 @@ import system.Sales.SalesPanel;
 	    private Sistema sistema = new Sistema();
 	   
 	
-	    public MainFrame() {
+	    @SuppressWarnings("unused")
+		public MainFrame() {
 	        // Configurações iniciais do JFrame
 	        setTitle("Sistema de Gestão para Loja de Eletrônicos");
 	        setSize(1200, 800);
@@ -42,19 +44,23 @@ import system.Sales.SalesPanel;
 	        // TODO: adicionar outros painéis aqui conforme forem criados
 	
 	        // Cria a barra lateral
-	        SidebarPanel sidebarPanel = new SidebarPanel(cardLayout, cardPanel);
+	        
 	        
 	        ProductsPanel productsPanel = new ProductsPanel(cardLayout, cardPanel, sistema);
 	        cardPanel.add(productsPanel, "ProductsPanel");
 	        
-	        CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel);
+	        CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel, sistema);
 	        cardPanel.add(customersPanel, "CustomersPanel");
 	        
 	        SalesPanel salesPanel = new SalesPanel(sistema);
 	        cardPanel.add(salesPanel, "SalesPanel");
 	        
+	        PromotionsPanel promotionsPanel = new PromotionsPanel(sistema);
+	        cardPanel.add(promotionsPanel, "PromotionsPanel");
+	        
 	        AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema);
 	        
+	        SidebarPanel sidebarPanel = new SidebarPanel(cardLayout, cardPanel, promotionsPanel);
 	        // Adiciona a barra lateral ao frame
 	        getContentPane().add(sidebarPanel, BorderLayout.WEST);
 	        add(cardPanel);

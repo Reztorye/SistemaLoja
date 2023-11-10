@@ -1,8 +1,9 @@
 package entities;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Sistema {
 	private List<Produto> produtos;
@@ -10,6 +11,7 @@ public class Sistema {
 	private List<Venda> vendas;
 	private List<Categoria> categorias;
 	private List<Fornecedor> fornecedores;
+	private List<Promocao> promocoes;
 
 	public Sistema() {
 		this.produtos = new ArrayList<>();
@@ -17,6 +19,7 @@ public class Sistema {
 		this.vendas = new ArrayList<>();
 		this.categorias = new ArrayList<>();
 		this.fornecedores = new ArrayList<>();
+		promocoes = new ArrayList<>();
 		categorias.add(new Categoria("Smartphone"));
 	    categorias.add(new Categoria("Mouse"));
 	    categorias.add(new Categoria("Notebook"));
@@ -270,8 +273,6 @@ public class Sistema {
 
 	public List<Produto> getProdutos() {
         return produtos; // retorna a lista real
-        // ou, para uma lista somente de leitura:
-        // return Collections.unmodifiableList(produtos);
 	}
 	
 	public Categoria buscarCategoriaPorNome(String nome) {
@@ -280,18 +281,18 @@ public class Sistema {
 	            return categoria;
 	        }
 	    }
-	    return null; // ou lançar uma exceção se preferir.
+	    throw new NoSuchElementException("Categoria com o nome '" + nome + "' não encontrado.");
 	}
 
-	// Método para buscar Fornecedor pelo nome
 	public Fornecedor buscarFornecedorPorNome(String nome) {
 	    for (Fornecedor fornecedor : fornecedores) {
 	        if (fornecedor.getNome().equals(nome)) {
 	            return fornecedor;
 	        }
 	    }
-	    return null; // ou lançar uma exceção se preferir.
+	    throw new NoSuchElementException("Fornecedor com o nome '" + nome + "' não encontrado.");
 	}
+	
 	public List<Categoria> getCategorias() {
 	    return categorias;
 	}
@@ -299,6 +300,14 @@ public class Sistema {
 	public List<Fornecedor> getFornecedores() {
 		return fornecedores;
 	}
+	
+	public void adicionarPromocao(Promocao promocao) {
+        promocoes.add(promocao); // Adiciona a nova promoção à lista
+    }
+
+    public List<Promocao> getPromocoes() {
+        return promocoes;
+    }
 }
 
 

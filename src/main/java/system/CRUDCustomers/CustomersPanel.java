@@ -29,10 +29,10 @@ public class CustomersPanel extends JPanel {
     private JButton btnAdd, btnEdit, btnDelete;
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Sistema sistema = new Sistema();
+    private Sistema sistema;
 
-    public CustomersPanel(CardLayout cardLayout, JPanel cardPanel) {
-        this.cardLayout = cardLayout;
+    public CustomersPanel(CardLayout cardLayout, JPanel cardPanel, Sistema sistema) {
+        this.sistema = sistema;
         this.cardPanel = cardPanel;
         setLayout(new BorderLayout());
 
