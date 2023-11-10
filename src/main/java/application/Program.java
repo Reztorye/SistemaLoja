@@ -17,10 +17,7 @@ public class Program {
 //		ListaDeProdutos produtos = new ListaDeProdutos();
 //		ListaDeClientes clientes = new ListaDeClientes();
 
-		sistema.adicionarProduto(1234, "Mi 8 lite", "descricao do produto 1", 999.90, 1499.99, 50, "Celular", "Xiaomi");
-		sistema.adicionarProduto(1235, "Redmi note 12", "descricao do produto 2", 1999.90, 2499.95, 20, "Tablet", "Xiaomi");
-		sistema.adicionarProduto(1236, "Galaxy S23", "descricao do produto 3", 2999.90, 3499.99, 4, "Celular",
-				"Samsung");
+		
 
 		sistema.adicionarCliente(
 				new Cliente("Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",

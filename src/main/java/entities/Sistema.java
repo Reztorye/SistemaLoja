@@ -1,6 +1,6 @@
 package entities;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Date;
 import java.util.List;
 
@@ -17,16 +17,23 @@ public class Sistema {
 		this.vendas = new ArrayList<>();
 		this.categorias = new ArrayList<>();
 		this.fornecedores = new ArrayList<>();
+		categorias.add(new Categoria("Smartphone"));
+	    categorias.add(new Categoria("Mouse"));
+	    categorias.add(new Categoria("Notebook"));
+	    // ... mais categorias ...
+
+	    fornecedores.add(new Fornecedor("Xiaomi"));
+	    fornecedores.add(new Fornecedor("Samsung"));
+	    fornecedores.add(new Fornecedor("Apple"));
 	}
 
-	public Produto adicionarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda,
-			int estoqueDisponivel, String NomeCategoria, String nomeFornecedor) {
-		Categoria categoria = adicionarCategoria(NomeCategoria);
-		Fornecedor fornecedor = adicionarFornecedor(nomeFornecedor);
-		Produto produto = new Produto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria,
-				fornecedor);
-		produtos.add(produto);
-		return produto;
+	public Produto adicionarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda, int estoqueDisponivel, Categoria categoria, Fornecedor fornecedor) {
+	    // Você não precisa recriar as instâncias de Categoria e Fornecedor aqui,
+	    // pois elas já são passadas como argumentos para o método.
+	    
+	    Produto produto = new Produto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
+	    produtos.add(produto);
+	    return produto;
 	}
 
 	public void atualizarProduto(Integer sku, String nome, String descricao, double precoVenda, String NomeCategoria, String nomeFornecedor) {
@@ -87,6 +94,15 @@ public class Sistema {
 
 	public void produtosMaisVendidosPorPeriodo() {
 		// Mostrar os produtos mais vendidos em um determinado periodo.
+	}
+	public void imprimirProdutos() {
+	    System.out.println("Lista de Produtos:");
+	    for (Produto produto : this.produtos) {  // Substitua 'this.listaProdutos' por 'this.produtos'
+	        System.out.println("SKU: " + produto.getSku() +
+	                           ", Nome: " + produto.getNome() +
+	                           ", Preço: " + produto.getPrecoVenda() +
+	                           ", Estoque: " + produto.getEstoqueDisponivel()); // Ajuste esses campos conforme sua classe Produto
+	    }
 	}
 
 	// =============================================================================
@@ -252,4 +268,37 @@ public class Sistema {
 	    System.out.println("Cliente não encontrado: " + email);  // Debug: Verifique se o cliente não foi encontrado
 	}
 
+	public List<Produto> getProdutos() {
+        return produtos; // retorna a lista real
+        // ou, para uma lista somente de leitura:
+        // return Collections.unmodifiableList(produtos);
+	}
+	
+	public Categoria buscarCategoriaPorNome(String nome) {
+	    for (Categoria categoria : categorias) {
+	        if (categoria.getNome().equals(nome)) {
+	            return categoria;
+	        }
+	    }
+	    return null; // ou lançar uma exceção se preferir.
+	}
+
+	// Método para buscar Fornecedor pelo nome
+	public Fornecedor buscarFornecedorPorNome(String nome) {
+	    for (Fornecedor fornecedor : fornecedores) {
+	        if (fornecedor.getNome().equals(nome)) {
+	            return fornecedor;
+	        }
+	    }
+	    return null; // ou lançar uma exceção se preferir.
+	}
+	public List<Categoria> getCategorias() {
+	    return categorias;
+	}
+
+	public List<Fornecedor> getFornecedores() {
+		return fornecedores;
+	}
 }
+
+

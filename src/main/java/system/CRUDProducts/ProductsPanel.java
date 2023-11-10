@@ -28,12 +28,13 @@ public class ProductsPanel extends JPanel {
     private JButton btnAdd, btnEdit, btnDelete;
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Sistema sistema = new Sistema();
+    private Sistema sistema;
     private int selectedRow;
 
-    public ProductsPanel(CardLayout cardLayout, JPanel cardPanel) {
+    public ProductsPanel(CardLayout cardLayout, JPanel cardPanel, Sistema sistema) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+        this.sistema = sistema;
         setLayout(new BorderLayout()); // Utilizar BorderLayout
 
         tableModel = new DefaultTableModel();
@@ -66,7 +67,7 @@ public class ProductsPanel extends JPanel {
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel);
+                AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema);
                 cardPanel.add(addProductPanel, "AddProductPanel");
                 cardLayout.show(cardPanel, "AddProductPanel");
             }

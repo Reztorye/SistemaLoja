@@ -270,11 +270,8 @@ public class ProjetoIndetado {
                     String NomeCategoria = (String) cbCategoria.getSelectedItem();
                     String nomeFornecedor = (String) cbFornecedor.getSelectedItem();
                     //funcao rodrigo
-                    Produto novoProduto = sistema.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, NomeCategoria, nomeFornecedor);
-                    
-                    model.addRow(new Object[]{novoProduto.getSku(), novoProduto.getNome(), novoProduto.getCategoria().getNome(), novoProduto.getFornecedor().getNome(), novoProduto.getDescricao(), novoProduto.getPrecoCusto(), novoProduto.getPrecoVenda(), novoProduto.getEstoqueDisponivel()});
-                    
-                    txtSku.setText("");
+                   
+              
                     txtNome.setText("");
                     txtDescricao.setText("");
                     txtPrecoCusto.setText("");

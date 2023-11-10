@@ -43,4 +43,8 @@ public class Produto {
 				+ String.format("%5s", this.getEstoqueDisponivel()) + " unidades.");
 	}
 
+	public double getPreco() {
+		return precoVenda;
+	}
+
 }
