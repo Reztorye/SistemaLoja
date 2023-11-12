@@ -302,7 +302,7 @@ public class Sistema {
 	}
 	
 	public void adicionarPromocao(Promocao promocao) {
-        promocoes.add(promocao); // Adiciona a nova promoção à lista
+        promocoes.add(promocao); 
     }
 
     public List<Promocao> getPromocoes() {

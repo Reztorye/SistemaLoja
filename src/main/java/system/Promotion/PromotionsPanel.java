@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -18,10 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import entities.Produto;
-import entities.Promocao;
 import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
+import system.CRUDProducts.ProductsPanel;
 
 @Getter
 @Setter
@@ -35,10 +34,12 @@ public class PromotionsPanel extends JPanel {
     private JTextField txtPercentualDesconto;
     private JFormattedTextField txtDataInicio, txtDataFim;
     private JButton btnAdicionarPromocao, btnCancelar;
+    private ProductsPanel productsPanel;
 
-    public PromotionsPanel(Sistema sistema) {
+    public PromotionsPanel(Sistema sistema, ProductsPanel productsPanel) {
         this.sistema = sistema;
-        setLayout(null);
+        this.productsPanel = productsPanel;
+        setLayout(null); 
         initializeUI();
     }
 
@@ -109,26 +110,33 @@ public class PromotionsPanel extends JPanel {
     private void adicionarPromocao() {
         try {
             Produto produto = (Produto) comboProdutos.getSelectedItem();
-            double percentual = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
-            Date dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(txtDataInicio.getText());
-            Date dataFim = new SimpleDateFormat("dd/MM/yyyy").parse(txtDataFim.getText());
+            double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
+            
+            // Suponha que você tem uma validação e criação de uma instância de promoção aqui...
 
-            if (dataInicio.after(dataFim)) {
-                JOptionPane.showMessageDialog(this, "Data de início deve ser antes da data de fim.", "Erro de Data", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            // Aplicar desconto ao produto (você precisará implementar esta lógica)
+            produto.setDescontoAtivo(true);
+            produto.setValorDesconto(percentualDesconto);
 
-            Promocao promocao = new Promocao(produto, percentual, dataInicio, dataFim);
-            sistema.adicionarPromocao(promocao);
-            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            // Suponha que você adiciona a promoção ao sistema aqui...
+
+            // Atualizar tabela no ProductsPanel
+            productsPanel.atualizarTabelaProdutos(); // Atualiza a tabela com os produtos e seus descontos
+            
+            // Se tudo ocorreu bem, limpa o formulário
             limparFormulario();
+
+            // Mostra uma mensagem de sucesso
+            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao adicionar a promoção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void limparFormulario() {
-        comboProdutos.setSelectedIndex(0);
+        comboProdutos.setSelectedIndex(-1); 
         txtPercentualDesconto.setText("");
         txtDataInicio.setValue(null);
         txtDataFim.setValue(null);

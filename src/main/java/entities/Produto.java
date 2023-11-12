@@ -12,7 +12,9 @@ public class Produto {
 	private int estoqueDisponivel;
 	private Categoria categoria;
 	private Fornecedor fornecedor;
-
+	private boolean descontoAtivo;
+    private double valorDesconto;
+	
 	// auxiliares
 	private int quantidadeEstoque = 0;
 	private int vendidos = 0;
@@ -46,5 +48,14 @@ public class Produto {
 	public double getPreco() {
 		return precoVenda;
 	}
+	
+	 public double getPrecoVendaComDesconto() {
+	        if (descontoAtivo) {
+	            // Assumindo que o valorDesconto é um valor percentual
+	            return getPrecoVenda() * (1 - (valorDesconto / 100));
+	        } else {
+	            return getPrecoVenda();
+	        }
+	    }
 
 }
