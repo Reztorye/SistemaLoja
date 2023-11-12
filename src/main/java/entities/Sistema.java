@@ -302,12 +302,17 @@ public class Sistema {
 	}
 	
 	public void adicionarPromocao(Promocao promocao) {
-        promocoes.add(promocao); 
+        promocoes.add(promocao); // Adiciona a nova promoção à lista
     }
 
     public List<Promocao> getPromocoes() {
         return promocoes;
     }
+    
+    public List<Venda> getVendas() {
+        return new ArrayList<>(vendas); // Retorna uma cópia da lista para evitar modificações externas
+    }
+
 }
 
 

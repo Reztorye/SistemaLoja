@@ -70,6 +70,10 @@ public class SalesPanel extends JPanel {
         btnFinalizeSale = new JButton("Finalize Sale");
         btnFinalizeSale.setBounds(140, 80, 120, 25);
         add(btnFinalizeSale);
+        
+        JButton btnRemoveFromCart = new JButton("Remove from Cart");
+        btnRemoveFromCart.setBounds(270, 80, 160, 25);
+        add(btnRemoveFromCart);
 
         // Setting up the JTable
         String[] columnNames = {"SKU", "Product Name", "Price", "Quantity", "Total"};
@@ -141,6 +145,25 @@ public class SalesPanel extends JPanel {
 	            }
 	        });
 
+	        btnRemoveFromCart.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                int selectedRow = tableCart.getSelectedRow();
+	                if (selectedRow >= 0) {
+	                    // Confirmação antes de remover
+	                    int confirm = JOptionPane.showConfirmDialog(
+	                            SalesPanel.this, 
+	                            "Tem certeza que deseja remover o item selecionado?", 
+	                            "Remover Item", 
+	                            JOptionPane.YES_NO_OPTION);
+
+	                    if (confirm == JOptionPane.YES_OPTION) {
+	                        tableModel.removeRow(selectedRow);
+	                    }
+	                } else {
+	                    JOptionPane.showMessageDialog(SalesPanel.this, "Por favor, selecione um item para remover.", "Nenhum item selecionado", JOptionPane.ERROR_MESSAGE);
+	                }
+	            }
+	        });
 
     }
     

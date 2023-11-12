@@ -51,7 +51,12 @@ public class PromotionsPanel extends JPanel {
 
         comboProdutos = new JComboBox<Produto>(new DefaultComboBoxModel<Produto>(sistema.getProdutos().toArray(new Produto[0])));
         comboProdutos.setRenderer(new DefaultListCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -774078213740267784L;
+
+			@Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Produto) {
@@ -118,6 +123,7 @@ public class PromotionsPanel extends JPanel {
             productsPanel.atualizarTabelaProdutos(); 
             
             limparFormulario();
+
 
             JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException ex) {
