@@ -112,21 +112,13 @@ public class PromotionsPanel extends JPanel {
             Produto produto = (Produto) comboProdutos.getSelectedItem();
             double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
             
-            // Suponha que você tem uma validação e criação de uma instância de promoção aqui...
-
-            // Aplicar desconto ao produto (você precisará implementar esta lógica)
             produto.setDescontoAtivo(true);
             produto.setValorDesconto(percentualDesconto);
 
-            // Suponha que você adiciona a promoção ao sistema aqui...
-
-            // Atualizar tabela no ProductsPanel
-            productsPanel.atualizarTabelaProdutos(); // Atualiza a tabela com os produtos e seus descontos
+            productsPanel.atualizarTabelaProdutos(); 
             
-            // Se tudo ocorreu bem, limpa o formulário
             limparFormulario();
 
-            // Mostra uma mensagem de sucesso
             JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);

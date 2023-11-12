@@ -132,12 +132,10 @@ public class ProductsPanel extends JPanel {
         }
     }
 
-    
- // Em ProductsPanel
     public void atualizarTabelaProdutos() {
-        tableModel.setRowCount(0); // Limpa a tabela
+        tableModel.setRowCount(0); //limpa a tabela anterior
 
-        List<Produto> produtos = sistema.getProdutos();
+        List<Produto> produtos = sistema.getProdutos(); //atualiza tabela com o desconto
         for (Produto produto : produtos) {
             tableModel.addRow(new Object[]{
                 produto.getSku(),
@@ -146,7 +144,7 @@ public class ProductsPanel extends JPanel {
                 produto.getFornecedor().getNome(),
                 produto.getDescricao(),
                 produto.getPrecoCusto(),
-                produto.getPrecoVendaComDesconto(), // Aqui usamos o preço com desconto
+                produto.getPrecoVendaComDesconto(), 
                 produto.getEstoqueDisponivel()
             });
         }

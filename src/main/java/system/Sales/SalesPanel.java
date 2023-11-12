@@ -37,17 +37,15 @@ public class SalesPanel extends JPanel {
     private JButton btnAddToCart;
     private JButton btnFinalizeSale;
     private Sistema sistema;
- // Exemplo de inicialização de Categoria
+
     Categoria categoriaEletronicos = new Categoria("Eletrônicos");
 
-    // Exemplo de inicialização de Fornecedor
     Fornecedor fornecedorTech = new Fornecedor("Tech Supplier");
     
 
-    public SalesPanel(Sistema sistema) { // Modifique o construtor para receber o Sistema
+    public SalesPanel(Sistema sistema) {
         this.sistema = sistema;			
         setLayout(null);
-        // Configurar componentes e layout...	
         
         JLabel lblSKU = new JLabel("SKU:");
         lblSKU.setBounds(10, 10, 80, 25);
@@ -82,7 +80,6 @@ public class SalesPanel extends JPanel {
         scrollPane.setBounds(10, 115, 580, 300);
         add(scrollPane);
         
-        // Action Listeners for buttons
         btnAddToCart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String skuStr = txtSKU.getText();
@@ -98,7 +95,7 @@ public class SalesPanel extends JPanel {
                     int sku = Integer.parseInt(skuStr);
                     Produto produto = findProductBySKU(sku);
                     if (produto != null) {
-                        double price = produto.getPrecoVenda();
+                        double price = produto.getPrecoVendaComDesconto(); // Certifique-se de que este método retorna o preço correto
                         double total = price * quantity;
                         tableModel.addRow(new Object[]{sku, produto.getNome(), price, quantity, total});
                         txtSKU.setText("");
@@ -111,6 +108,7 @@ public class SalesPanel extends JPanel {
                 }
             }
         });
+
 
 	        btnFinalizeSale.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
@@ -167,10 +165,23 @@ public class SalesPanel extends JPanel {
         }
         return null;
     }
-
-
     
-    protected void finalizeSale() {
-        // Logic to finalize sale
+    public void atualizarTabelaProdutos() {
+        tableModel.setRowCount(0); //limpa a tabela anterior
+
+        List<Produto> produtos = sistema.getProdutos(); //atualiza tabela com o desconto
+        for (Produto produto : produtos) {
+            tableModel.addRow(new Object[]{
+                produto.getSku(),
+                produto.getNome(),
+                produto.getCategoria().getNome(),
+                produto.getFornecedor().getNome(),
+                produto.getDescricao(),
+                produto.getPrecoCusto(),
+                produto.getPrecoVendaComDesconto(), 
+                produto.getEstoqueDisponivel()
+            });
+        }
     }
+    
 }
