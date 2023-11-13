@@ -75,7 +75,11 @@ public class SalesReportPanel extends JPanel {
     }
     
     class DateRenderer extends DefaultTableCellRenderer {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -4565714607647023646L;
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
