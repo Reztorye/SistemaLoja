@@ -1,7 +1,5 @@
 package system.CRUDProducts;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -17,6 +15,8 @@ import entities.Produto;
 import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
+import javax.swing.JLabel;
+import java.awt.Font;
 @Getter
 @Setter
 
@@ -32,12 +32,14 @@ public class ProductsPanel extends JPanel {
     private JPanel cardPanel;
     private Sistema sistema;
     private int selectedRow;
+    private JButton backButton;
+    private JLabel lblProdutos;
 
     public ProductsPanel(CardLayout cardLayout, JPanel cardPanel, Sistema sistema) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.sistema = sistema;
-        setLayout(new BorderLayout()); // Utilizar BorderLayout
+        setLayout(null);
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("SKU");
@@ -51,21 +53,31 @@ public class ProductsPanel extends JPanel {
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBounds(20, 49, 930, 300); // Substitua pelos valores reais
+        add(scrollPane);
 
-        // Painel para os botões
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));	
         btnAdd = new JButton("Adicionar Produto");
-        btnEdit = new JButton("Editar Produto");   
-        btnDelete = new JButton("Deletar Produto");
-
-        buttonsPanel.add(btnAdd);
-        buttonsPanel.add(btnEdit);
-        buttonsPanel.add(btnDelete);		
-
-        add(buttonsPanel, BorderLayout.SOUTH);
+        btnAdd.setBounds(214, 8, 150, 30); // Substitua pelos valores reais
+        add(btnAdd);
+         
+        btnEdit = new JButton("Editar Produto");
+        btnEdit.setBounds(20, 360, 150, 30); // Substitua pelos valores reais
+        add(btnEdit);
         
-        // Adicionar action listeners para os botões
+        btnDelete = new JButton("Deletar Produto");
+        btnDelete.setBounds(180, 360, 150, 30); // Substitua pelos valores reais
+        add(btnDelete);
+        
+        backButton = new JButton("Voltar");
+        backButton.setBounds(870, 8, 80, 30);
+        add(backButton);
+        
+        lblProdutos = new JLabel("PRODUTOS");
+        lblProdutos.setFont(new Font("Arial", Font.BOLD, 30));
+        lblProdutos.setBounds(20, 8, 184, 30);
+        add(lblProdutos);
+        
+        //Actions Listeners (eventos ao clicar no botão)
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,7 +92,6 @@ public class ProductsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow >= 0) { // Verifica se uma linha está selecionada
-                    // Aqui você pega os valores da linha selecionada para preencher nos campos de texto do painel de edição
                     Object sku = tableModel.getValueAt(selectedRow, 0);
                     Object nome = tableModel.getValueAt(selectedRow, 1);
                     Object categoria = tableModel.getValueAt(selectedRow, 2);
@@ -88,10 +99,9 @@ public class ProductsPanel extends JPanel {
                     Object descricao = tableModel.getValueAt(selectedRow, 4);
                     Object precoVenda = tableModel.getValueAt(selectedRow, 6);
 
-                    // Agora você cria o painel de edição e preenche os campos de texto
                     EditProductPanel editProductPanel = new EditProductPanel(cardLayout, cardPanel);
-                    editProductPanel.setSelectedRow(selectedRow); // Você precisa de um método para definir a linha selecionada
-                    editProductPanel.setTableModel(tableModel); // E um método para definir o modelo da tabela
+                    editProductPanel.setSelectedRow(selectedRow);
+                    editProductPanel.setTableModel(tableModel); 
                     editProductPanel.getTxtSKU().setText(sku.toString());
                     editProductPanel.getTxtNome().setText(nome.toString());
                     editProductPanel.getTxtSKU().setText(sku.toString());
@@ -119,11 +129,15 @@ public class ProductsPanel extends JPanel {
                 cardLayout.show(cardPanel, "DeleteProductPanel");
             }
         });
-    
+        
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "MainPanel");
+            }
+        });
     }
-    
- // Dentro da classe ProductsPanel
-
+ 
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
@@ -131,7 +145,7 @@ public class ProductsPanel extends JPanel {
             atualizarTabelaProdutos();
         }
     }
-
+    
     public void atualizarTabelaProdutos() {
         tableModel.setRowCount(0); //limpa a tabela anterior
 

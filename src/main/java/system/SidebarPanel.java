@@ -33,7 +33,6 @@ public class SidebarPanel extends JPanel {
         // Adicionando botões com os seus respectivos painéis
         addButton("Tela Principal", "MainPanel", null);
         addButton("Vendas", "SalesPanel", null);
-        addButton("Entrada", "EntryPanel", null);
         addButton("Promoções", "PromotionsPanel", this::atualizarPromotionsPanel); // Passando uma ação para atualizar
         addButton("Produtos", "ProductsPanel", null);
         addButton("Clientes", "CustomersPanel", null);

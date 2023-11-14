@@ -1,11 +1,11 @@
 package system.CRUDCustomers;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,13 +30,14 @@ public class CustomersPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private Sistema sistema;
+    private JButton backButton;
+    private JLabel lblClientes;
 
     public CustomersPanel(CardLayout cardLayout, JPanel cardPanel, Sistema sistema) {
         this.sistema = sistema;
         this.cardPanel = cardPanel;
-        setLayout(new BorderLayout());
+        setLayout(null);
 
-        // Modelo de tabela
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
@@ -47,19 +48,31 @@ public class CustomersPanel extends JPanel {
         // Tabela para mostrar os clientes
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBounds(20, 50, 930, 300);
+        add(scrollPane);
 
-        // Painel para os botões
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        btnAdd = new JButton("Adicionar Cliente");	
+        btnAdd = new JButton("Adicionar Cliente");
+        btnAdd.setBounds(180, 10, 150, 30); 
+        add(btnAdd);
+        
         btnEdit = new JButton("Editar Cliente");
+        btnEdit.setBounds(20, 360, 150, 30);
+        add(btnEdit);
+        
         btnDelete = new JButton("Deletar Cliente");
+        btnDelete.setBounds(180, 360, 150, 30);
+        add(btnDelete);
 
-        buttonsPanel.add(btnAdd);
-        buttonsPanel.add(btnEdit);
-        buttonsPanel.add(btnDelete);
+        backButton = new JButton("Voltar");
+        backButton.setBounds(870, 10, 80, 30);
+        add(backButton);
+        
+        lblClientes = new JLabel("CLIENTES");
+        lblClientes.setFont(new Font("Arial", Font.BOLD, 30));
+        lblClientes.setBounds(20, 9, 150, 30);
+        add(lblClientes);
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "MainPanel"));
 
-        add(buttonsPanel, BorderLayout.SOUTH);
 
         btnAdd.addActionListener(e -> {
             AddCustomerPanel addCustomerPanel = new AddCustomerPanel(sistema, tableModel, cardLayout, cardPanel);
