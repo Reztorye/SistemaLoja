@@ -11,10 +11,12 @@ import entities.Sistema;
 import system.CRUDCustomers.CustomersPanel;
 import system.CRUDProducts.AddProductPanel;
 import system.CRUDProducts.ProductsPanel;
+import system.Category.AddCategoryPanel;
 import system.Promotion.PromotionsPanel;
 import system.Reports.ReportsPanel;
 import system.Reports.SalesReportPanel;
 import system.Sales.SalesPanel;
+import system.Supplier.AddSupplierPanel;
 	
 	public class MainFrame extends JFrame {
 	    /**
@@ -60,18 +62,19 @@ import system.Sales.SalesPanel;
 	        
 	        AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema);
 	        
-	     // No MainFrame ou onde você instanciar ReportsPanel:
 	        ReportsPanel reportsPanel = new ReportsPanel(sistema);
 	        cardPanel.add(reportsPanel, "ReportsPanel");
 	        
+	        AddSupplierPanel addSupplierPanel = new AddSupplierPanel(sistema, cardLayout, cardPanel);
+	        cardPanel.add(addSupplierPanel, "AddSupplierPanel");
+	        
+	        AddCategoryPanel addCategoryPanel = new AddCategoryPanel(sistema, cardLayout, cardPanel);
+	        cardPanel.add(addCategoryPanel, "AddCategoryPanel");
+	        
 	        SidebarPanel sidebarPanel = new SidebarPanel(cardLayout, cardPanel, promotionsPanel);
 	        
-	       
-	        // Adiciona a barra lateral ao frame
 	        getContentPane().add(sidebarPanel, BorderLayout.WEST);
 	        add(cardPanel);
-	
-	        // Define o painel principal para ser exibido inicialmente
 	        cardLayout.show(cardPanel, "MainPanel");
 	    }
 	

@@ -45,7 +45,11 @@ public class CustomersPanel extends JPanel {
         tableModel.addColumn("Telefone");
         tableModel.addColumn("Email");
 
-        // Tabela para mostrar os clientes
+        lblClientes = new JLabel("CLIENTES");
+        lblClientes.setFont(new Font("Arial", Font.BOLD, 30));
+        lblClientes.setBounds(20, 10, 150, 30);
+        add(lblClientes);
+        
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(20, 50, 930, 300);
@@ -65,14 +69,9 @@ public class CustomersPanel extends JPanel {
 
         backButton = new JButton("Voltar");
         backButton.setBounds(870, 10, 80, 30);
-        add(backButton);
+        add(backButton);   
         
-        lblClientes = new JLabel("CLIENTES");
-        lblClientes.setFont(new Font("Arial", Font.BOLD, 30));
-        lblClientes.setBounds(20, 9, 150, 30);
-        add(lblClientes);
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "MainPanel"));
-
 
         btnAdd.addActionListener(e -> {
             AddCustomerPanel addCustomerPanel = new AddCustomerPanel(sistema, tableModel, cardLayout, cardPanel);

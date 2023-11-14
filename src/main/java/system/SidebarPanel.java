@@ -20,7 +20,7 @@ public class SidebarPanel extends JPanel {
 
     private static final long serialVersionUID = -1666701738391775114L;
     private CardLayout cardLayout;
-    private JPanel cardPanel; // O painel que usa CardLayout
+    private JPanel cardPanel; //Painel que usa CardLayout
     private PromotionsPanel promotionsPanel;
 
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel, PromotionsPanel promotionsPanel) {
@@ -33,9 +33,11 @@ public class SidebarPanel extends JPanel {
         // Adicionando botões com os seus respectivos painéis
         addButton("Tela Principal", "MainPanel", null);
         addButton("Vendas", "SalesPanel", null);
-        addButton("Promoções", "PromotionsPanel", this::atualizarPromotionsPanel); // Passando uma ação para atualizar
+        addButton("Promoções", "PromotionsPanel", this::atualizarPromotionsPanel); //metodo para atualizar a jcombobox no painel de promoção
         addButton("Produtos", "ProductsPanel", null);
         addButton("Clientes", "CustomersPanel", null);
+        addButton("Fornecedor", "AddSupplierPanel", null);
+        addButton("Categoria", "AddCategoryPanel", null);
         addButton("Relatórios", "ReportsPanel", null);
 
         // Define o tamanho preferido da barra lateral se desejar
@@ -49,7 +51,7 @@ public class SidebarPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (additionalAction != null) {
-                    additionalAction.run(); // Executa a ação adicional
+                    additionalAction.run();
                 }
                 cardLayout.show(cardPanel, panelName);
             }
@@ -59,6 +61,6 @@ public class SidebarPanel extends JPanel {
 
     // Método que será chamado antes de mostrar o PromotionsPanel
     private void atualizarPromotionsPanel() {
-        promotionsPanel.atualizarListaProdutos(); // Chamada direta para atualizar
+        promotionsPanel.atualizarListaProdutos();
     }
 }
