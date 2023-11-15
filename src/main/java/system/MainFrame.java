@@ -5,11 +5,9 @@ import java.awt.CardLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 import entities.Sistema;
 import system.CRUDCustomers.CustomersPanel;
-import system.CRUDProducts.AddProductPanel;
 import system.CRUDProducts.ProductsPanel;
 import system.Category.AddCategoryPanel;
 import system.Promotion.PromotionsPanel;
@@ -25,13 +23,10 @@ import system.Supplier.AddSupplierPanel;
 		private static final long serialVersionUID = -6340235651217630471L;
 		private CardLayout cardLayout;
 	    private JPanel cardPanel; // Contém todos os painéis da aplicação
-	    private DefaultTableModel tableModel;
-	    private Sistema sistema = new Sistema();
-	   
+	    private Sistema sistema = new Sistema();   
 	
-	    @SuppressWarnings("unused")
 		public MainFrame() {
-	        // Configurações iniciais do JFrame
+			sistema.inicializarDadosDeTeste();
 	        setTitle("Sistema de Gestão para Loja de Eletrônicos");
 	        setSize(1200, 800);
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,8 +54,6 @@ import system.Supplier.AddSupplierPanel;
 	        
 	        PromotionsPanel promotionsPanel = new PromotionsPanel(sistema, productsPanel);
 	        cardPanel.add(promotionsPanel, "PromotionsPanel");
-	        
-	        AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema);
 	        
 	        ReportsPanel reportsPanel = new ReportsPanel(sistema);
 	        cardPanel.add(reportsPanel, "ReportsPanel");

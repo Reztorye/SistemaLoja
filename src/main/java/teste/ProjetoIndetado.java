@@ -565,7 +565,7 @@ public class ProjetoIndetado {
                                                                 String telefone = txtTelefoneCliente.getText();
                                                                 String email = txtEmailCliente.getText();
                                                                 Cliente novoCliente = new Cliente(nome, endereco, telefone, email);
-                                                                sistema.adicionarCliente(novoCliente);
+                                                                //sistema.adicionarCliente(novoCliente);
                                                                 
                                                                 modelClientes.addRow(new Object[]{novoCliente.getNome(), novoCliente.getEndereco(), novoCliente.getTelefone(), novoCliente.getEmail()});
                                                                 

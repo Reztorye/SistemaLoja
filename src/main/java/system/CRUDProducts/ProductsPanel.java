@@ -98,7 +98,7 @@ public class ProductsPanel extends JPanel {
                     Object fornecedor = tableModel.getValueAt(selectedRow, 3);
                     Object descricao = tableModel.getValueAt(selectedRow, 4);
                     Object precoVenda = tableModel.getValueAt(selectedRow, 6);
-
+                    
                     EditProductPanel editProductPanel = new EditProductPanel(cardLayout, cardPanel);
                     editProductPanel.setSelectedRow(selectedRow);
                     editProductPanel.setTableModel(tableModel); 

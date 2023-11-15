@@ -130,18 +130,16 @@ public class AddProductPanel extends JPanel {
 	                    String nomeCategoria = (String) comboCategoria.getSelectedItem();
 	                    String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
 	
-	                    // Aqui você deve criar a Categoria e o Fornecedor com base nos nomes selecionados.
-	                    // Isso pressupõe que você tenha maneiras de buscar a Categoria e o Fornecedor pelo nome.
 	                    Categoria categoria = sistema.buscarCategoriaPorNome(nomeCategoria);
 	                    Fornecedor fornecedor = sistema.buscarFornecedorPorNome(nomeFornecedor);
 	                    
 	                    
-	                    // Verifique se a categoria e o fornecedor existem antes de adicionar o produto
 	                    if (categoria == null || fornecedor == null) {
 	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
 	                        return;
 	                    }
-	
+	                    
+	                    
 	                    Produto novoProduto = sistema.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
 	
 	                    Object[] rowData = {sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda, estoqueDisponivel};

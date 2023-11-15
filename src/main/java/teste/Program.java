@@ -19,12 +19,12 @@ public class Program {
 
 		
 
-		sistema.adicionarCliente(
-				new Cliente("Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
-						"(41) 99866-6332", "rodrigosrising@gmail.com"));
-		sistema.adicionarCliente(
-				new Cliente("Camila Sartori", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
-						"(41) 99633-9225", "camylla55@gmail.com"));
+		//sistema.adicionarCliente(
+				//new Cliente("Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
+						//"(41) 99866-6332", "rodrigosrising@gmail.com"));
+		//sistema.adicionarCliente(
+				//new Cliente("Camila Sartori", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR",
+						//"(41) 99633-9225", "camylla55@gmail.com"));
 
 		System.out.println("Todos os clientes");
 		sistema.listarClientes();

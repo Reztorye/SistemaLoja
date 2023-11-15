@@ -37,14 +37,14 @@ public class CustomersPanel extends JPanel {
         this.sistema = sistema;
         this.cardPanel = cardPanel;
         setLayout(null);
-
+        
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
         tableModel.addColumn("Endereço");
         tableModel.addColumn("Telefone");
         tableModel.addColumn("Email");
-
+        loadCustomersIntoTable();
         lblClientes = new JLabel("CLIENTES");
         lblClientes.setFont(new Font("Arial", Font.BOLD, 30));
         lblClientes.setBounds(20, 10, 150, 30);
@@ -106,5 +106,20 @@ public class CustomersPanel extends JPanel {
             cardLayout.show(cardPanel, "DeleteCustomerPanel");
         });
     }
+    
+    public void loadCustomersIntoTable() {
+        tableModel.setRowCount(0); 
+
+        for (Cliente cliente : sistema.getClientes()) {
+            tableModel.addRow(new Object[]{
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getEndereco(),
+                cliente.getTelefone(),
+                cliente.getEmail()
+            });
+        }
+    }
+
 }
 

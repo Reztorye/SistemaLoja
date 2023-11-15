@@ -1,6 +1,6 @@
 package entities;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,17 +23,47 @@ public class Sistema {
 		categorias.add(new Categoria("Smartphone"));
 	    categorias.add(new Categoria("Mouse"));
 	    categorias.add(new Categoria("Notebook"));
-	    // ... mais categorias ...
 
 	    fornecedores.add(new Fornecedor("Xiaomi"));
 	    fornecedores.add(new Fornecedor("Samsung"));
 	    fornecedores.add(new Fornecedor("Apple"));
 	}
+	
+	public void inicializarDadosDeTeste() {
+	    Categoria categoria1 = adicionarCategoria("Xiaomi");
+	    Fornecedor fornecedor1 = adicionarFornecedor("IPhone");
 
+	    Produto prod1 = adicionarProduto(1, "Produto 1", "Descrição 1", 10.0, 15.0, 100, categoria1, fornecedor1);
+	    Produto prod2 = adicionarProduto(2, "Produto 2", "Descrição 2", 20.0, 25.0, 200, categoria1, fornecedor1);
+
+	    Cliente cliente1 = adicionarCliente("Cliente 1", "Endereço 1", "Telefone 1", "cliente1@email.com");
+	    Cliente cliente2 = adicionarCliente("Cliente 2", "Endereço 2", "Telefone 2", "cliente2@email.com");
+
+	    List<ItemVenda> itensVenda1 = new ArrayList<>();
+	    itensVenda1.add(new ItemVenda(prod1, 3));
+
+	    List<ItemVenda> itensVenda2 = new ArrayList<>();
+	    itensVenda2.add(new ItemVenda(prod2, 5));
+
+	    int quantidadeTotalVenda1 = itensVenda1.stream().mapToInt(ItemVenda::getQuantidade).sum();
+
+	    Venda venda1 = new Venda(cliente1, itensVenda1, quantidadeTotalVenda1, new Date());
+
+	    int quantidadeTotalVenda2 = itensVenda2.stream().mapToInt(ItemVenda::getQuantidade).sum();
+	    Venda venda2 = new Venda(cliente2, itensVenda2, quantidadeTotalVenda2, new Date());
+
+	    vendas.add(venda1);
+	    vendas.add(venda2);
+	}
+
+	public double totalDeVendasPorPeriodo(Date inicio, Date fim) {
+        return vendas.stream()
+                     .filter(venda -> !venda.getData().before(inicio) && !venda.getData().after(fim))
+                     .mapToDouble(Venda::calcularValorTotal)
+                     .sum();
+    }
+	
 	public Produto adicionarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda, int estoqueDisponivel, Categoria categoria, Fornecedor fornecedor) {
-	    // Você não precisa recriar as instâncias de Categoria e Fornecedor aqui,
-	    // pois elas já são passadas como argumentos para o método.
-	    
 	    Produto produto = new Produto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
 	    produtos.add(produto);
 	    return produto;
@@ -111,10 +141,12 @@ public class Sistema {
 	// =============================================================================
 
 	// Clientes
-	public void adicionarCliente(Cliente cliente) {
-		clientes.add(cliente);
+	public Cliente adicionarCliente(String nome, String endereco, String telefone, String email) {
+	    Cliente cliente = new Cliente(nome, endereco, telefone, email);
+	    clientes.add(cliente);
+	    return cliente;
 	}
-	
+
 	public void atualizarCliente(Cliente cliente) {
 	    // atualizar o cliente na lista de clientes
 	    // isso substitui a necessidade de passar todos os campos individualmente
@@ -312,7 +344,11 @@ public class Sistema {
     public List<Venda> getVendas() {
         return new ArrayList<>(vendas); // Retorna uma cópia da lista para evitar modificações externas
     }
-
+    
+    public List<Cliente> getClientes() {
+        return this.clientes;
+    }
+   
 }
 
 
