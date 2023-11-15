@@ -16,11 +16,11 @@ public class Venda {
 	private List<Produto> produtos;
 	private List<ItemVenda> itensVenda;
 
-	public Venda(Cliente cliente, List<ItemVenda> itensVenda, int quantidade, Date date) {
+	public Venda(Cliente cliente, List<ItemVenda> itensVenda, int quantidade, Date data) {
 		this.id = ++ultimoId;
 		this.cliente = cliente;
 		this.itensVenda = new ArrayList<>(itensVenda);
-		this.data = new Date(); // Data atual
+		this.data = data; 
 	}
 
 	public void adicionarVenda(int sku) {

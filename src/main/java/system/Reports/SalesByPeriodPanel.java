@@ -26,11 +26,7 @@ public class SalesByPeriodPanel extends JPanel {
     public SalesByPeriodPanel(Sistema sistema) {
         this.sistema = sistema;
         setLayout(null);
-        initializeUI();
-    }
 
-    private void initializeUI() {
-        // Data de início
         dateChooserInicio = new JDateChooser();
         dateChooserInicio.setBounds(10, 20, 120, 25);
         add(dateChooserInicio);
@@ -56,7 +52,7 @@ public class SalesByPeriodPanel extends JPanel {
         lblTotalSales.setBounds(10, 60, 300, 25);
         add(lblTotalSales);
     }
-
+    
     private void filterSales() {
         Date startDate = dateChooserInicio.getDate();
         Date endDate = dateChooserFim.getDate();

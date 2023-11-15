@@ -32,11 +32,9 @@ import system.Supplier.AddSupplierPanel;
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        setLocationRelativeTo(null); // Centraliza a janela
 	
-	        // Inicializa o cardLayout e o painel que contém os cards
 	        cardLayout = new CardLayout();
 	        cardPanel = new JPanel(cardLayout);
 	
-	        // Cria o painel principal e o adiciona ao cardPanel
 	        MainPanel mainPanel = new MainPanel();
 	        cardPanel.add(mainPanel, "MainPanel");
 	
@@ -71,7 +69,6 @@ import system.Supplier.AddSupplierPanel;
 	        cardLayout.show(cardPanel, "MainPanel");
 	    }
 	
-	    // Método para alternar entre os painéis
 	    public void showPanel(String panelName) {
 	        cardLayout.show(cardPanel, panelName);
 	    }

@@ -1,7 +1,9 @@
 package entities;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -46,14 +48,25 @@ public class Sistema {
 	    itensVenda2.add(new ItemVenda(prod2, 5));
 
 	    int quantidadeTotalVenda1 = itensVenda1.stream().mapToInt(ItemVenda::getQuantidade).sum();
+	    
+	    Calendar calendar = new GregorianCalendar(2023, Calendar.JANUARY, 1); // 1 de Janeiro de 2023
+	    Date dataEspecifica = calendar.getTime();
 
-	    Venda venda1 = new Venda(cliente1, itensVenda1, quantidadeTotalVenda1, new Date());
+	    Venda venda1 = new Venda(cliente1, itensVenda1, quantidadeTotalVenda1, dataEspecifica);
 
+	    // ... código para definir uma nova data para venda2 ...
+	    // Por exemplo, para definir a data de venda2 para 2 de Janeiro de 2023:
+	    calendar.set(Calendar.DATE, 2); // Mudança para o dia 2
+	    Date dataEspecificaVenda2 = calendar.getTime();
+	    
 	    int quantidadeTotalVenda2 = itensVenda2.stream().mapToInt(ItemVenda::getQuantidade).sum();
-	    Venda venda2 = new Venda(cliente2, itensVenda2, quantidadeTotalVenda2, new Date());
+	    
+	    Venda venda2 = new Venda(cliente2, itensVenda2, quantidadeTotalVenda2, dataEspecificaVenda2);
 
 	    vendas.add(venda1);
 	    vendas.add(venda2);
+	    System.out.println("Data específica venda1: " + dataEspecifica);
+	    System.out.println("Data venda1 na Venda: " + venda1.getData());
 	}
 
 	public double totalDeVendasPorPeriodo(Date inicio, Date fim) {
@@ -90,7 +103,7 @@ public class Sistema {
 			if (p.getSku().equals(sku)) {
 				produtos.remove(i);
 				System.out.println("Produto removido: " + p.getNome());
-				return; // Para de procurar após encontrar e remover o produto
+				return; 
 			}
 		}
 		System.out.println("Produto não encontrado: " + sku);
@@ -184,16 +197,13 @@ public class Sistema {
 				return cliente;
 			}
 		}
-		return null; // Retorna null se o cliente com o ID especificado não for encontrado
+		return null; 
 	}
 
-	// Vendas
 	public void realizarVenda(Cliente cliente, List<ItemVenda> itensVenda) {
 		boolean estoqueSuficiente = true;
 		int quantidadeTotal = 0;
 
-		// Verificar se há quantidade suficiente em estoque para todos os produtos na
-		// lista
 		for (ItemVenda itemVenda : itensVenda) {
 			Produto produto = itemVenda.getProduto();
 			int quantidade = itemVenda.getQuantidade();
@@ -206,19 +216,15 @@ public class Sistema {
 			quantidadeTotal += quantidade;
 		}
 
-		// Se houver quantidade suficiente em estoque para todos os produtos
 		if (estoqueSuficiente) {
-			// Atualizar o estoque dos produtos
 			for (ItemVenda itemVenda : itensVenda) {
 				Produto produto = itemVenda.getProduto();
 				int quantidade = itemVenda.getQuantidade();
 				produto.setEstoqueDisponivel(produto.getEstoqueDisponivel() - quantidade);
 			}
 
-			// Criar a venda
 			Venda venda = new Venda(cliente, itensVenda, quantidadeTotal, new Date());
 
-			// Adicionar a venda à lista de vendas
 			vendas.add(venda);
 
 			System.out.println("Venda realizada com sucesso!");
@@ -251,14 +257,12 @@ public class Sistema {
 		}
 	}
 
-	// Categorias
 	public Categoria adicionarCategoria(String nome) {
 		for (Categoria categoria : categorias) {
 			if (categoria.getNome().equalsIgnoreCase(nome)) {
-				return categoria; // Retorna a categoria existente se encontrada
+				return categoria; 
 			}
 		}
-		// Se a categoria não existe, cria uma nova
 		Categoria novaCategoria = new Categoria(nome);
 		categorias.add(novaCategoria);
 		return novaCategoria;
@@ -269,15 +273,12 @@ public class Sistema {
 			System.out.println(categoria);
 		}
 	}
-
-	// Fornecedores
 	public Fornecedor adicionarFornecedor(String nome) {
 		for (Fornecedor fornecedor : fornecedores) {
 			if (fornecedor.getNome().equalsIgnoreCase(nome)) {
-				return fornecedor; // Retorna o fornecedor existente se encontrado
+				return fornecedor; 
 			}
 		}
-		// Se o fornecedor não existe, cria um novo
 		Fornecedor novoFornecedor = new Fornecedor(nome);
 		fornecedores.add(novoFornecedor);
 		return novoFornecedor;
@@ -292,15 +293,12 @@ public class Sistema {
 	public void atualizarCliente(String email, String nome, String endereco, String telefone) {
 	    for (Cliente cliente : clientes) {
 	        if (cliente.getEmail().equals(email)) {
-	            System.out.println("Cliente encontrado: " + cliente.getNome());  // Debug: Verifique se o cliente foi encontrado
 	            cliente.setNome(nome);
 	            cliente.setEndereco(endereco);
 	            cliente.setTelefone(telefone);
-	            System.out.println("Cliente atualizado: " + cliente.getNome());  // Debug: Verifique a atualização
 	            return;
 	        }
 	    }
-	    System.out.println("Cliente não encontrado: " + email);  // Debug: Verifique se o cliente não foi encontrado
 	}
 
 	public List<Produto> getProdutos() {
@@ -334,7 +332,7 @@ public class Sistema {
 	}
 	
 	public void adicionarPromocao(Promocao promocao) {
-        promocoes.add(promocao); // Adiciona a nova promoção à lista
+        promocoes.add(promocao); 
     }
 
     public List<Promocao> getPromocoes() {
@@ -342,7 +340,7 @@ public class Sistema {
     }
     
     public List<Venda> getVendas() {
-        return new ArrayList<>(vendas); // Retorna uma cópia da lista para evitar modificações externas
+        return new ArrayList<>(vendas); 
     }
     
     public List<Cliente> getClientes() {
