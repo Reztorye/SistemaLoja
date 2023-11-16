@@ -1,5 +1,7 @@
 package system.Reports;
 
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -8,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import com.toedter.calendar.JDateChooser;
-import java.util.Date;
 
 import entities.ItemVenda;
 import entities.Produto;
@@ -25,6 +27,8 @@ public class TopSellingProductsPanel extends JPanel {
     private Sistema sistema;
     private JDateChooser dateChooserInicio, dateChooserFim;
     private JButton btnFiltrar;
+    private JButton btnOrdenarPorValor;
+    private JButton btnOrdenarPorQuantidade;
 
 
     public TopSellingProductsPanel(Sistema sistema) {
@@ -51,10 +55,21 @@ public class TopSellingProductsPanel extends JPanel {
         btnFiltrar.setBounds(270, 320, 80, 25);
         btnFiltrar.addActionListener(e -> loadData());
         add(btnFiltrar);
+        
+        btnOrdenarPorValor = new JButton("Ordenar por Valor");
+        btnOrdenarPorValor.setBounds(360, 320, 150, 25);
+        btnOrdenarPorValor.addActionListener(e -> ordenarPorValor());
+        add(btnOrdenarPorValor);
 
+        // Botão para ordenar por quantidade vendida
+        btnOrdenarPorQuantidade = new JButton("Ordenar por Quantidade");
+        btnOrdenarPorQuantidade.setBounds(520, 320, 180, 25);
+        btnOrdenarPorQuantidade.addActionListener(e -> ordenarPorQuantidade());
+        add(btnOrdenarPorQuantidade);
+        
         loadData();
     }
-
+    
     private void loadData() {
         tableModel.setRowCount(0);
 
@@ -72,11 +87,54 @@ public class TopSellingProductsPanel extends JPanel {
                 ItemVenda::getQuantidade,
                 Integer::sum));
 
-        // Adiciona os dados ao modelo da tabela
-        totalVendasPorProduto.forEach((produto, quantidade) -> {
+        // Ordena e adiciona os dados ao modelo da tabela
+        totalVendasPorProduto.entrySet().stream()
+            .sorted((entry1, entry2) -> 
+                Double.compare(entry2.getValue() * entry2.getKey().getPrecoVenda(), 
+                               entry1.getValue() * entry1.getKey().getPrecoVenda()))
+            .forEach(entry -> {
+                Produto produto = entry.getKey();
+                Integer quantidade = entry.getValue();
+                double valorTotalVendas = quantidade * produto.getPrecoVenda();
+                tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorTotalVendas});
+            });
+    }
+    
+    private void ordenarPorValor() {
+        ordenarEExibir((entry1, entry2) -> 
+            Double.compare(entry2.getValue() * entry2.getKey().getPrecoVenda(),
+                           entry1.getValue() * entry1.getKey().getPrecoVenda()));
+    }
+
+
+    private void ordenarEExibir(Comparator<Map.Entry<Produto, Integer>> comparator) {
+        tableModel.setRowCount(0);
+        
+        Date inicio = dateChooserInicio.getDate();
+        Date fim = dateChooserFim.getDate();
+        
+        Map<Produto, Integer> totalVendasPorProduto = sistema.getVendas().stream()
+                .filter(venda -> 
+                    (inicio == null || !venda.getData().before(inicio)) && 
+                    (fim == null || !venda.getData().after(fim)))
+                .flatMap(venda -> venda.getItensVenda().stream())
+                .collect(Collectors.toMap(
+                    ItemVenda::getProduto,
+                    ItemVenda::getQuantidade,
+                    Integer::sum));
+
+        totalVendasPorProduto.entrySet().stream()
+        .sorted(comparator) 
+        .forEach(entry -> {
+            Produto produto = entry.getKey();
+            Integer quantidade = entry.getValue();
             double valorTotalVendas = quantidade * produto.getPrecoVenda();
             tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorTotalVendas});
         });
     }
-
+    
+    private void ordenarPorQuantidade() {
+        ordenarEExibir((entry1, entry2) -> 
+            entry2.getValue().compareTo(entry1.getValue()));  // Inverte a comparação para ordenar do maior para o menor
+    }
 }

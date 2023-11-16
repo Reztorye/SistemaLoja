@@ -32,14 +32,22 @@ public class Sistema {
 	}
 	
 	public void inicializarDadosDeTeste() {
-	    Categoria categoria1 = adicionarCategoria("Xiaomi");
-	    Fornecedor fornecedor1 = adicionarFornecedor("IPhone");
+	    Categoria Celular  = adicionarCategoria("Celular");
+	    Categoria Tablet  = adicionarCategoria("Tablet");
+	    Fornecedor Xiaomi = adicionarFornecedor("Xiaomi");
+	    Fornecedor Samsung = adicionarFornecedor("Samsung");
 
-	    Produto prod1 = adicionarProduto(1, "Produto 1", "Descrição 1", 10.0, 15.0, 100, categoria1, fornecedor1);
-	    Produto prod2 = adicionarProduto(2, "Produto 2", "Descrição 2", 20.0, 25.0, 200, categoria1, fornecedor1);
+	    Produto prod1 = adicionarProduto(1, "Produto 1", "Descrição 1", 10.0, 15.0, 100, Celular, Xiaomi);
+	    Produto prod2 = adicionarProduto(2, "Produto 2", "Descrição 2", 20.0, 25.0, 200, Celular, Xiaomi);
+	    
+	    Produto prod3 = adicionarProduto(1234, "Mi 8 lite", "descricao do produto 1", 999.90, 1499.99, 50, Celular, Xiaomi);
+		Produto prod4 = adicionarProduto(1235, "Redmi note 12", "descricao do produto 2", 1999.90, 2499.95, 20, Tablet, Xiaomi);
+		Produto prod5 = adicionarProduto(1236, "Galaxy S23", "descricao do produto 3", 2999.90, 3499.99, 4, Celular, Samsung);
 
-	    Cliente cliente1 = adicionarCliente("Cliente 1", "Endereço 1", "Telefone 1", "cliente1@email.com");
-	    Cliente cliente2 = adicionarCliente("Cliente 2", "Endereço 2", "Telefone 2", "cliente2@email.com");
+		Cliente cliente1 = adicionarCliente("Rodrigo Garcia", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR", "(41) 99866-6332", "rodrigosrising@gmail.com");
+		Cliente cliente2 = adicionarCliente("Camila Sartori", "Rua Almir Nelson de Almeida, 290, bloco 6 apto 5 - Curitiba - PR", "(41) 99633-9225", "camylla55@gmail.com");	    
+	    Cliente cliente3 = adicionarCliente("Cliente 1", "Endereço 1", "Telefone 1", "cliente1@email.com");
+	    Cliente cliente4 = adicionarCliente("Cliente 2", "Endereço 2", "Telefone 2", "cliente2@email.com");
 
 	    List<ItemVenda> itensVenda1 = new ArrayList<>();
 	    itensVenda1.add(new ItemVenda(prod1, 3));
@@ -60,7 +68,38 @@ public class Sistema {
 	    int quantidadeTotalVenda2 = itensVenda2.stream().mapToInt(ItemVenda::getQuantidade).sum();
 	    
 	    Venda venda2 = new Venda(cliente2, itensVenda2, quantidadeTotalVenda2, dataEspecificaVenda2);
+	    
+	    List<ItemVenda> itensVenda3 = new ArrayList<>();
+	    itensVenda3.add(new ItemVenda(prod3, 2)); // Venda de 2 unidades do "Mi 8 lite"
 
+	    List<ItemVenda> itensVenda4 = new ArrayList<>();
+	    itensVenda4.add(new ItemVenda(prod4, 1)); // Venda de 1 unidade do "Redmi note 12"
+
+	    List<ItemVenda> itensVenda5 = new ArrayList<>();
+	    itensVenda5.add(new ItemVenda(prod5, 3)); // Venda de 3 unidades do "Galaxy S23"
+
+	    // Calcula a quantidade total vendida para as novas vendas
+	    int quantidadeTotalVenda3 = itensVenda3.stream().mapToInt(ItemVenda::getQuantidade).sum();
+	    int quantidadeTotalVenda4 = itensVenda4.stream().mapToInt(ItemVenda::getQuantidade).sum();
+	    int quantidadeTotalVenda5 = itensVenda5.stream().mapToInt(ItemVenda::getQuantidade).sum();
+
+	    calendar.set(Calendar.DATE, 3);
+	    Date dataVenda3 = calendar.getTime(); // Data para a terceira venda
+
+	    calendar.set(Calendar.DATE, 4);
+	    Date dataVenda4 = calendar.getTime(); // Data para a quarta venda
+
+	    calendar.set(Calendar.DATE, 5);
+	    Date dataVenda5 = calendar.getTime(); // Data para a quinta venda
+
+	    // Cria e adiciona as novas vendas à lista
+	    Venda venda3 = new Venda(cliente3, itensVenda3, quantidadeTotalVenda3, dataVenda3);
+	    Venda venda4 = new Venda(cliente4, itensVenda4, quantidadeTotalVenda4, dataVenda4);
+	    Venda venda5 = new Venda(cliente1, itensVenda5, quantidadeTotalVenda5, dataVenda5); 
+
+	    vendas.add(venda3);
+	    vendas.add(venda4);
+	    vendas.add(venda5);
 	    vendas.add(venda1);
 	    vendas.add(venda2);
 	}
