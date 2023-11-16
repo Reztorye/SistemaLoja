@@ -31,7 +31,6 @@ public class TopSellingProductsPanel extends JPanel {
         this.sistema = sistema;
         setLayout(null);
 
-        // Configuração da tabela
         String[] columnNames = {"Nome do Produto", "Quantidade Vendida", "Valor Total de Vendas"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);

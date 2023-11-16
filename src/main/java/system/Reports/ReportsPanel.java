@@ -23,8 +23,8 @@ public class ReportsPanel extends JPanel {
         setLayout(new BorderLayout());
 
         String[] reportTypes = {"Relatório de Vendas", "Relatório de Produtos", "Relatório de Estoque"
-        		, "Relatório de Clientes", "Produtos Mais Vendidos", "Relatório de Vendas por Período"
-        		,"Clientes mais Valiosos"};
+        		, "Produtos Mais Vendidos", "Relatório de Vendas por Período","Clientes mais Valiosos"
+        		, "Análise de Lucratividade", "Vendas por Categoria"};
         reportTypeComboBox = new JComboBox<>(reportTypes);
         reportTypeComboBox.addActionListener(new ActionListener() {
             @Override
@@ -65,6 +65,18 @@ public class ReportsPanel extends JPanel {
         		topCustomersPanel.setBounds(0, 0, reportDisplayPanel.getWidth(), reportDisplayPanel.getHeight());
                 reportDisplayPanel.add(topCustomersPanel);
                 topCustomersPanel.setVisible(true);
+                break;
+        	case "Análise de Lucratividade":
+        		ProfitabilityAnalysisPanel profitabilityAnalysisPanel = new ProfitabilityAnalysisPanel(sistema);
+        		profitabilityAnalysisPanel.setBounds(0, 0, reportDisplayPanel.getWidth(), reportDisplayPanel.getHeight());
+                reportDisplayPanel.add(profitabilityAnalysisPanel);
+                profitabilityAnalysisPanel.setVisible(true);
+                break;
+        	case "Vendas por Categoria":
+        		SalesByCategoryPanel salesByCategoryPanel = new SalesByCategoryPanel(sistema);
+        		salesByCategoryPanel.setBounds(0, 0, reportDisplayPanel.getWidth(), reportDisplayPanel.getHeight());
+                reportDisplayPanel.add(salesByCategoryPanel);
+                salesByCategoryPanel.setVisible(true);
                 break;
             case "Relatório de Estoque":
 

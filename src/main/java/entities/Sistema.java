@@ -49,14 +49,12 @@ public class Sistema {
 
 	    int quantidadeTotalVenda1 = itensVenda1.stream().mapToInt(ItemVenda::getQuantidade).sum();
 	    
-	    Calendar calendar = new GregorianCalendar(2023, Calendar.JANUARY, 1); // 1 de Janeiro de 2023
+	    Calendar calendar = new GregorianCalendar(2023, Calendar.JANUARY, 1); 
 	    Date dataEspecifica = calendar.getTime();
 
 	    Venda venda1 = new Venda(cliente1, itensVenda1, quantidadeTotalVenda1, dataEspecifica);
 
-	    // ... código para definir uma nova data para venda2 ...
-	    // Por exemplo, para definir a data de venda2 para 2 de Janeiro de 2023:
-	    calendar.set(Calendar.DATE, 2); // Mudança para o dia 2
+	    calendar.set(Calendar.DATE, 2); 
 	    Date dataEspecificaVenda2 = calendar.getTime();
 	    
 	    int quantidadeTotalVenda2 = itensVenda2.stream().mapToInt(ItemVenda::getQuantidade).sum();
@@ -65,8 +63,6 @@ public class Sistema {
 
 	    vendas.add(venda1);
 	    vendas.add(venda2);
-	    System.out.println("Data específica venda1: " + dataEspecifica);
-	    System.out.println("Data venda1 na Venda: " + venda1.getData());
 	}
 
 	public double totalDeVendasPorPeriodo(Date inicio, Date fim) {

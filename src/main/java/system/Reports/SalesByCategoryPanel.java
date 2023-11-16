@@ -1,0 +1,58 @@
+package system.Reports;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import entities.Categoria;
+import entities.ItemVenda;
+import entities.Sistema;
+import entities.Venda;
+
+public class SalesByCategoryPanel extends JPanel {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6508291280027593846L;
+	private JTable table;
+    private DefaultTableModel tableModel;
+    private Sistema sistema;
+
+    public SalesByCategoryPanel(Sistema sistema) {
+        this.sistema = sistema;
+        setLayout(null);
+        String[] columnNames = {"Categoria", "Total de Vendas"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+
+        // Configura a barra de rolagem e a tabela
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(10, 10, 300, 200); // Ajuste conforme necessário
+        add(scrollPane);
+
+        // Preenche a tabela com os dados de vendas por categoria
+        loadSalesData();
+    }
+
+    private void loadSalesData() {
+        Map<Categoria, Double> salesByCategory = new HashMap<>();
+
+        // Calcula o total de vendas por categoria
+        for (Venda venda : sistema.getVendas()) {
+            for (ItemVenda itemVenda : venda.getItensVenda()) {
+                Categoria categoria = itemVenda.getProduto().getCategoria();
+                double valorTotalItem = itemVenda.getQuantidade() * itemVenda.getProduto().getPrecoVenda();
+                salesByCategory.merge(categoria, valorTotalItem, Double::sum);
+            }
+        }
+
+        // Adiciona os dados calculados ao modelo da tabela
+        salesByCategory.forEach((categoria, totalVendas) -> {
+            tableModel.addRow(new Object[]{categoria.getNome(), String.format("R$ %.2f", totalVendas)});
+        });
+    }
+}

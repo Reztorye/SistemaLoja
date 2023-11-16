@@ -53,12 +53,8 @@ public class SalesReportPanel extends JPanel {
                 venda.calcularValorTotal()
             };
             tableModel.addRow(row);
-            System.out.println("Data da venda carregada: " + venda.getData());
-        }
-        
-        
+        }  
     }
-
 
     private String formatarItensVenda(List<ItemVenda> itens) {
         // Exemplo: "Produto A (3), Produto B (2)"
