@@ -20,7 +20,7 @@ Este é um sistema de gestão de vendas desenvolvido em Java, projetado para ger
 
 ## Como Executar
 1. Clone o repositório: git clone https://github.com/Reztorye/SistemaLoja.git
-2. Navegue até a pasta do projeto e compile o código (instruções para compilação).
+2. Navegue até a pasta do projeto e compile o código.
 3. Execute o sistema a partir do ponto de entrada principal (MainFrame).
 
 ## Autores
