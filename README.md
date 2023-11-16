@@ -24,6 +24,6 @@ Este é um sistema de gestão de vendas desenvolvido em Java, projetado para ger
 3. Execute o sistema a partir do ponto de entrada principal (MainFrame).
 
 ## Autores
-- Ruan Lisboa Ulrich (Reztorye)
-- Contribuidores: Rodrigo GaRCIA (rodrigosrising)
+- Ruan Ulrich (Reztorye)
+- Contribuidores: Rodrigo Garcia (rodrigosrising)
 
