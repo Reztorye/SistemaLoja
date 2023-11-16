@@ -1,17 +1,18 @@
 package system;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import system.Promotion.PromotionsPanel;
-
 import lombok.Getter;
 import lombok.Setter;
+import system.Promotion.PromotionsPanel;
 
 @Getter
 @Setter
@@ -22,6 +23,11 @@ public class SidebarPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel; //Painel que usa CardLayout
     private PromotionsPanel promotionsPanel;
+    private Color lightModeBackground = Color.WHITE;
+    private Color darkModeBackground = Color.DARK_GRAY;
+    private Color lightModeForeground = Color.BLACK;
+    private Color darkModeForeground = Color.WHITE;
+    private boolean isDarkMode = false;
 
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel, PromotionsPanel promotionsPanel) {
         this.cardLayout = cardLayout;
@@ -30,7 +36,6 @@ public class SidebarPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
-        // Adicionando botões com os seus respectivos painéis
         addButton("Tela Principal", "MainPanel", null);
         addButton("Vendas", "SalesPanel", null);
         addButton("Promoções", "PromotionsPanel", this::atualizarPromotionsPanel); //metodo para atualizar a jcombobox no painel de promoção
@@ -39,8 +44,7 @@ public class SidebarPanel extends JPanel {
         addButton("Fornecedor", "AddSupplierPanel", null);
         addButton("Categoria", "AddCategoryPanel", null);
         addButton("Relatórios", "ReportsPanel", null);
-
-        // Define o tamanho preferido da barra lateral se desejar
+        
         setPreferredSize(new Dimension(200, getHeight()));
     }
 
@@ -59,7 +63,6 @@ public class SidebarPanel extends JPanel {
         add(button);
     }
 
-    // Método que será chamado antes de mostrar o PromotionsPanel
     private void atualizarPromotionsPanel() {
         promotionsPanel.atualizarListaProdutos();
     }

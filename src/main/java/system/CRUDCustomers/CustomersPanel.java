@@ -38,6 +38,7 @@ public class CustomersPanel extends JPanel {
         this.cardPanel = cardPanel;
         setLayout(null);
         
+       
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
