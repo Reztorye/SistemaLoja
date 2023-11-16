@@ -26,15 +26,23 @@ public class SalesByCategoryPanel extends JPanel {
         this.sistema = sistema;
         setLayout(null);
         String[] columnNames = {"Categoria", "Total de Vendas"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0){
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -9049266189071413309L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table = new JTable(tableModel);
 
-        // Configura a barra de rolagem e a tabela
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 300, 200); // Ajuste conforme necessário
+        scrollPane.setBounds(10, 10, 300, 200); 
         add(scrollPane);
 
-        // Preenche a tabela com os dados de vendas por categoria
         loadSalesData();
     }
 

@@ -33,19 +33,18 @@ public class AddProductPanel extends JPanel {
     private JTextField fieldSKU, fieldNome, fieldDescricao, fieldPrecoCusto, fieldPrecoVenda, fieldEstoqueDisponivel;
     private JComboBox<String> comboCategoria, comboFornecedor;
     private JButton btnConfirmar;
-    private DefaultTableModel tableModel; // Modelo da tabela para adicionar os produtos
-    private CardLayout cardLayout; // Layout dos cards
-    private JPanel cardPanel; // Painel que contém os cards
+    private DefaultTableModel tableModel; 
+    private CardLayout cardLayout;
+    private JPanel cardPanel; 
     private JButton btnVoltar;
 
     public AddProductPanel(CardLayout cardLayout, JPanel cardPanel, DefaultTableModel tableModel, Sistema sistema) {
     	this.sistema = sistema;
     	this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
-        this.tableModel = tableModel; // Atribui o modelo da tabela passado pelo construtor
-        setLayout(null); // Sem gerenciador de layout
+        this.tableModel = tableModel;
+        setLayout(null); 
         
-        // Inicialização e posicionamento das labels e campos de texto
         JLabel labelSKU = new JLabel("SKU:");
         labelSKU.setBounds(10, 10, 80, 25);
         add(labelSKU);
@@ -98,9 +97,9 @@ public class AddProductPanel extends JPanel {
         labelCategoria.setBounds(10, 190, 80, 25);
         add(labelCategoria);
 
-        comboCategoria = new JComboBox<>(); // Inicializa o JComboBox sem itens
+        comboCategoria = new JComboBox<>();
         for (Categoria categoria : sistema.getCategorias()) {
-            comboCategoria.addItem(categoria.getNome()); // Adiciona cada categoria ao JComboBox
+            comboCategoria.addItem(categoria.getNome());
         }
         comboCategoria.setBounds(100, 190, 165, 25);
         add(comboCategoria);
@@ -109,9 +108,9 @@ public class AddProductPanel extends JPanel {
         labelFornecedor.setBounds(10, 220, 80, 25);
         add(labelFornecedor);
 
-        comboFornecedor = new JComboBox<>(); // Exemplo de fornecedores
+        comboFornecedor = new JComboBox<>();
         for (Fornecedor fornecedor : sistema.getFornecedores()) {
-            comboFornecedor.addItem(fornecedor.getNome()); // Adiciona cada categoria ao JComboBox
+            comboFornecedor.addItem(fornecedor.getNome()); 
         }
         comboFornecedor.setBounds(100, 220, 165, 25);
         add(comboFornecedor);

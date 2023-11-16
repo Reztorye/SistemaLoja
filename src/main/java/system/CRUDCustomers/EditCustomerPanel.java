@@ -28,7 +28,7 @@ public class EditCustomerPanel extends JPanel {
     private JButton btnSaveChanges;
     private Sistema sistema;
     private DefaultTableModel tableModel;
-    private Cliente currentCliente; //el cliente atual sendo editado
+    private Cliente currentCliente; //o cliente atual sendo editado
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private JButton btnBack;
@@ -38,13 +38,9 @@ public class EditCustomerPanel extends JPanel {
     	this.cardPanel = cardPanel;
         this.sistema = sistema;
         this.tableModel = tableModel;
-        initializeUI();
-    }
 
-    private void initializeUI() {
         setLayout(null);
 
-        // Nome
         JLabel lblName = new JLabel("Nome:");
         lblName.setBounds(10, 10, 80, 25);
         add(lblName);
@@ -53,7 +49,6 @@ public class EditCustomerPanel extends JPanel {
         txtName.setBounds(100, 10, 165, 25);
         add(txtName);
 
-        // Endereço
         JLabel lblAddress = new JLabel("Endereço:");
         lblAddress.setBounds(10, 45, 80, 25);
         add(lblAddress);
@@ -62,7 +57,6 @@ public class EditCustomerPanel extends JPanel {
         txtAddress.setBounds(100, 45, 165, 25);
         add(txtAddress);
 
-        // Telefone
         JLabel lblPhone = new JLabel("Telefone:");
         lblPhone.setBounds(10, 80, 80, 25);
         add(lblPhone);
@@ -71,7 +65,6 @@ public class EditCustomerPanel extends JPanel {
         txtPhone.setBounds(100, 80, 165, 25);
         add(txtPhone);
 
-        // Email
         JLabel lblEmail = new JLabel("Email:");
         lblEmail.setBounds(10, 115, 80, 25);
         add(lblEmail);
@@ -80,7 +73,6 @@ public class EditCustomerPanel extends JPanel {
         txtEmail.setBounds(100, 115, 165, 25);
         add(txtEmail);
 
-        // Botão para salvar alterações
         btnSaveChanges = new JButton("Salvar Alterações");
         btnSaveChanges.setBounds(10, 150, 255, 25);
         btnSaveChanges.addActionListener(new ActionListener() {
@@ -103,7 +95,6 @@ public class EditCustomerPanel extends JPanel {
 
     public void setCurrentCliente(Cliente cliente) {
         this.currentCliente = cliente;
-        // Preenche os campos com os dados do cliente
         txtName.setText(cliente.getNome());
         txtAddress.setText(cliente.getEndereco());
         txtPhone.setText(cliente.getTelefone());
@@ -111,12 +102,10 @@ public class EditCustomerPanel extends JPanel {
     }
 
     private void saveChanges() {
-        // Validação dos campos
         if (txtName.getText().isEmpty() || txtAddress.getText().isEmpty() || txtPhone.getText().isEmpty() || txtEmail.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Todos os campos são obrigatórios.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         currentCliente.setNome(txtName.getText());
         currentCliente.setEndereco(txtAddress.getText());
         currentCliente.setTelefone(txtPhone.getText());
@@ -133,7 +122,6 @@ public class EditCustomerPanel extends JPanel {
                 break;
             }
         }
-
         JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!", "Cliente Atualizado", JOptionPane.INFORMATION_MESSAGE);
     }
 }

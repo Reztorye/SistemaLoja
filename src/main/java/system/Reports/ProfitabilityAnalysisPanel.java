@@ -21,7 +21,17 @@ public class ProfitabilityAnalysisPanel extends JPanel {
         setLayout(null);
         
         String[] columnNames = {"Nome do Produto", "Preço de Custo", "Preço de Venda", "Margem de Lucro"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0){
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -9049266189071413309L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);

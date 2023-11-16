@@ -37,17 +37,14 @@ public class DeleteCustomerPanel extends JPanel {
     private void initializeUI() {
         setLayout(null);
 
-        // Label ID
         JLabel lblCustomerId = new JLabel("ID do Cliente:");
         lblCustomerId.setBounds(10, 10, 150, 25);
         add(lblCustomerId);
 
-        // Campo de texto para o ID
         txtCustomerId = new JTextField();
         txtCustomerId.setBounds(160, 10, 165, 25);
         add(txtCustomerId);
 
-        // Botão de deletar
         btnDeleteCustomer = new JButton("Deletar Cliente");
         btnDeleteCustomer.setBounds(10, 45, 315, 25);
         btnDeleteCustomer.addActionListener(new ActionListener() {
@@ -79,7 +76,6 @@ public class DeleteCustomerPanel extends JPanel {
             int customerId = Integer.parseInt(customerIdStr);
             sistema.removerCliente(customerId);
 
-            // Remover da tabela do GUI
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 if (tableModel.getValueAt(i, 0).equals(customerId)) {
                     tableModel.removeRow(i);

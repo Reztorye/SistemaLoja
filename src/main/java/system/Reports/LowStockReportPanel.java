@@ -25,7 +25,6 @@ public class LowStockReportPanel extends JPanel {
     	this.sistema = sistema;
         setLayout(null); 
 
-        // Define as colunas da tabela
         String[] columnNames = {"SKU", "Nome do Produto", "Quantidade em Estoque"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             /**

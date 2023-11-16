@@ -29,7 +29,17 @@ public class SalesReportPanel extends JPanel {
         
         String[] columnNames = {"Data da Venda", "Nome do Cliente", "Itens Vendidos", "Valor Total"};
         
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0){
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -9049266189071413309L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         salesTable = new JTable(tableModel);
         this.add(new JScrollPane(salesTable), BorderLayout.CENTER);
         

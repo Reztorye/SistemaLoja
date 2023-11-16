@@ -25,7 +25,17 @@ public class TopCustomersPanel extends JPanel {
         this.sistema = sistema;
         setLayout(null);
         
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel(){
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -9049266189071413309L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tableModel.addColumn("Nome do Cliente");
         tableModel.addColumn("Total de Compras");
 

@@ -45,7 +45,6 @@ public class AddCategoryPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String nomeCategoria = txtNomeCategoria.getText().trim();
                 if (!nomeCategoria.isEmpty()) {
-                    // Chama o método adicionarCategoria de sistema
                     Categoria categoria = sistema.adicionarCategoria(nomeCategoria);
                     if (categoria != null) {
                         JOptionPane.showMessageDialog(AddCategoryPanel.this,
@@ -53,7 +52,7 @@ public class AddCategoryPanel extends JPanel {
                                 "Operação Concluída",
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
-                    txtNomeCategoria.setText(""); // Limpa o campo de texto após adicionar
+                    txtNomeCategoria.setText(""); 
                 } else {
                     JOptionPane.showMessageDialog(AddCategoryPanel.this,
                             "O nome da categoria não pode ser vazio.",

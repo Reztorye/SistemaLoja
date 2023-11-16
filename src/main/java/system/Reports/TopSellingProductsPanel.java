@@ -36,7 +36,17 @@ public class TopSellingProductsPanel extends JPanel {
         setLayout(null);
 
         String[] columnNames = {"Nome do Produto", "Quantidade Vendida", "Valor Total de Vendas"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0){
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -9049266189071413309L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -61,7 +71,6 @@ public class TopSellingProductsPanel extends JPanel {
         btnOrdenarPorValor.addActionListener(e -> ordenarPorValor());
         add(btnOrdenarPorValor);
 
-        // Botão para ordenar por quantidade vendida
         btnOrdenarPorQuantidade = new JButton("Ordenar por Quantidade");
         btnOrdenarPorQuantidade.setBounds(520, 320, 180, 25);
         btnOrdenarPorQuantidade.addActionListener(e -> ordenarPorQuantidade());
@@ -75,21 +84,24 @@ public class TopSellingProductsPanel extends JPanel {
 
         Date inicio = dateChooserInicio.getDate();
         Date fim = dateChooserFim.getDate();
-
-        // Filtro de vendas por data
+        
+        // Usa o stream para processar as vendas e coletar a quantidade total de produtos vendidos
         Map<Produto, Integer> totalVendasPorProduto = sistema.getVendas().stream()
-            .filter(venda -> 
+        		 // Filtra as vendas que estão dentro do intervalo de datas especificado
+        		.filter(venda -> 
                 (inicio == null || !venda.getData().before(inicio)) && 
                 (fim == null || !venda.getData().after(fim)))
-            .flatMap(venda -> venda.getItensVenda().stream())
-            .collect(Collectors.toMap(
-                ItemVenda::getProduto,
-                ItemVenda::getQuantidade,
-                Integer::sum));
+        		// Converte cada venda em um stream de itens de venda
+        		.flatMap(venda -> venda.getItensVenda().stream())
+        		// Coleta os itens em um mapa, somando as quantidades para cada produto
+        		.collect(Collectors.toMap(
+                ItemVenda::getProduto,	// Chave do mapa: Produto
+                ItemVenda::getQuantidade,	// Valor do mapa: Quantidade vendida
+                Integer::sum));	// Método de combinação: Soma das quantidades
 
-        // Ordena e adiciona os dados ao modelo da tabela
         totalVendasPorProduto.entrySet().stream()
             .sorted((entry1, entry2) -> 
+            	// Compara os valores totais de vendas de dois produtos
                 Double.compare(entry2.getValue() * entry2.getKey().getPrecoVenda(), 
                                entry1.getValue() * entry1.getKey().getPrecoVenda()))
             .forEach(entry -> {
@@ -106,7 +118,8 @@ public class TopSellingProductsPanel extends JPanel {
                            entry1.getValue() * entry1.getKey().getPrecoVenda()));
     }
 
-
+    
+    // Este método genérico ordena os dados com base em um comparador e exibe na tabela
     private void ordenarEExibir(Comparator<Map.Entry<Produto, Integer>> comparator) {
         tableModel.setRowCount(0);
         
@@ -122,7 +135,8 @@ public class TopSellingProductsPanel extends JPanel {
                     ItemVenda::getProduto,
                     ItemVenda::getQuantidade,
                     Integer::sum));
-
+        
+        // Ordena os produtos com base no comparador fornecido e exibe os resultados na tabela
         totalVendasPorProduto.entrySet().stream()
         .sorted(comparator) 
         .forEach(entry -> {
@@ -135,6 +149,6 @@ public class TopSellingProductsPanel extends JPanel {
     
     private void ordenarPorQuantidade() {
         ordenarEExibir((entry1, entry2) -> 
-            entry2.getValue().compareTo(entry1.getValue()));  // Inverte a comparação para ordenar do maior para o menor
+            entry2.getValue().compareTo(entry1.getValue())); 
     }
 }

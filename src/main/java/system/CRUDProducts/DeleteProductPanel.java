@@ -30,22 +30,18 @@ public class DeleteProductPanel extends JPanel {
 	private Sistema sistema;
 
 	public DeleteProductPanel(DefaultTableModel tableModel, Sistema sistema) {
-	    // Guarda a instância do sistema
 	    this.sistema = sistema;
     	this.tableModel = tableModel;
         setLayout(null);
 
-        // Label SKU
         JLabel lblSKU = new JLabel("SKU para deletar:");
         lblSKU.setBounds(10, 10, 150, 25);
         add(lblSKU);
 
-        // Campo de texto para SKU
         txtSKU = new JTextField();
         txtSKU.setBounds(160, 10, 165, 25);
         add(txtSKU);
 
-        // Botão de deletar
         btnDelete = new JButton("Deletar");
         btnDelete.setBounds(10, 45, 315, 25);
         btnDelete.addActionListener(new ActionListener() {
@@ -57,7 +53,6 @@ public class DeleteProductPanel extends JPanel {
         add(btnDelete);
     }
 
-
 	private void deleteProduct() {
 	    String skuToDelete = txtSKU.getText();
 	    if (skuToDelete.isEmpty()) {
@@ -67,7 +62,7 @@ public class DeleteProductPanel extends JPanel {
 
 	    try {
 	        int sku = Integer.parseInt(skuToDelete);
-	        sistema.removerProduto(sku); // Chama o método do sistema.rodrigo para remover o produto
+	        sistema.removerProduto(sku); 
 
 	        for (int i = 0; i < tableModel.getRowCount(); i++) {
 	            String tableSKU = tableModel.getValueAt(i, 0).toString();

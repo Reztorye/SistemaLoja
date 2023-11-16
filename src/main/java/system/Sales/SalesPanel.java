@@ -1,4 +1,5 @@
 package system.Sales;
+import java.awt.Font;
 import java.awt.event.ActionEvent ;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,9 +14,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import entities.Categoria;
 import entities.Cliente;
-import entities.Fornecedor;
 import entities.ItemVenda;
 import entities.Produto;
 import entities.Sistema;
@@ -37,51 +36,51 @@ public class SalesPanel extends JPanel {
     private JButton btnAddToCart;
     private JButton btnFinalizeSale;
     private Sistema sistema;
-
-    Categoria categoriaEletronicos = new Categoria("Eletrônicos");
-
-    Fornecedor fornecedorTech = new Fornecedor("Tech Supplier");
+    private JLabel lblVendas;
     
-
     public SalesPanel(Sistema sistema) {
         this.sistema = sistema;			
         setLayout(null);
         
+        lblVendas = new JLabel("VENDAS");
+        lblVendas.setFont(new Font("Arial", Font.BOLD, 30));
+        lblVendas.setBounds(20, 8, 184, 30);
+        add(lblVendas);
+        
         JLabel lblSKU = new JLabel("SKU:");
-        lblSKU.setBounds(10, 10, 80, 25);
+        lblSKU.setBounds(20, 49, 80, 25);
         add(lblSKU);
 
         txtSKU = new JTextField();
-        txtSKU.setBounds(100, 10, 165, 25);
+        txtSKU.setBounds(110, 49, 165, 25);
         add(txtSKU);
 
-        JLabel lblQuantity = new JLabel("Quantity:");
-        lblQuantity.setBounds(10, 45, 80, 25);
+        JLabel lblQuantity = new JLabel("Quantidade:");
+        lblQuantity.setBounds(20, 78, 80, 25);
         add(lblQuantity);
 
         txtQuantity = new JTextField();
-        txtQuantity.setBounds(100, 45, 165, 25);
+        txtQuantity.setBounds(110, 78, 165, 25);
         add(txtQuantity);
 
-        btnAddToCart = new JButton("Add to Cart");
-        btnAddToCart.setBounds(10, 80, 120, 25);
+        btnAddToCart = new JButton("Adicionar ao Carrinho");
+        btnAddToCart.setBounds(300, 78, 160, 25);
         add(btnAddToCart);
 
-        btnFinalizeSale = new JButton("Finalize Sale");
-        btnFinalizeSale.setBounds(140, 80, 120, 25);
+        btnFinalizeSale = new JButton("Finalizar Venda");
+        btnFinalizeSale.setBounds(640, 78, 160, 25);
         add(btnFinalizeSale);
         
-        JButton btnRemoveFromCart = new JButton("Remove from Cart");
-        btnRemoveFromCart.setBounds(270, 80, 160, 25);
+        JButton btnRemoveFromCart = new JButton("Remover do Carrinho");
+        btnRemoveFromCart.setBounds(470, 78, 160, 25);
         add(btnRemoveFromCart);
 
-        // Setting up the JTable
-        String[] columnNames = {"SKU", "Product Name", "Price", "Quantity", "Total"};
+        String[] columnNames = {"SKU", "Produto", "Preco", "Quantidade", "Total"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableCart = new JTable(tableModel);
         
         JScrollPane scrollPane = new JScrollPane(tableCart);
-        scrollPane.setBounds(10, 115, 580, 300);
+        scrollPane.setBounds(20, 115, 780, 300);
         add(scrollPane);
         
         btnAddToCart.addActionListener(new ActionListener() {
@@ -91,7 +90,7 @@ public class SalesPanel extends JPanel {
                 try {
                     quantity = Integer.parseInt(txtQuantity.getText());
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(SalesPanel.this, "Please enter a valid quantity.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(SalesPanel.this, "Por favor entre com uma quantidade valida.", "Input Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -99,7 +98,7 @@ public class SalesPanel extends JPanel {
                     int sku = Integer.parseInt(skuStr);
                     Produto produto = findProductBySKU(sku);
                     if (produto != null) {
-                        double price = produto.getPrecoVendaComDesconto(); // Certifique-se de que este método retorna o preço correto
+                        double price = produto.getPrecoVendaComDesconto(); 
                         double total = price * quantity;
                         tableModel.addRow(new Object[]{sku, produto.getNome(), price, quantity, total});
                         txtSKU.setText("");
@@ -108,7 +107,7 @@ public class SalesPanel extends JPanel {
                         JOptionPane.showMessageDialog(SalesPanel.this, "Produto não encontrado com SKU: " + sku, "Erro do Produto", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(SalesPanel.this, "Please enter a valid SKU.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(SalesPanel.this, "Please entre com um SKU valido.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -123,15 +122,15 @@ public class SalesPanel extends JPanel {
 	                }
 	
 	                List<ItemVenda> itensVenda = new ArrayList<>();
-	                // Iterar sobre as linhas da tabela para coletar os produtos e quantidades
+	
 	                for (int i = 0; i < tableModel.	getRowCount(); i++) {
-	                    Integer sku = (Integer) tableModel.getValueAt(i, 0); // Coluna do SKU
-	                    int quantidade = (Integer) tableModel.getValueAt(i, 3); // Coluna da Quantidade
+	                    Integer sku = (Integer) tableModel.getValueAt(i, 0); 
+	                    int quantidade = (Integer) tableModel.getValueAt(i, 3); 
 	                    Produto produto = sistema.buscarProdutoPorSku(sku);
 	                    if (produto != null) {
 	                        if (quantidade > produto.getEstoqueDisponivel()) {
 	                            JOptionPane.showMessageDialog(SalesPanel.this, "Quantidade solicitada para o produto '" + produto.getNome() + "' excede o estoque disponível.", "Erro de Estoque", JOptionPane.ERROR_MESSAGE);
-	                            return; // Interrompe o processo de finalização da venda
+	                            return; 
 	                        }
 	                        itensVenda.add(new ItemVenda(produto, quantidade));
 	                    }
@@ -139,7 +138,6 @@ public class SalesPanel extends JPanel {
 	
 	                sistema.realizarVenda(cliente, itensVenda);
 	
-	                // Limpar o carrinho e atualizar a interface conforme necessário
 	                tableModel.setRowCount(0);
 	                JOptionPane.showMessageDialog(SalesPanel.this, "Venda finalizada com sucesso!", "Venda Concluída", JOptionPane.INFORMATION_MESSAGE);
 	            }
@@ -149,7 +147,6 @@ public class SalesPanel extends JPanel {
 	            public void actionPerformed(ActionEvent e) {
 	                int selectedRow = tableCart.getSelectedRow();
 	                if (selectedRow >= 0) {
-	                    // Confirmação antes de remover
 	                    int confirm = JOptionPane.showConfirmDialog(
 	                            SalesPanel.this, 
 	                            "Tem certeza que deseja remover o item selecionado?", 
@@ -190,9 +187,9 @@ public class SalesPanel extends JPanel {
     }
     
     public void atualizarTabelaProdutos() {
-        tableModel.setRowCount(0); //limpa a tabela anterior
+        tableModel.setRowCount(0);
 
-        List<Produto> produtos = sistema.getProdutos(); //atualiza tabela com o desconto
+        List<Produto> produtos = sistema.getProdutos(); 
         for (Produto produto : produtos) {
             tableModel.addRow(new Object[]{
                 produto.getSku(),

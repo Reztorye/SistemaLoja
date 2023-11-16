@@ -41,7 +41,17 @@ public class ProductsPanel extends JPanel {
         this.sistema = sistema;
         setLayout(null);
 
-        tableModel = new DefaultTableModel();
+        tableModel = new DefaultTableModel() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -3005244091815725029L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tableModel.addColumn("SKU");
         tableModel.addColumn("Nome");
         tableModel.addColumn("Categoria");
@@ -53,19 +63,19 @@ public class ProductsPanel extends JPanel {
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(20, 49, 930, 300); // Substitua pelos valores reais
+        scrollPane.setBounds(20, 49, 930, 300); 
         add(scrollPane);
 
         btnAdd = new JButton("Adicionar Produto");
-        btnAdd.setBounds(214, 8, 150, 30); // Substitua pelos valores reais
+        btnAdd.setBounds(214, 8, 150, 30); 
         add(btnAdd);
          
         btnEdit = new JButton("Editar Produto");
-        btnEdit.setBounds(20, 360, 150, 30); // Substitua pelos valores reais
+        btnEdit.setBounds(20, 360, 150, 30);
         add(btnEdit);
         
         btnDelete = new JButton("Deletar Produto");
-        btnDelete.setBounds(180, 360, 150, 30); // Substitua pelos valores reais
+        btnDelete.setBounds(180, 360, 150, 30);
         add(btnDelete);
         
         backButton = new JButton("Voltar");
@@ -77,7 +87,6 @@ public class ProductsPanel extends JPanel {
         lblProdutos.setBounds(20, 8, 184, 30);
         add(lblProdutos);
         
-        //Actions Listeners (eventos ao clicar no botão)
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +120,6 @@ public class ProductsPanel extends JPanel {
                     editProductPanel.getTxtDescricao().setText(descricao.toString());
                     editProductPanel.getTxtPrecoVenda().setText(precoVenda.toString());
 
-                    // Aqui você adiciona o painel de edição ao cardPanel e mostra ele
                     cardPanel.add(editProductPanel, "EditProductPanel");
                     cardLayout.show(cardPanel, "EditProductPanel");
                 } else {
@@ -123,7 +131,6 @@ public class ProductsPanel extends JPanel {
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // A suposição aqui é que você tem uma instância válida do 'Sistema' chamada 'sistema'.
                 DeleteProductPanel deleteProductPanel = new DeleteProductPanel(tableModel, sistema);
                 cardPanel.add(deleteProductPanel, "DeleteProductPanel");
                 cardLayout.show(cardPanel, "DeleteProductPanel");
@@ -147,9 +154,9 @@ public class ProductsPanel extends JPanel {
     }
     
     public void atualizarTabelaProdutos() {
-        tableModel.setRowCount(0); //limpa a tabela anterior
+        tableModel.setRowCount(0); 
 
-        List<Produto> produtos = sistema.getProdutos(); //atualiza tabela com o desconto
+        List<Produto> produtos = sistema.getProdutos(); 
         for (Produto produto : produtos) {
             tableModel.addRow(new Object[]{
                 produto.getSku(),

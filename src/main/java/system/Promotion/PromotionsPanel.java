@@ -44,7 +44,6 @@ public class PromotionsPanel extends JPanel {
     }
 
     private void initializeUI() {
-        // Componentes e suas posições com layout null
         JLabel lblProduto = new JLabel("Produto:");
         lblProduto.setBounds(10, 10, 80, 25);
         add(lblProduto);
@@ -149,10 +148,8 @@ public class PromotionsPanel extends JPanel {
     }
 
     public void atualizarListaProdutos() {
-        // Limpa os itens existentes
         comboProdutos.removeAllItems();
         
-        // Adiciona os produtos atualizados
         for (Produto produto : sistema.getProdutos()) {
             comboProdutos.addItem(produto);
         }
