@@ -1,6 +1,8 @@
 package system.Reports;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -40,7 +42,7 @@ public class SalesByCategoryPanel extends JPanel {
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 300, 200); 
+        scrollPane.setBounds(0, 10, 943, 240); 
         add(scrollPane);
 
         loadSalesData();
@@ -48,6 +50,7 @@ public class SalesByCategoryPanel extends JPanel {
 
     private void loadSalesData() {
         Map<Categoria, Double> salesByCategory = new HashMap<>();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formatador de moeda para o Brasil
 
         // Calcula o total de vendas por categoria
         for (Venda venda : sistema.getVendas()) {
@@ -60,7 +63,10 @@ public class SalesByCategoryPanel extends JPanel {
 
         // Adiciona os dados calculados ao modelo da tabela
         salesByCategory.forEach((categoria, totalVendas) -> {
-            tableModel.addRow(new Object[]{categoria.getNome(), String.format("R$ %.2f", totalVendas)});
+            tableModel.addRow(new Object[]{
+                categoria.getNome(),
+                currencyFormat.format(totalVendas) 
+            });
         });
     }
 }

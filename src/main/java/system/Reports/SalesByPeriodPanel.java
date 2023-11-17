@@ -2,7 +2,9 @@ package system.Reports;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -53,10 +55,11 @@ public class SalesByPeriodPanel extends JPanel {
     private void filterSales() {
         Date startDate = dateChooserInicio.getDate();
         Date endDate = dateChooserFim.getDate();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formatador de moeda para o Brasil
 
         if (startDate != null && endDate != null) {
             double totalSales = sistema.totalDeVendasPorPeriodo(startDate, endDate);
-            lblTotalSales.setText("Total de Vendas: " + totalSales);
+            lblTotalSales.setText("Total de Vendas: " + currencyFormat.format(totalSales)); // Formata o valor como moeda
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, selecione as datas de início e término.");
         }

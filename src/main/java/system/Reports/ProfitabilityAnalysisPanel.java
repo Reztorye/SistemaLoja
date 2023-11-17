@@ -35,7 +35,7 @@ public class ProfitabilityAnalysisPanel extends JPanel {
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 779, 300); 
+        scrollPane.setBounds(0, 10, 943, 300); 
         add(scrollPane);
 
         loadProductData();

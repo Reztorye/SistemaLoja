@@ -1,8 +1,10 @@
 package system.Reports;
 import java.awt.Component;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -70,6 +72,10 @@ public class SalesReportPanel extends JPanel {
             };
             tableModel.addRow(row);
         }  
+        
+        TableColumn totalColumn = table.getColumn("Valor Total");
+        totalColumn.setCellRenderer(new CurrencyRenderer());
+        totalColumn.setPreferredWidth(150);
     }
 
     private String formatarItensVenda(List<ItemVenda> itens) {
@@ -102,4 +108,19 @@ public class SalesReportPanel extends JPanel {
             return component;
         }
     }
+    
+    class CurrencyRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = 1L;
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            if (value instanceof Number) {
+                value = currencyFormatter.format(value);
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+}
 }

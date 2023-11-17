@@ -1,6 +1,8 @@
 package system.Reports;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -41,7 +43,7 @@ public class TopCustomersPanel extends JPanel {
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 934, 280);
+        scrollPane.setBounds(0, 10, 944, 280);
         add(scrollPane);
         
         loadTopCustomers();
@@ -49,7 +51,8 @@ public class TopCustomersPanel extends JPanel {
     
     private void loadTopCustomers() {
         Map<Cliente, Double> totalPorCliente = new HashMap<>();
-
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        
         // Calcula o total de compras por cliente
         for (Venda venda : sistema.getVendas()) {
             Cliente cliente = venda.getCliente();
@@ -61,7 +64,8 @@ public class TopCustomersPanel extends JPanel {
         totalPorCliente.entrySet().stream()
             .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
             .forEach(entry -> {
-                tableModel.addRow(new Object[]{entry.getKey().getNome(), entry.getValue()});
+                String valorFormatado = currencyFormat.format(entry.getValue()); // Formata o valor para a moeda local
+                tableModel.addRow(new Object[]{entry.getKey().getNome(), valorFormatado});
             });
     }
 }

@@ -1,7 +1,9 @@
 package system.Reports;
 
+import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -50,15 +52,15 @@ public class TopSellingProductsPanel extends JPanel {
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 0, 780, 300);
+        scrollPane.setBounds(0, 0, 944, 300);
         add(scrollPane);
         
         dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(10, 320, 120, 25);
+        dateChooserInicio.setBounds(0, 320, 120, 25);
         add(dateChooserInicio);
 
         dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(140, 320, 120, 25);
+        dateChooserFim.setBounds(130, 320, 120, 25);
         add(dateChooserFim);
 
         btnFiltrar = new JButton("Filtrar");
@@ -99,18 +101,23 @@ public class TopSellingProductsPanel extends JPanel {
                 ItemVenda::getQuantidade,	// Valor do mapa: Quantidade vendida
                 Integer::sum));	// Método de combinação: Soma das quantidades
 
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formatador de moeda para o Brasil
+
         totalVendasPorProduto.entrySet().stream()
             .sorted((entry1, entry2) -> 
-            	// Compara os valores totais de vendas de dois produtos
+                // Compara os valores totais de vendas de dois produtos
                 Double.compare(entry2.getValue() * entry2.getKey().getPrecoVenda(), 
                                entry1.getValue() * entry1.getKey().getPrecoVenda()))
             .forEach(entry -> {
                 Produto produto = entry.getKey();
                 Integer quantidade = entry.getValue();
                 double valorTotalVendas = quantidade * produto.getPrecoVenda();
-                tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorTotalVendas});
+                // Formata o valor como moeda antes de adicionar à tabela
+                String valorFormatado = currencyFormat.format(valorTotalVendas);
+                tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorFormatado});
             });
         
+        // Chama a função de ordenar por quantidade ao carregar os dados
         ordenarPorQuantidade();
     }
     
@@ -127,6 +134,8 @@ public class TopSellingProductsPanel extends JPanel {
         
         Date inicio = dateChooserInicio.getDate();
         Date fim = dateChooserFim.getDate();
+        
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formatador de moeda para o Brasil
         
         Map<Produto, Integer> totalVendasPorProduto = sistema.getVendas().stream()
                 .filter(venda -> 
@@ -145,7 +154,8 @@ public class TopSellingProductsPanel extends JPanel {
             Produto produto = entry.getKey();
             Integer quantidade = entry.getValue();
             double valorTotalVendas = quantidade * produto.getPrecoVenda();
-            tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorTotalVendas});
+            String valorFormatado = currencyFormat.format(valorTotalVendas); // Formata o valor para a moeda local
+            tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorFormatado});
         });
     }
     
