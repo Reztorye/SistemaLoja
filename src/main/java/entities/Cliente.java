@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+
 public class Cliente {
 	private static int ultimoId = 0;
 	private Integer id;
@@ -27,13 +30,20 @@ public class Cliente {
 	public void adicionarCompra(Venda venda) {
 		historicoDeCompras.add(venda);
 	}
-	
-
 
 	@Override
 	public String toString() {
-		return "ID: " + id + " | Nome: " + nome + " \nEndereco: " + endereco + "\nTelefone: " + telefone + " | email: "
-				+ email + "\nHistorico de compras: " + historicoDeCompras;
+		StringBuilder sb = new StringBuilder();
+		sb.append("ID: ").append(id).append(" | Nome: ").append(nome)
+				.append("\nEndereco: ").append(endereco).append("\nTelefone: ").append(telefone)
+				.append(" | email: ").append(email).append("\nHistorico de compras:\n");
+
+		for (Venda venda : historicoDeCompras) {
+			sb.append(" - ").append(venda.getId()).append(": ").append(venda.toString()).append("\n");
+			// Utilize o método toString() da classe Venda, ou adapte conforme necessário
+		}
+
+		return sb.toString();
 	}
 
 }
