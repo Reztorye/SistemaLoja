@@ -47,7 +47,7 @@ import system.Supplier.AddSupplierPanel;
 	        CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel, sistema);
 	        cardPanel.add(customersPanel, "CustomersPanel");
 	        
-	        SalesPanel salesPanel = new SalesPanel(sistema);
+	        SalesPanel salesPanel = new SalesPanel(sistema, cardLayout, cardPanel);
 	        cardPanel.add(salesPanel, "SalesPanel");
 	        
 	        PromotionsPanel promotionsPanel = new PromotionsPanel(sistema, productsPanel);

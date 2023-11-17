@@ -1,5 +1,4 @@
 package system.Reports;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,11 +20,12 @@ public class SalesReportPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 4659160089766279374L;
-	private JTable salesTable;
+	private JTable table;
     private DefaultTableModel tableModel;
     private Sistema sistema;
     public SalesReportPanel(Sistema sistema) {
         this.sistema = sistema;
+        setLayout(null);
         
         String[] columnNames = {"Data da Venda", "Nome do Cliente", "Itens Vendidos", "Valor Total"};
         
@@ -40,10 +40,16 @@ public class SalesReportPanel extends JPanel {
                 return false;
             }
         };
-        salesTable = new JTable(tableModel);
-        this.add(new JScrollPane(salesTable), BorderLayout.CENTER);
+        table = new JTable(tableModel);
+        table.setBounds(10, 10, 480, 300);  
+
         
-        TableColumn dateColumn = salesTable.getColumn("Data da Venda");
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(0, 11, 952, 261); 
+        add(scrollPane);
+
+        
+        TableColumn dateColumn = table.getColumn("Data da Venda");
         dateColumn.setCellRenderer(new DateRenderer());
         dateColumn.setPreferredWidth(150);
         

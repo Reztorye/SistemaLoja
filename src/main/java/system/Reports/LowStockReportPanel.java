@@ -1,8 +1,7 @@
 package system.Reports;
 
-import java.awt.Color;
+import java.awt.Color; 
 import java.awt.Component;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,7 +19,7 @@ public class LowStockReportPanel extends JPanel {
 	private JTable table;
     private DefaultTableModel tableModel;
     private Sistema sistema;
-
+    
     public LowStockReportPanel(Sistema sistema) {
     	this.sistema = sistema;
         setLayout(null); 
@@ -44,7 +43,7 @@ public class LowStockReportPanel extends JPanel {
         table.setDefaultRenderer(Object.class, new StockCellRenderer());
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 480, 300); 
+        scrollPane.setBounds(0, 11, 952, 261); 
         add(scrollPane);
 
         loadData();  
@@ -55,11 +54,13 @@ public class LowStockReportPanel extends JPanel {
 
         for (Produto produto : sistema.getProdutos()) {
             int estoque = produto.getEstoqueDisponivel();  
-            tableModel.addRow(new Object[]{
-                produto.getSku(),  
-                produto.getNome(), 
-                estoque 
-            });
+            if (estoque < 5) { 
+                tableModel.addRow(new Object[]{
+                    produto.getSku(),  
+                    produto.getNome(), 
+                    estoque 
+                });
+            }
         }
     }
     

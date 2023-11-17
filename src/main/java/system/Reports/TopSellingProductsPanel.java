@@ -50,7 +50,7 @@ public class TopSellingProductsPanel extends JPanel {
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 780, 300);
+        scrollPane.setBounds(0, 0, 780, 300);
         add(scrollPane);
         
         dateChooserInicio = new JDateChooser();
@@ -110,6 +110,8 @@ public class TopSellingProductsPanel extends JPanel {
                 double valorTotalVendas = quantidade * produto.getPrecoVenda();
                 tableModel.addRow(new Object[]{produto.getNome(), quantidade, valorTotalVendas});
             });
+        
+        ordenarPorQuantidade();
     }
     
     private void ordenarPorValor() {
@@ -148,7 +150,6 @@ public class TopSellingProductsPanel extends JPanel {
     }
     
     private void ordenarPorQuantidade() {
-        ordenarEExibir((entry1, entry2) -> 
-            entry2.getValue().compareTo(entry1.getValue())); 
+        ordenarEExibir((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
     }
 }

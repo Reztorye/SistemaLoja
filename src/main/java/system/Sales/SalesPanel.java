@@ -1,4 +1,5 @@
 package system.Sales;
+import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent ;
 import java.awt.event.ActionListener;
@@ -37,10 +38,24 @@ public class SalesPanel extends JPanel {
     private JButton btnFinalizeSale;
     private Sistema sistema;
     private JLabel lblVendas;
+    private JButton btnVoltar;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
     
-    public SalesPanel(Sistema sistema) {
-        this.sistema = sistema;			
+    public SalesPanel(Sistema sistema, CardLayout cardLayout, JPanel cardPanel) {
+    	this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+    	this.sistema = sistema;			
         setLayout(null);
+        
+        btnVoltar = new JButton("Voltar");
+        btnVoltar.setBounds(881, 18, 89, 23);
+        btnVoltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "ProductsPanel"); 
+            }
+        });
+        add(btnVoltar);
         
         lblVendas = new JLabel("VENDAS");
         lblVendas.setFont(new Font("Arial", Font.BOLD, 30));
@@ -68,11 +83,11 @@ public class SalesPanel extends JPanel {
         add(btnAddToCart);
 
         btnFinalizeSale = new JButton("Finalizar Venda");
-        btnFinalizeSale.setBounds(640, 78, 160, 25);
+        btnFinalizeSale.setBounds(190, 425, 160, 25);
         add(btnFinalizeSale);
         
         JButton btnRemoveFromCart = new JButton("Remover do Carrinho");
-        btnRemoveFromCart.setBounds(470, 78, 160, 25);
+        btnRemoveFromCart.setBounds(20, 425, 160, 25);
         add(btnRemoveFromCart);
 
         String[] columnNames = {"SKU", "Produto", "Preco", "Quantidade", "Total"};
@@ -80,7 +95,7 @@ public class SalesPanel extends JPanel {
         tableCart = new JTable(tableModel);
         
         JScrollPane scrollPane = new JScrollPane(tableCart);
-        scrollPane.setBounds(20, 115, 780, 300);
+        scrollPane.setBounds(20, 114, 950, 300);
         add(scrollPane);
         
         btnAddToCart.addActionListener(new ActionListener() {

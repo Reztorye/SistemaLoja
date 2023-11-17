@@ -28,15 +28,15 @@ public class SalesByPeriodPanel extends JPanel {
         setLayout(null);
 
         dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(10, 20, 120, 25);
+        dateChooserInicio.setBounds(270, 118, 120, 25);
         add(dateChooserInicio);
 
         dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(140, 20, 120, 25);
+        dateChooserFim.setBounds(408, 118, 120, 25);
         add(dateChooserFim);
 
         btnFilter = new JButton("Filtrar");
-        btnFilter.setBounds(270, 20, 80, 25);
+        btnFilter.setBounds(538, 118, 80, 25);
         btnFilter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -46,7 +46,7 @@ public class SalesByPeriodPanel extends JPanel {
         add(btnFilter);
 
         lblTotalSales = new JLabel("Total de Vendas: ");
-        lblTotalSales.setBounds(10, 60, 300, 25);
+        lblTotalSales.setBounds(270, 154, 300, 25);
         add(lblTotalSales);
     }
     

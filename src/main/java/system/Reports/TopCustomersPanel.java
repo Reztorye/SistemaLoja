@@ -41,7 +41,7 @@ public class TopCustomersPanel extends JPanel {
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 480, 280);
+        scrollPane.setBounds(10, 10, 934, 280);
         add(scrollPane);
         
         loadTopCustomers();
