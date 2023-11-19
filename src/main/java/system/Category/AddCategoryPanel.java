@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Manager.Sistema;
 import entities.Categoria;
-import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +19,10 @@ import lombok.Setter;
 @Setter
 public class AddCategoryPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6055427396847789185L;
-	private JTextField txtNomeCategoria;
+     * 
+     */
+    private static final long serialVersionUID = -6055427396847789185L;
+    private JTextField txtNomeCategoria;
     private JButton btnAddCategoria, btnCancelCategoria;
     private Sistema sistema;
     private JButton backButton;
@@ -52,7 +52,7 @@ public class AddCategoryPanel extends JPanel {
                                 "Operação Concluída",
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
-                    txtNomeCategoria.setText(""); 
+                    txtNomeCategoria.setText("");
                 } else {
                     JOptionPane.showMessageDialog(AddCategoryPanel.this,
                             "O nome da categoria não pode ser vazio.",
@@ -63,11 +63,11 @@ public class AddCategoryPanel extends JPanel {
         });
 
         add(btnAddCategoria);
-        
+
         backButton = new JButton("Voltar");
         backButton.setBounds(360, 9, 80, 30);
         add(backButton);
-        
+
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "MainPanel"));
 
         btnCancelCategoria = new JButton("Cancelar");

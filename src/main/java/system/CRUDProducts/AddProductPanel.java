@@ -3,6 +3,8 @@ package system.CRUDProducts;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,39 +14,39 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import Manager.Sistema;
 import entities.Categoria;
 import entities.Fornecedor;
-import entities.Produto;
-import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 
-
 public class AddProductPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2862788884325913939L;
-	private Sistema sistema;
+     * 
+     */
+    private static final long serialVersionUID = 2862788884325913939L;
+    private Sistema sistema;
     private JTextField fieldSKU, fieldNome, fieldDescricao, fieldPrecoCusto, fieldPrecoVenda, fieldEstoqueDisponivel;
     private JComboBox<String> comboCategoria, comboFornecedor;
     private JButton btnConfirmar;
-    private DefaultTableModel tableModel; 
+    private DefaultTableModel tableModel;
     private CardLayout cardLayout;
-    private JPanel cardPanel; 
+    private JPanel cardPanel;
     private JButton btnVoltar;
 
     public AddProductPanel(CardLayout cardLayout, JPanel cardPanel, DefaultTableModel tableModel, Sistema sistema) {
-    	this.sistema = sistema;
-    	this.cardLayout = cardLayout;
+        this.sistema = sistema;
+        this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.tableModel = tableModel;
-        setLayout(null); 
-        
+        setLayout(null);
+
         JLabel labelSKU = new JLabel("SKU:");
         labelSKU.setBounds(10, 10, 80, 25);
         add(labelSKU);
@@ -110,60 +112,78 @@ public class AddProductPanel extends JPanel {
 
         comboFornecedor = new JComboBox<>();
         for (Fornecedor fornecedor : sistema.getFornecedores()) {
-            comboFornecedor.addItem(fornecedor.getNome()); 
+            comboFornecedor.addItem(fornecedor.getNome());
         }
         comboFornecedor.setBounds(100, 220, 165, 25);
         add(comboFornecedor);
 
-	        btnConfirmar = new JButton("Confirmar");
-	        btnConfirmar.setBounds(10, 270, 255, 25);
-	        btnConfirmar.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	                try {
-	                    Integer sku = Integer.valueOf(fieldSKU.getText());
-	                    String nome = fieldNome.getText();
-	                    String descricao = fieldDescricao.getText();
-	                    double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
-	                    double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
-	                    int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
-	                    String nomeCategoria = (String) comboCategoria.getSelectedItem();
-	                    String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
-	
-	                    Categoria categoria = sistema.buscarCategoriaPorNome(nomeCategoria);
-	                    Fornecedor fornecedor = sistema.buscarFornecedorPorNome(nomeFornecedor);
-	                    
-	                    
-	                    if (categoria == null || fornecedor == null) {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-	                        return;
-	                    }
-	                    
-	                    
-	                    Produto novoProduto = sistema.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
-	
-	                    Object[] rowData = {sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda, estoqueDisponivel};
-	                    tableModel.addRow(rowData);
-	                    
-	                    if (novoProduto != null) {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Produto adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-	                        sistema.imprimirProdutos(); // Mova a chamada do método para aqui
-	                    } else {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Não foi possível adicionar o produto", "Erro", JOptionPane.ERROR_MESSAGE);
-	                    }
-	                } catch (NumberFormatException nfe) {
-	                    JOptionPane.showMessageDialog(AddProductPanel.this, "Por favor, insira números válidos nos campos de preço e estoque.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-	                } catch (Exception ex) {
-	                    JOptionPane.showMessageDialog(AddProductPanel.this, "Erro ao adicionar o produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-	                }
-	            }
-	        });
-	        add(btnConfirmar);
-                   
+        btnConfirmar = new JButton("Confirmar");
+        btnConfirmar.setBounds(10, 270, 255, 25);
+        btnConfirmar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Integer sku = Integer.valueOf(fieldSKU.getText());
+                    String nome = fieldNome.getText();
+                    String descricao = fieldDescricao.getText();
+                    double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
+                    double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
+                    int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
+                    String nomeCategoria = (String) comboCategoria.getSelectedItem();
+                    String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
+
+                    Categoria categoria = sistema.buscarCategoriaPorNome(nomeCategoria);
+                    Fornecedor fornecedor = sistema.buscarFornecedorPorNome(nomeFornecedor);
+
+                    if (categoria == null || fornecedor == null) {
+                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.",
+                                "Erro", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Preparando os dados do produto para enviar ao Firebase
+                    Map<String, Object> produtoData = new HashMap<>();
+                    produtoData.put("sku", sku);
+                    produtoData.put("nome", nome);
+                    produtoData.put("descricao", descricao);
+                    produtoData.put("precoCusto", precoCusto);
+                    produtoData.put("precoVenda", precoVenda);
+                    produtoData.put("estoqueDisponivel", estoqueDisponivel);
+                    produtoData.put("categoria", nomeCategoria);
+                    produtoData.put("fornecedor", nomeFornecedor);
+
+                    // Obtendo uma referência para a coleção "produtos" no Firebase
+                    DatabaseReference produtosRef = FirebaseDatabase.getInstance().getReference("produtos");
+
+                    // Adicionando os dados ao Firebase e obtendo o ID único gerado automaticamente
+                    DatabaseReference novoProdutoRef = produtosRef.push();
+
+                    // Adicionando os dados ao Firebase usando o ID único
+                    novoProdutoRef.setValueAsync(produtoData);
+
+                    // Atualiza a tabela local
+                    Object[] rowData = { sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda,
+                            estoqueDisponivel };
+                    tableModel.addRow(rowData);
+
+                    JOptionPane.showMessageDialog(AddProductPanel.this, "Produto adicionado com sucesso", "Sucesso",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(AddProductPanel.this,
+                            "Por favor, insira números válidos nos campos de preço e estoque.", "Erro de Formato",
+                            JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(AddProductPanel.this,
+                            "Erro ao adicionar o produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        add(btnConfirmar);
+
         btnVoltar = new JButton("Voltar");
         btnVoltar.setBounds(351, 271, 89, 23);
         btnVoltar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "ProductsPanel"); 
+                cardLayout.show(cardPanel, "ProductsPanel");
             }
         });
         add(btnVoltar);

@@ -1,8 +1,10 @@
 package entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Produto {
 	private Integer sku;
 	private String nome;
@@ -13,8 +15,8 @@ public class Produto {
 	private Categoria categoria;
 	private Fornecedor fornecedor;
 	private boolean descontoAtivo;
-    private double valorDesconto;
-	
+	private double valorDesconto;
+
 	// auxiliares
 	private int quantidadeEstoque = 0;
 	private int vendidos = 0;
@@ -22,6 +24,8 @@ public class Produto {
 	private double valorLucro = 0.0;
 	private double custoTemporario = 0.0;
 	private double receita = 0.0;
+
+	private String firebaseId;
 
 	public Produto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda,
 			int estoqueDisponivel, Categoria categoria, Fornecedor fornecedor) {
@@ -36,9 +40,18 @@ public class Produto {
 		this.fornecedor = fornecedor;
 	}
 
+	public void setFirebaseId(String firebaseId) {
+		this.firebaseId = firebaseId;
+	}
+
+	public String getFirebaseId() {
+		return firebaseId;
+	}
+
 	@Override
 	public String toString() {
-		return ("SKU:" + String.format(" %-5d", this.getSku()) + "| " + String.format("%-20s", this.getNome()) + " | Cat: "
+		return ("SKU:" + String.format(" %-5d", this.getSku()) + "| " + String.format("%-20s", this.getNome())
+				+ " | Cat: "
 				+ String.format("%-10s", this.getCategoria().getNome()) + " | Fornecedor: "
 				+ String.format("%-10s", this.getFornecedor().getNome()) + " | "
 				+ String.format("R$ %10.2f", this.getPrecoVenda()) + " | Estoque: "
@@ -48,14 +61,14 @@ public class Produto {
 	public double getPreco() {
 		return precoVenda;
 	}
-	
-	 public double getPrecoVendaComDesconto() {
-	        if (descontoAtivo) {
-	            // Assumindo que o valorDesconto é um valor percentual
-	            return getPrecoVenda() * (1 - (valorDesconto / 100));
-	        } else {
-	            return getPrecoVenda();
-	        }
-	    }
+
+	public double getPrecoVendaComDesconto() {
+		if (descontoAtivo) {
+			// Assumindo que o valorDesconto é um valor percentual
+			return getPrecoVenda() * (1 - (valorDesconto / 100));
+		} else {
+			return getPrecoVenda();
+		}
+	}
 
 }

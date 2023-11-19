@@ -16,8 +16,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Manager.ProdutoManager;
+import Manager.Sistema;
 import entities.Produto;
-import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
 import system.CRUDProducts.ProductsPanel;
@@ -26,20 +27,22 @@ import system.CRUDProducts.ProductsPanel;
 @Setter
 public class PromotionsPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3830440178314486669L;
-	private Sistema sistema;
+     * 
+     */
+    private static final long serialVersionUID = 3830440178314486669L;
+    private Sistema sistema;
     private JComboBox<Produto> comboProdutos;
     private JTextField txtPercentualDesconto;
     private JFormattedTextField txtDataInicio, txtDataFim;
     private JButton btnAdicionarPromocao, btnCancelar;
     private ProductsPanel productsPanel;
+    private ProdutoManager produtoManager;
 
-    public PromotionsPanel(Sistema sistema, ProductsPanel productsPanel) {
-        this.sistema = sistema;
+    public PromotionsPanel(ProductsPanel productsPanel, ProdutoManager produtoManager) {
         this.productsPanel = productsPanel;
-        setLayout(null); 
+        this.produtoManager = produtoManager;
+
+        setLayout(null);
         initializeUI();
     }
 
@@ -48,15 +51,17 @@ public class PromotionsPanel extends JPanel {
         lblProduto.setBounds(10, 10, 80, 25);
         add(lblProduto);
 
-        comboProdutos = new JComboBox<Produto>(new DefaultComboBoxModel<Produto>(sistema.getProdutos().toArray(new Produto[0])));
+        comboProdutos = new JComboBox<Produto>(
+                new DefaultComboBoxModel<Produto>(produtoManager.getProdutos().toArray(new Produto[0])));
         comboProdutos.setRenderer(new DefaultListCellRenderer() {
             /**
-			 * 
-			 */
-			private static final long serialVersionUID = -774078213740267784L;
+             * 
+             */
+            private static final long serialVersionUID = -774078213740267784L;
 
-			@Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Produto) {
                     setText(((Produto) value).getNome());
@@ -115,30 +120,30 @@ public class PromotionsPanel extends JPanel {
         try {
             Produto produto = (Produto) comboProdutos.getSelectedItem();
             double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
-            
+
             produto.setDescontoAtivo(true);
             produto.setValorDesconto(percentualDesconto);
 
-            productsPanel.atualizarTabelaProdutos(); 
-            
             limparFormulario();
 
-
-            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato",
+                    JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao adicionar a promoção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar a promoção: " + ex.getMessage(), "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void limparFormulario() {
-        comboProdutos.setSelectedIndex(-1); 
+        comboProdutos.setSelectedIndex(-1);
         txtPercentualDesconto.setText("");
         txtDataInicio.setValue(null);
         txtDataFim.setValue(null);
     }
-    
+
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
@@ -149,8 +154,8 @@ public class PromotionsPanel extends JPanel {
 
     public void atualizarListaProdutos() {
         comboProdutos.removeAllItems();
-        
-        for (Produto produto : sistema.getProdutos()) {
+
+        for (Produto produto : produtoManager.getProdutos()) {
             comboProdutos.addItem(produto);
         }
     }

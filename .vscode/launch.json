@@ -1,0 +1,63 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "teste.Main",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "DataBase",
+            "request": "launch",
+            "mainClass": "system.BancodeDados.DataBase",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "MainFrame",
+            "request": "launch",
+            "mainClass": "system.MainFrame",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "FirebaseExample",
+            "request": "launch",
+            "mainClass": "teste.FirebaseExample",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "Program",
+            "request": "launch",
+            "mainClass": "teste.Program",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "ProjetoIndetado",
+            "request": "launch",
+            "mainClass": "teste.ProjetoIndetado",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
+            "name": "TesteBancoDados",
+            "request": "launch",
+            "mainClass": "teste.TesteBancoDados",
+            "projectName": "lombok"
+        }
+    ]
+}
