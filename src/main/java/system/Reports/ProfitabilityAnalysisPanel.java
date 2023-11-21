@@ -1,4 +1,8 @@
 package system.Reports;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -43,7 +47,20 @@ public class ProfitabilityAnalysisPanel extends JPanel {
 
 
     private void loadProductData() {
-        for (Produto produto : sistema.getProdutos()) {
+        List<Produto> produtos = sistema.getProdutos();
+
+        // Ordenando a lista de produtos com base na margem de lucro percentual
+        Collections.sort(produtos, new Comparator<Produto>() {
+            @Override
+            public int compare(Produto p1, Produto p2) {
+                double margemP1 = (p1.getPrecoVenda() - p1.getPrecoCusto()) / p1.getPrecoCusto();
+                double margemP2 = (p2.getPrecoVenda() - p2.getPrecoCusto()) / p2.getPrecoCusto();
+                return Double.compare(margemP2, margemP1); // Ordena em ordem decrescente
+            }
+        });
+
+        // Adicionando os produtos ordenados ao modelo de tabela
+        for (Produto produto : produtos) {
             double custo = produto.getPrecoCusto();
             double venda = produto.getPrecoVenda();
             double margem = venda - custo;

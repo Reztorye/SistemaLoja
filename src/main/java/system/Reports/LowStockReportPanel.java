@@ -12,28 +12,22 @@ import entities.Produto;
 import entities.Sistema;
 
 public class LowStockReportPanel extends JPanel {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 212123;
-	private JTable table;
+    private static final long serialVersionUID = 212123;
+    private JTable table;
     private DefaultTableModel tableModel;
     private Sistema sistema;
-    
-    public LowStockReportPanel(Sistema sistema) {
-    	this.sistema = sistema;
-        setLayout(null); 
 
+    public LowStockReportPanel(Sistema sistema) {
+        this.sistema = sistema;
+        setLayout(null); 
+        
         String[] columnNames = {"SKU", "Nome do Produto", "Quantidade em Estoque"};
         tableModel = new DefaultTableModel(columnNames, 0) {
-            /**
-			 * 
-			 */
-			private static final long serialVersionUID = -7806541731456304290L;
-			
-			@Override
+            private static final long serialVersionUID = -7806541731456304290L;
+
+            @Override
             public boolean isCellEditable(int row, int column) {
-                return false;  // Desativa a edição das células
+                return false; // Desativa a edição das células
             }
         };
 
@@ -48,29 +42,26 @@ public class LowStockReportPanel extends JPanel {
 
         loadData();  
     }
-    
+
     private void loadData() {
         tableModel.setRowCount(0);
 
         for (Produto produto : sistema.getProdutos()) {
             int estoque = produto.getEstoqueDisponivel();  
-            if (estoque < 5) { 
+            if (estoque < 5) {
                 tableModel.addRow(new Object[]{
                     produto.getSku(),  
                     produto.getNome(), 
-                    estoque 
+                    estoque
                 });
             }
         }
     }
-    
-    class StockCellRenderer extends DefaultTableCellRenderer {
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 235563;
 
-		@Override
+    class StockCellRenderer extends DefaultTableCellRenderer {
+        private static final long serialVersionUID = 235563;
+
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -88,5 +79,9 @@ public class LowStockReportPanel extends JPanel {
 
             return c;
         }
+    }
+
+    public JTable getTable() {
+        return table;
     }
 }

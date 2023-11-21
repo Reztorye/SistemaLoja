@@ -100,7 +100,7 @@ public class ProductsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
-                if (selectedRow >= 0) { // Verifica se uma linha está selecionada
+                if (selectedRow >= 0) { 
                     Object sku = tableModel.getValueAt(selectedRow, 0);
                     Object nome = tableModel.getValueAt(selectedRow, 1);
                     Object categoria = tableModel.getValueAt(selectedRow, 2);

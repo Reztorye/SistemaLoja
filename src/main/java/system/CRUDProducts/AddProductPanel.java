@@ -137,16 +137,13 @@ public class AddProductPanel extends JPanel {
 	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
 	                        return;
 	                    }
-	                    
-	                    
+	                    	                    
 	                    Produto novoProduto = sistema.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
 	
 	                    Object[] rowData = {sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda, estoqueDisponivel};
 	                    tableModel.addRow(rowData);
-	                    
 	                    if (novoProduto != null) {
 	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Produto adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-	                        sistema.imprimirProdutos(); // Mova a chamada do método para aqui
 	                    } else {
 	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Não foi possível adicionar o produto", "Erro", JOptionPane.ERROR_MESSAGE);
 	                    }

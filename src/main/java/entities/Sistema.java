@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class Sistema {
 	private List<Produto> produtos;
@@ -96,12 +97,14 @@ public class Sistema {
 	    Venda venda3 = new Venda(cliente3, itensVenda3, quantidadeTotalVenda3, dataVenda3);
 	    Venda venda4 = new Venda(cliente4, itensVenda4, quantidadeTotalVenda4, dataVenda4);
 	    Venda venda5 = new Venda(cliente1, itensVenda5, quantidadeTotalVenda5, dataVenda5); 
-
+	    
+	    vendas.add(venda1);
+	    vendas.add(venda2);
 	    vendas.add(venda3);
 	    vendas.add(venda4);
 	    vendas.add(venda5);
-	    vendas.add(venda1);
-	    vendas.add(venda2);
+	    
+	    
 	}
 
 	public double totalDeVendasPorPeriodo(Date inicio, Date fim) {
@@ -143,7 +146,7 @@ public class Sistema {
 		}
 		System.out.println("Produto não encontrado: " + sku);
 	}
-
+	
 	public void listarProdutos() {
 		for (Produto produto : produtos) {
 			System.out.println(produto);
@@ -348,7 +351,13 @@ public class Sistema {
 	    }
 	    throw new NoSuchElementException("Categoria com o nome '" + nome + "' não encontrado.");
 	}
-
+	
+	public List<Produto> getProdutosPorCategoria(Categoria categoria) {
+	    return produtos.stream()
+	                   .filter(produto -> produto.getCategoria().equals(categoria))
+	                   .collect(Collectors.toList());
+	}
+	
 	public Fornecedor buscarFornecedorPorNome(String nome) {
 	    for (Fornecedor fornecedor : fornecedores) {
 	        if (fornecedor.getNome().equals(nome)) {

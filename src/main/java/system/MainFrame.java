@@ -35,7 +35,7 @@ import system.Supplier.AddSupplierPanel;
 	        cardLayout = new CardLayout();
 	        cardPanel = new JPanel(cardLayout);
 	
-	        MainPanel mainPanel = new MainPanel();
+	        MainPanel mainPanel = new MainPanel(sistema);
 	        cardPanel.add(mainPanel, "MainPanel");
 	
 	        SalesReportPanel salesReportPanel = new SalesReportPanel(sistema);
@@ -50,7 +50,7 @@ import system.Supplier.AddSupplierPanel;
 	        SalesPanel salesPanel = new SalesPanel(sistema, cardLayout, cardPanel);
 	        cardPanel.add(salesPanel, "SalesPanel");
 	        
-	        PromotionsPanel promotionsPanel = new PromotionsPanel(sistema, productsPanel);
+	        PromotionsPanel promotionsPanel = new PromotionsPanel(sistema, productsPanel, cardLayout, cardPanel);
 	        cardPanel.add(promotionsPanel, "PromotionsPanel");
 	        
 	        ReportsPanel reportsPanel = new ReportsPanel(sistema);

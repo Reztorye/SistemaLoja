@@ -1,7 +1,6 @@
 package system;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,14 +20,9 @@ public class SidebarPanel extends JPanel {
 
     private static final long serialVersionUID = -1666701738391775114L;
     private CardLayout cardLayout;
-    private JPanel cardPanel; //Painel que usa CardLayout
+    private JPanel cardPanel;
     private PromotionsPanel promotionsPanel;
-    private Color lightModeBackground = Color.WHITE;
-    private Color darkModeBackground = Color.DARK_GRAY;
-    private Color lightModeForeground = Color.BLACK;
-    private Color darkModeForeground = Color.WHITE;
-    private boolean isDarkMode = false;
-
+    
     public SidebarPanel(CardLayout cardLayout, JPanel cardPanel, PromotionsPanel promotionsPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
@@ -38,7 +32,10 @@ public class SidebarPanel extends JPanel {
         
         addButton("Tela Principal", "MainPanel", null);
         addButton("Vendas", "SalesPanel", null);
-        addButton("Promoções", "PromotionsPanel", this::atualizarPromotionsPanel); //metodo para atualizar a jcombobox no painel de promoção
+        addButton("Promoções", "PromotionsPanel", () -> {
+            promotionsPanel.atualizarListaProdutos(); 
+            cardLayout.show(cardPanel, "PromotionsPanel");
+        });
         addButton("Produtos", "ProductsPanel", null);
         addButton("Clientes", "CustomersPanel", null);
         addButton("Fornecedor", "AddSupplierPanel", null);
@@ -61,9 +58,5 @@ public class SidebarPanel extends JPanel {
             }
         });
         add(button);
-    }
-
-    private void atualizarPromotionsPanel() {
-        promotionsPanel.atualizarListaProdutos();
     }
 }

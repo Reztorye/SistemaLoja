@@ -15,6 +15,6 @@ public class Categoria {
 	
 	@Override
 	public String toString() {
-		return "ID: " + id + " | Nome: " + nome;
+		return nome;
 	}
 }

@@ -1,5 +1,6 @@
 package system.Reports;
 
+import java.awt.Font;
 import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,8 +31,6 @@ public class TopSellingProductsPanel extends JPanel {
     private Sistema sistema;
     private JDateChooser dateChooserInicio, dateChooserFim;
     private JButton btnFiltrar;
-    private JButton btnOrdenarPorValor;
-    private JButton btnOrdenarPorQuantidade;
 
 
     public TopSellingProductsPanel(Sistema sistema) {
@@ -52,31 +52,31 @@ public class TopSellingProductsPanel extends JPanel {
         table = new JTable(tableModel);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 0, 944, 300);
+        scrollPane.setBounds(0, 50, 944, 300);
         add(scrollPane);
-        
-        dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(0, 320, 120, 25);
-        add(dateChooserInicio);
 
         dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(130, 320, 120, 25);
+        dateChooserFim.setBounds(365, 21, 120, 20);
         add(dateChooserFim);
 
         btnFiltrar = new JButton("Filtrar");
-        btnFiltrar.setBounds(270, 320, 80, 25);
+        btnFiltrar.setBounds(495, 20, 80, 20);
         btnFiltrar.addActionListener(e -> loadData());
         add(btnFiltrar);
         
-        btnOrdenarPorValor = new JButton("Ordenar por Valor");
-        btnOrdenarPorValor.setBounds(360, 320, 150, 25);
-        btnOrdenarPorValor.addActionListener(e -> ordenarPorValor());
-        add(btnOrdenarPorValor);
-
-        btnOrdenarPorQuantidade = new JButton("Ordenar por Quantidade");
-        btnOrdenarPorQuantidade.setBounds(520, 320, 180, 25);
-        btnOrdenarPorQuantidade.addActionListener(e -> ordenarPorQuantidade());
-        add(btnOrdenarPorQuantidade);
+        JLabel lblDateBegin = new JLabel("Data de início");
+        lblDateBegin.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblDateBegin.setBounds(0, 20, 130, 20);
+        add(lblDateBegin);
+        
+        dateChooserInicio = new JDateChooser();
+        dateChooserInicio.setBounds(129, 20, 120, 20);
+        add(dateChooserInicio);
+        
+        JLabel lblDataDeFim = new JLabel("Data de fim");
+        lblDataDeFim.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblDataDeFim.setBounds(255, 20, 109, 20);
+        add(lblDataDeFim);
         
         loadData();
     }
@@ -119,12 +119,6 @@ public class TopSellingProductsPanel extends JPanel {
         
         // Chama a função de ordenar por quantidade ao carregar os dados
         ordenarPorQuantidade();
-    }
-    
-    private void ordenarPorValor() {
-        ordenarEExibir((entry1, entry2) -> 
-            Double.compare(entry2.getValue() * entry2.getKey().getPrecoVenda(),
-                           entry1.getValue() * entry1.getKey().getPrecoVenda()));
     }
 
     

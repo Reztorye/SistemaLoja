@@ -1,5 +1,6 @@
 package system.Reports;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -30,15 +31,15 @@ public class SalesByPeriodPanel extends JPanel {
         setLayout(null);
 
         dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(270, 118, 120, 25);
+        dateChooserInicio.setBounds(125, 20, 120, 20);
         add(dateChooserInicio);
 
         dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(408, 118, 120, 25);
+        dateChooserFim.setBounds(360, 20, 120, 20);
         add(dateChooserFim);
 
         btnFilter = new JButton("Filtrar");
-        btnFilter.setBounds(538, 118, 80, 25);
+        btnFilter.setBounds(495, 20, 80, 20);
         btnFilter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,8 +49,18 @@ public class SalesByPeriodPanel extends JPanel {
         add(btnFilter);
 
         lblTotalSales = new JLabel("Total de Vendas: ");
-        lblTotalSales.setBounds(270, 154, 300, 25);
+        lblTotalSales.setBounds(0, 50, 300, 25);
         add(lblTotalSales);
+        
+        JLabel lblDateBegin = new JLabel("Data de início");
+        lblDateBegin.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblDateBegin.setBounds(0, 20, 130, 20);
+        add(lblDateBegin);
+        
+        JLabel lblDataDeFim = new JLabel("Data de fim");
+        lblDataDeFim.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblDataDeFim.setBounds(255, 20, 109, 20);
+        add(lblDataDeFim);
     }
     
     private void filterSales() {
