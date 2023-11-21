@@ -49,7 +49,6 @@ public class ProductsReportPanel extends JPanel {
 
         List<Produto> produtos = produtoManager.getProdutos();
         List<ProdutoVendido> topProdutos = sistema.getTopMaisVendidos(3);
-        // Note que estamos buscando o top 3 fora do loop de preenchimento da tabela
 
         for (Produto produto : produtos) {
             Object[] row = new Object[] {

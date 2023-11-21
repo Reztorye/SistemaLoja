@@ -18,7 +18,7 @@ public class ItemVenda {
 
 	@Override
 	public String toString() {
-		return produto.getCategoria().getNome() + " " + produto.getFornecedor().getNome() + " " + produto.getNome()
+		return produto.getCategoria() + " " + produto.getFornecedor() + " " + produto.getNome()
 				+ " - quantidade: " + quantidade + " - preço unitário: "
 				+ String.format("R$ %.2f", produto.getPrecoVenda());
 	}

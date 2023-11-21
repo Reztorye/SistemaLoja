@@ -18,10 +18,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddCategoryPanel extends JPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6055427396847789185L;
     private JTextField txtNomeCategoria;
     private JButton btnAddCategoria, btnCancelCategoria;
     private Sistema sistema;
@@ -29,7 +25,7 @@ public class AddCategoryPanel extends JPanel {
 
     public AddCategoryPanel(Sistema sistema, CardLayout cardLayout, JPanel cardPanel) {
         this.sistema = sistema;
-        setLayout(null); // Configura o painel para layout null
+        setLayout(null);
 
         JLabel lblNomeCategoria = new JLabel("Nome da Categoria:");
         lblNomeCategoria.setBounds(50, 50, 150, 25);
@@ -45,12 +41,17 @@ public class AddCategoryPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String nomeCategoria = txtNomeCategoria.getText().trim();
                 if (!nomeCategoria.isEmpty()) {
-                    Categoria categoria = sistema.adicionarCategoria(nomeCategoria);
+                    Categoria categoria = sistema.adicionarCategoriaFirebase(nomeCategoria);
                     if (categoria != null) {
                         JOptionPane.showMessageDialog(AddCategoryPanel.this,
-                                "Categoria adicionada ou já existente: " + categoria.getNome(),
+                                "Categoria adicionada com sucesso: " + categoria.getNome(),
                                 "Operação Concluída",
                                 JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(AddCategoryPanel.this,
+                                "Erro ao adicionar categoria.",
+                                "Erro",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                     txtNomeCategoria.setText("");
                 } else {

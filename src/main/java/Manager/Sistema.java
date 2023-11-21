@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import entities.Categoria;
 import entities.Cliente;
 import entities.Fornecedor;
@@ -23,6 +26,8 @@ public class Sistema {
 	private List<Categoria> categorias;
 	private List<Fornecedor> fornecedores;
 	private List<Promocao> promocoes;
+	private CategoriaManager categoriaManager;
+	private FornecedorManager fornecedorManager;
 
 	public Sistema() {
 
@@ -31,14 +36,11 @@ public class Sistema {
 		this.vendas = new ArrayList<>();
 		this.categorias = new ArrayList<>();
 		this.fornecedores = new ArrayList<>();
-		promocoes = new ArrayList<>();
-		categorias.add(new Categoria("Smartphone"));
-		categorias.add(new Categoria("Mouse"));
-		categorias.add(new Categoria("Notebook"));
+		this.categoriaManager = new CategoriaManager();
+		this.fornecedorManager = new FornecedorManager();
 
-		fornecedores.add(new Fornecedor("Xiaomi"));
-		fornecedores.add(new Fornecedor("Samsung"));
-		fornecedores.add(new Fornecedor("Apple"));
+		promocoes = new ArrayList<>();
+
 	}
 
 	public List<ProdutoVendido> getTopMaisVendidos(int topN) {
@@ -182,6 +184,24 @@ public class Sistema {
 		for (Fornecedor fornecedor : fornecedores) {
 			System.out.println(fornecedor);
 		}
+	}
+
+	public Categoria adicionarCategoriaFirebase(String nome) {
+		Categoria categoria = categoriaManager.adicionarCategoria(nome);
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("categorias");
+		String firebaseId = ref.push().getKey();
+		categoria.setFirebaseId(firebaseId);
+		ref.child(firebaseId).setValueAsync(categoria);
+		return categoria;
+	}
+
+	public Fornecedor adicionarFornecedorFirebase(String nome) {
+		Fornecedor fornecedor = fornecedorManager.adicionarFornecedor(nome);
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference("fornecedores");
+		String firebaseId = ref.push().getKey();
+		fornecedor.setFirebaseId(firebaseId);
+		ref.child(firebaseId).setValueAsync(fornecedor);
+		return fornecedor;
 	}
 
 	public Categoria buscarCategoriaPorNome(String nome) {

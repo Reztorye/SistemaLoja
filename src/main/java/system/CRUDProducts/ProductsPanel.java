@@ -1,11 +1,12 @@
 package system.CRUDProducts;
 
 import java.awt.CardLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,45 +14,43 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import Manager.ProdutoManager;
+import Manager.Sistema;
 import entities.Produto;
 import lombok.Getter;
 import lombok.Setter;
-import Manager.ProdutoManager;
-import Manager.Sistema;
-
-import javax.swing.JLabel;
-import java.awt.Font;
 
 @Getter
 @Setter
-
 public class ProductsPanel extends JPanel {
+    /**
+    * 
+    */
+
     private static final long serialVersionUID = 2448723614099966739L;
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd, btnEdit, btnDelete;
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private Sistema sistema;
+    private ProdutoManager produtoManager;
     private int selectedRow;
     private JButton backButton;
     private JLabel lblProdutos;
-    private ProdutoManager produtoManager;
+    private Sistema sistema;
 
-    public ProductsPanel(CardLayout cardLayout, JPanel cardPanel, Sistema sistema, ProdutoManager produtoManager) {
+    public ProductsPanel(CardLayout cardLayout, JPanel cardPanel, ProdutoManager produtoManager, Sistema sistema) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
-        this.sistema = sistema;
         this.produtoManager = produtoManager;
+        this.sistema = sistema;
         setLayout(null);
 
         tableModel = new DefaultTableModel() {
+            /**
+             * 
+             */
+
             private static final long serialVersionUID = -3005244091815725029L;
 
             @Override
@@ -67,6 +66,8 @@ public class ProductsPanel extends JPanel {
         tableModel.addColumn("Preço de Custo");
         tableModel.addColumn("Preço de Venda");
         tableModel.addColumn("Estoque Disponível");
+
+        loadProdutoIntoTable();
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -97,7 +98,8 @@ public class ProductsPanel extends JPanel {
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema);
+                AddProductPanel addProductPanel = new AddProductPanel(cardLayout, cardPanel, tableModel, sistema,
+                        produtoManager);
                 cardPanel.add(addProductPanel, "AddProductPanel");
                 cardLayout.show(cardPanel, "AddProductPanel");
             }
@@ -108,16 +110,21 @@ public class ProductsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow >= 0) {
-                    Object[] rowData = new Object[tableModel.getColumnCount()];
-                    for (int i = 0; i < tableModel.getColumnCount(); i++) {
-                        rowData[i] = tableModel.getValueAt(selectedRow, i);
-                    }
+                    int produtoSku = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+                    Produto produtoParaEditar = produtoManager.buscarProdutoPorSku(produtoSku);
 
-                    EditProductPanel editProductPanel = new EditProductPanel(cardLayout, cardPanel, produtoManager,
-                            rowData);
-                    cardPanel.add(editProductPanel, "EditProductPanel");
-                    cardLayout.show(cardPanel, "EditProductPanel");
+                    if (produtoParaEditar != null) {
+                        EditProductPanel editProductPanel = new EditProductPanel(cardLayout, cardPanel, produtoManager);
+                        editProductPanel.setCurrentProduto(produtoParaEditar);
+                        cardPanel.add(editProductPanel, "EditProductPanel");
+                        cardLayout.show(cardPanel, "EditProductPanel");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Produto não encontrado.", "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
+
+                    System.out.println("Deu Merda" + produtoManager);
                     JOptionPane.showMessageDialog(null, "Selecione um produto para editar.",
                             "Nenhum produto selecionado", JOptionPane.WARNING_MESSAGE);
                 }
@@ -139,48 +146,37 @@ public class ProductsPanel extends JPanel {
                 cardLayout.show(cardPanel, "MainPanel");
             }
         });
+
     }
 
-    @Override
-    public void setVisible(boolean aFlag) {
-        super.setVisible(aFlag);
-        if (aFlag) {
-            atualizarTabelaProdutos();
-        }
+    public void refreshProdutoTable() {
+        loadProdutoIntoTable();
     }
 
-    public void atualizarTabelaProdutos() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("caminho/para/produtos");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+    private void loadProdutoIntoTable() {
+        tableModel.setRowCount(0); // Limpar a tabela existente
+
+        produtoManager.fetchProdutosFromFirebase(produtos -> {
+            if (produtos != null) {
                 SwingUtilities.invokeLater(() -> {
-                    tableModel.setRowCount(0);
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Produto produto = snapshot.getValue(Produto.class);
+                    for (Produto produto : produtos) {
                         tableModel.addRow(new Object[] {
-                                produto.getSku(),
                                 produto.getNome(),
-                                produto.getCategoria() != null ? produto.getCategoria().getNome() : "",
-                                produto.getFornecedor() != null ? produto.getFornecedor().getNome() : "",
+                                produto.getCategoria() != null ? produto.getCategoria() : "",
+                                produto.getFornecedor() != null ? produto.getFornecedor() : "",
                                 produto.getDescricao(),
-                                formatarMoeda(produto.getPrecoCusto()),
-                                formatarMoeda(produto.getPrecoVendaComDesconto()),
+                                produto.getPrecoCusto(),
+                                produto.getPrecoVenda(),
                                 produto.getEstoqueDisponivel()
                         });
                     }
                 });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("Falha ao ler dados: " + databaseError.getCode());
+            } else {
+                String errorMessage = "Erro ao carregar dados do Firebase. Lista de produtos nula.";
+                System.err.println(errorMessage);
+                JOptionPane.showMessageDialog(this, errorMessage, "Erro", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
 
-    private String formatarMoeda(double valor) {
-        NumberFormat format = NumberFormat.getCurrencyInstance();
-        return format.format(valor);
-    }
 }

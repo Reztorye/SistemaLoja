@@ -11,7 +11,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Manager.Sistema;
-import entities.Categoria;
 import entities.ItemVenda;
 import entities.Venda;
 
@@ -49,14 +48,15 @@ public class SalesByCategoryPanel extends JPanel {
     }
 
     private void loadSalesData() {
-        Map<Categoria, Double> salesByCategory = new HashMap<>();
+        Map<String, Double> salesByCategory = new HashMap<>();
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formatador de moeda
                                                                                                 // para o Brasil
 
         // Calcula o total de vendas por categoria
         for (Venda venda : sistema.getVendas()) {
             for (ItemVenda itemVenda : venda.getItensVenda()) {
-                Categoria categoria = itemVenda.getProduto().getCategoria();
+                String categoria = itemVenda.getProduto().getCategoria();
+                salesByCategory.putIfAbsent(categoria, 0.0);
                 double valorTotalItem = itemVenda.getQuantidade() * itemVenda.getProduto().getPrecoVenda();
                 salesByCategory.merge(categoria, valorTotalItem, Double::sum);
             }
@@ -65,7 +65,7 @@ public class SalesByCategoryPanel extends JPanel {
         // Adiciona os dados calculados ao modelo da tabela
         salesByCategory.forEach((categoria, totalVendas) -> {
             tableModel.addRow(new Object[] {
-                    categoria.getNome(),
+                    categoria,
                     currencyFormat.format(totalVendas)
             });
         });

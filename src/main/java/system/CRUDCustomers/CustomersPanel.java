@@ -107,8 +107,7 @@ public class CustomersPanel extends JPanel {
                     Cliente clienteParaEditar = clienteManager.buscarClientePorId(clienteId);
                     if (clienteParaEditar != null) {
                         EditCustomerPanel editCustomerPanel = new EditCustomerPanel(clienteManager, tableModel,
-                                cardLayout,
-                                cardPanel);
+                                cardLayout, cardPanel);
                         editCustomerPanel.setCurrentCliente(clienteParaEditar);
                         cardPanel.add(editCustomerPanel, "EditCustomerPanel");
                         cardLayout.show(cardPanel, "EditCustomerPanel");

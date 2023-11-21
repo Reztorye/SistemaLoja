@@ -51,52 +51,6 @@ public class ClienteManager {
         return cliente;
     }
 
-    public void fetchClientesFromFirebase(Consumer<List<Cliente>> callback) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("clientes");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Cliente> fetchedClientes = new ArrayList<>();
-
-                // Limpa o mapeamento existente
-                clienteIdMap.clear();
-
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Cliente cliente = child.getValue(Cliente.class);
-                    if (cliente != null && cliente.getIdLocal() != 0) {
-                        cliente.setFirebaseId(child.getKey());
-                        fetchedClientes.add(cliente);
-                        // Adiciona ao mapeamento
-                        clienteIdMap.put(cliente.getIdLocal(), child.getKey());
-                    }
-                }
-
-                // Remove clientes do mapeamento se não estiverem presentes no Firebase
-                for (Integer idLocal : new ArrayList<>(clienteIdMap.keySet())) {
-                    boolean foundInFirebase = false;
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (!foundInFirebase && clienteIdMap.containsKey(idLocal)) {
-                            foundInFirebase = true;
-                            break;
-                        }
-                    }
-                    if (!foundInFirebase) {
-                        clienteIdMap.remove(idLocal);
-                    }
-                }
-
-                callback.accept(fetchedClientes);
-                clientes.addAll(fetchedClientes);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.err.println("Erro ao buscar clientes: " + databaseError.getMessage());
-                callback.accept(null);
-            }
-        });
-    }
-
     public void atualizarCliente(Cliente cliente) {
         for (int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getIdLocal() == cliente.getIdLocal()) {
@@ -141,4 +95,35 @@ public class ClienteManager {
         }
     }
 
+    public void fetchClientesFromFirebase(Consumer<List<Cliente>> callback) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("clientes");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Cliente> fetchedClientes = new ArrayList<>();
+
+                // Limpa o mapeamento existente
+                clienteIdMap.clear();
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Cliente cliente = child.getValue(Cliente.class);
+                    if (cliente != null && cliente.getIdLocal() != 0) {
+                        cliente.setFirebaseId(child.getKey());
+                        fetchedClientes.add(cliente);
+                        // Adiciona ao mapeamento
+                        clienteIdMap.put(cliente.getIdLocal(), child.getKey());
+                    }
+                }
+
+                callback.accept(fetchedClientes);
+                clientes.addAll(fetchedClientes);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("Erro ao buscar clientes: " + databaseError.getMessage());
+                callback.accept(null);
+            }
+        });
+    }
 }

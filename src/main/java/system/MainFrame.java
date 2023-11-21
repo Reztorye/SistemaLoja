@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import Manager.ClienteManager;
+import Manager.FornecedorManager;
 import Manager.ProdutoManager;
 import Manager.Sistema;
 import system.BancodeDados.DataBaseFirebase;
@@ -30,6 +31,7 @@ public class MainFrame extends JFrame {
 	private Sistema sistema = new Sistema();
 	private ClienteManager clienteManager = new ClienteManager();
 	private ProdutoManager produtoManager = new ProdutoManager();
+	private FornecedorManager fornecedorManager;
 
 	public MainFrame() {
 		// sistema.inicializarDadosDeTeste();
@@ -47,7 +49,7 @@ public class MainFrame extends JFrame {
 		SalesReportPanel salesReportPanel = new SalesReportPanel(sistema);
 		cardPanel.add(salesReportPanel, "SalesReportPanel");
 
-		ProductsPanel productsPanel = new ProductsPanel(cardLayout, cardPanel, sistema, produtoManager);
+		ProductsPanel productsPanel = new ProductsPanel(cardLayout, cardPanel, produtoManager, sistema);
 		cardPanel.add(productsPanel, "ProductsPanel");
 
 		CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel, clienteManager);
@@ -62,7 +64,7 @@ public class MainFrame extends JFrame {
 		ReportsPanel reportsPanel = new ReportsPanel(sistema, produtoManager);
 		cardPanel.add(reportsPanel, "ReportsPanel");
 
-		AddSupplierPanel addSupplierPanel = new AddSupplierPanel(sistema, cardLayout, cardPanel);
+		AddSupplierPanel addSupplierPanel = new AddSupplierPanel(sistema, cardLayout, cardPanel, fornecedorManager);
 		cardPanel.add(addSupplierPanel, "AddSupplierPanel");
 
 		AddCategoryPanel addCategoryPanel = new AddCategoryPanel(sistema, cardLayout, cardPanel);

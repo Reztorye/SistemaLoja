@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Cliente {
 	private static int ultimoId = 0;
-	private int idLocal; // ID local
-	private String firebaseId; // ID do Firebase
 	private String nome;
 	private String endereco;
 	private String telefone;
 	private String email;
 	private List<Venda> historicoDeCompras = new ArrayList<>();
+	private int idLocal; // ID local
+	private String firebaseId; // ID do Firebase
 
 	public Cliente(String nome, String endereco, String telefone, String email) {
 		this.idLocal = ++ultimoId; // Incrementa o ID local
