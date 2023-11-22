@@ -5,7 +5,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,8 +19,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import Manager.ClienteManager;
 import Manager.ProdutoManager;
+import Manager.SalesManager;
 import Manager.Sistema;
 import entities.Cliente;
 import entities.ItemVenda;
@@ -46,14 +53,17 @@ public class SalesPanel extends JPanel {
     private JPanel cardPanel;
     private ProdutoManager produtoManager;
     private ClienteManager clienteManager;
+    private SalesManager salesManager;
+    private JTextField txtNomeProduto;
 
     public SalesPanel(Sistema sistema, CardLayout cardLayout, JPanel cardPanel, ProdutoManager produtoManager,
-            ClienteManager clienteManager) {
+            ClienteManager clienteManager, SalesManager salesManager) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.sistema = sistema;
         this.produtoManager = produtoManager;
         this.clienteManager = clienteManager;
+        this.salesManager = salesManager;
         setLayout(null);
 
         btnVoltar = new JButton("Voltar");
@@ -70,24 +80,36 @@ public class SalesPanel extends JPanel {
         lblVendas.setBounds(20, 8, 184, 30);
         add(lblVendas);
 
+        JLabel lblSearchByName = new JLabel("Pesquisar por Nome:");
+        lblSearchByName.setBounds(20, 49, 160, 25);
+        add(lblSearchByName);
+
+        txtNomeProduto = new JTextField();
+        txtNomeProduto.setBounds(150, 49, 170, 25);
+        add(txtNomeProduto);
+
+        JButton btnSearchByName = new JButton("Pesquisar");
+        btnSearchByName.setBounds(350, 49, 160, 25);
+        add(btnSearchByName);
+
         JLabel lblSKU = new JLabel("SKU:");
-        lblSKU.setBounds(20, 49, 80, 25);
+        lblSKU.setBounds(20, 84, 160, 25);
         add(lblSKU);
 
         txtSKU = new JTextField();
-        txtSKU.setBounds(110, 49, 165, 25);
+        txtSKU.setBounds(60, 84, 80, 25);
         add(txtSKU);
 
         JLabel lblQuantity = new JLabel("Quantidade:");
-        lblQuantity.setBounds(20, 78, 80, 25);
+        lblQuantity.setBounds(160, 84, 160, 25);
         add(lblQuantity);
 
         txtQuantity = new JTextField();
-        txtQuantity.setBounds(110, 78, 165, 25);
+        txtQuantity.setBounds(240, 84, 80, 25);
         add(txtQuantity);
 
         btnAddToCart = new JButton("Adicionar ao Carrinho");
-        btnAddToCart.setBounds(300, 78, 160, 25);
+        btnAddToCart.setBounds(350, 84, 160, 25);
         add(btnAddToCart);
 
         btnFinalizeSale = new JButton("Finalizar Venda");
@@ -165,8 +187,8 @@ public class SalesPanel extends JPanel {
                     }
                 }
 
-                sistema.realizarVenda(cliente, itensVenda);
-
+                salesManager.realizarVenda(cliente, itensVenda);
+                addSales(cliente, itensVenda);
                 tableModel.setRowCount(0);
                 JOptionPane.showMessageDialog(SalesPanel.this, "Venda finalizada com sucesso!", "Venda Concluída",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -190,6 +212,40 @@ public class SalesPanel extends JPanel {
                     JOptionPane.showMessageDialog(SalesPanel.this, "Por favor, selecione um item para remover.",
                             "Nenhum item selecionado", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+
+        btnSearchByName.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nome = txtNomeProduto.getText();
+                produtoManager.buscarProdutosPorNomeFirebase(nome, produtosEncontrados -> {
+
+                    if (!produtosEncontrados.isEmpty()) {
+                        // Se apenas um produto for encontrado, preenche automaticamente
+                        if (produtosEncontrados.size() == 1) {
+                            Produto produtoEncontrado = produtosEncontrados.get(0);
+                            txtSKU.setText(String.valueOf(produtoEncontrado.getSku()));
+                        } else {
+                            // Se múltiplos produtos forem encontrados, permite que o usuário escolha
+                            Produto produtoEscolhido = (Produto) JOptionPane.showInputDialog(
+                                    SalesPanel.this,
+                                    "Selecione um produto:",
+                                    "Produtos Encontrados",
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    produtosEncontrados.toArray(),
+                                    produtosEncontrados.get(0));
+
+                            // Se um produto foi escolhido, atualiza o campo SKU
+                            if (produtoEscolhido != null) {
+                                txtSKU.setText(String.valueOf(produtoEscolhido.getSku()));
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(SalesPanel.this, "Nenhum produto encontrado com o nome: " + nome,
+                                "Erro do Produto", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
             }
         });
 
@@ -234,6 +290,36 @@ public class SalesPanel extends JPanel {
                     produto.getEstoqueDisponivel()
             });
         }
+    }
+
+    private void addSales(Cliente cliente, List<ItemVenda> itensVenda) {
+        // Calcula o total da venda
+        double totalVenda = itensVenda.stream()
+                .mapToDouble(item -> item.getProduto().getPrecoVenda() *
+                        item.getQuantidade())
+                .sum();
+
+        // Cria uma referência para o nó "sales" no Firebase
+        DatabaseReference salesRef = FirebaseDatabase.getInstance().getReference("vendas");
+
+        // Cria um novo nó para armazenar informações da venda
+        DatabaseReference newSaleRef = salesRef.push();
+
+        // Preparar dados da venda para enviar
+        Map<String, Object> vendaData = new HashMap<>();
+        vendaData.put("clienteId", cliente.getFirebaseId());
+        vendaData.put("itensVenda", itensVenda.stream().map(this::convertItemVendaToMap).collect(Collectors.toList()));
+        vendaData.put("totalVenda", totalVenda);
+
+        // Envia os dados para o Firebase
+        newSaleRef.setValueAsync(vendaData);
+    }
+
+    private Map<String, Object> convertItemVendaToMap(ItemVenda item) {
+        Map<String, Object> itemMap = new HashMap<>();
+        itemMap.put("produtoId", item.getProduto().getFirebaseId());
+        itemMap.put("quantidade", item.getQuantidade());
+        return itemMap;
     }
 
 }

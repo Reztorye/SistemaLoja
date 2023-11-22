@@ -124,7 +124,6 @@ public class ProductsPanel extends JPanel {
                     }
                 } else {
 
-                    System.out.println("Deu Merda" + produtoManager);
                     JOptionPane.showMessageDialog(null, "Selecione um produto para editar.",
                             "Nenhum produto selecionado", JOptionPane.WARNING_MESSAGE);
                 }
@@ -161,6 +160,7 @@ public class ProductsPanel extends JPanel {
                 SwingUtilities.invokeLater(() -> {
                     for (Produto produto : produtos) {
                         tableModel.addRow(new Object[] {
+                                produto.getSku(),
                                 produto.getNome(),
                                 produto.getCategoria() != null ? produto.getCategoria() : "",
                                 produto.getFornecedor() != null ? produto.getFornecedor() : "",

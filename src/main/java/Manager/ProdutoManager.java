@@ -100,6 +100,29 @@ public class ProdutoManager {
                 .orElse(null);
     }
 
+    public void buscarProdutosPorNomeFirebase(String nome, Consumer<List<Produto>> callback) {
+        String nomeBusca = nome.toUpperCase();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
+        ref.orderByChild("nome").startAt(nomeBusca).endAt(nome + "\uf8ff")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<Produto> produtosEncontrados = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Produto produto = snapshot.getValue(Produto.class);
+                            produtosEncontrados.add(produto);
+                        }
+                        callback.accept(produtosEncontrados);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.err.println("Erro ao buscar produtos: " + databaseError.getMessage());
+                        callback.accept(Collections.emptyList());
+                    }
+                });
+    }
+
     public void atualizarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda,
             int estoqueDisponivel, String categoria, String fornecedor) {
         for (Produto produto : produtos) {

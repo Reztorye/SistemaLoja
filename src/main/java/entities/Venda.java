@@ -6,57 +6,72 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+
 public class Venda {
 	private static int ultimoId = 0;
-	private int id;
+	private int idLocal; // ID local
+	private String firebaseId; // ID do Firebase
 	private Cliente cliente;
 	private Date data;
-	private List<Produto> produtos;
 	private List<ItemVenda> itensVenda;
 
-	public Venda(Cliente cliente, List<ItemVenda> itensVenda, int quantidade, Date data) {
-		this.id = ++ultimoId;
+	public Venda(Cliente cliente, List<ItemVenda> itensVenda, Date data) {
+		this.idLocal = ++ultimoId;
 		this.cliente = cliente;
 		this.itensVenda = new ArrayList<>(itensVenda);
-		this.data = data; 
+		this.data = data;
+		cliente.adicionarCompra(this); // Adiciona esta venda ao histórico do cliente
 	}
 
-	public void adicionarVenda(int sku) {
-		for (Produto produto : produtos) {
-			if (produto.getSku().equals(sku)) {
-				produtos.add(produto);
-			}
-		}
+	public void adicionarItemVenda(ItemVenda itemVenda) {
+		// Método para adicionar um item à venda
+		itensVenda.add(itemVenda);
 	}
 
-	public void removerVenda(int sku) {
-		for (Produto produto : produtos) {
-			if (produto.getSku().equals(sku)) {
-				produtos.remove(produto);
-			}
-		}
-	}
-
-	public List<ItemVenda> getProdutosVendidos() {
-		return itensVenda;
+	public void removerItemVenda(int sku) {
+		// Método para remover um item da venda
+		itensVenda.removeIf(item -> item.getProduto().getSku().equals(sku));
 	}
 
 	public double calcularValorTotal() {
-		double valorTotal = 0;
-		for (ItemVenda itemVenda : itensVenda) {
-			valorTotal += itemVenda.getProduto().getPrecoVenda() * itemVenda.getQuantidade();
-		}
-		return valorTotal;
+		// Método para calcular o valor total da venda
+		return itensVenda.stream()
+				.mapToDouble(item -> item.getProduto().getPrecoVenda() * item.getQuantidade())
+				.sum();
+	}
+
+	public static int gerarNovoId() {
+		return ++ultimoId;
+	}
+
+	public void setFirebaseId(String firebaseId) {
+		this.firebaseId = firebaseId;
+	}
+
+	public String getFirebaseId() {
+		return firebaseId;
 	}
 
 	SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	@Override
 	public String toString() {
-		return "Venda - ID: " + id + ", cliente: " + cliente.getNome() + ", data: " + formato.format(data) + ", itens: "
-				+ itensVenda + " Total: " + String.format("R$ %.2f", calcularValorTotal());
+		StringBuilder sb = new StringBuilder();
+		sb.append("Venda - ID: ").append(idLocal)
+				.append(", cliente: ").append(cliente.getNome())
+				.append(", data: ").append(formato.format(data))
+				.append(", itens: ").append(itensVenda)
+				.append(" Total: ").append(String.format("R$ %.2f", calcularValorTotal()));
+
+		return sb.toString();
+	}
+
+	public List<ItemVenda> getProdutosVendidos() {
+		return this.itensVenda;
 	}
 
 }

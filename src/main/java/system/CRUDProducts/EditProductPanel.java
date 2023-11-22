@@ -16,11 +16,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import Manager.ProdutoManager;
-
+import entities.Categoria;
+import entities.Fornecedor;
 import entities.Produto;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,13 +48,15 @@ public class EditProductPanel extends JPanel {
 		this.produtoManager = produtoManager;
 		tableModel = new DefaultTableModel();
 		setLayout(null);
+		buscarCategorias();
+		buscarFornecedores();
 
 		JLabel lblSKU = new JLabel("SKU:");
 		lblSKU.setBounds(10, 10, 80, 25);
 		add(lblSKU);
 
 		txtSKU = new JTextField();
-		txtSKU.setBounds(100, 10, 165, 25);
+		txtSKU.setBounds(0, 0, 0, 0);
 		add(txtSKU);
 
 		JLabel lblNome = new JLabel("Nome:");
@@ -58,23 +64,23 @@ public class EditProductPanel extends JPanel {
 		add(lblNome);
 
 		txtNome = new JTextField();
-		txtNome.setBounds(100, 45, 165, 25);
+		txtNome.setBounds(130, 45, 165, 25);
 		add(txtNome);
 
 		JLabel lblCategoria = new JLabel("Categoria:");
 		lblCategoria.setBounds(10, 80, 80, 25);
 		add(lblCategoria);
 
-		cbCategoria = new JComboBox<>(new String[] { "Smartphone", "Notebook", "Mouse" });
-		cbCategoria.setBounds(100, 80, 165, 25);
+		cbCategoria = new JComboBox<>();
+		cbCategoria.setBounds(130, 80, 165, 25);
 		add(cbCategoria);
 
 		JLabel lblFornecedor = new JLabel("Fornecedor:");
 		lblFornecedor.setBounds(10, 115, 80, 25);
 		add(lblFornecedor);
 
-		cbFornecedor = new JComboBox<>(new String[] { "Xiaomi", "Samsung", "Apple" });
-		cbFornecedor.setBounds(100, 115, 165, 25);
+		cbFornecedor = new JComboBox<>();
+		cbFornecedor.setBounds(130, 115, 165, 25);
 		add(cbFornecedor);
 
 		JLabel lblDescricao = new JLabel("Descrição:");
@@ -82,11 +88,11 @@ public class EditProductPanel extends JPanel {
 		add(lblDescricao);
 
 		txtDescricao = new JTextField();
-		txtDescricao.setBounds(100, 150, 165, 25);
+		txtDescricao.setBounds(130, 150, 165, 25);
 		add(txtDescricao);
 
 		txtPrecoCusto = new JTextField();
-		txtPrecoCusto.setBounds(100, 185, 165, 25);
+		txtPrecoCusto.setBounds(0, 0, 0, 0);
 		add(txtPrecoCusto);
 
 		JLabel lblPrecoVenda = new JLabel("Preço de Venda:");
@@ -94,11 +100,11 @@ public class EditProductPanel extends JPanel {
 		add(lblPrecoVenda);
 
 		txtEstoque = new JTextField();
-		txtEstoque.setBounds(100, 220, 165, 25);
+		txtEstoque.setBounds(0, 0, 0, 0);
 		add(txtEstoque);
 
 		txtPrecoVenda = new JTextField();
-		txtPrecoVenda.setBounds(110, 185, 155, 25);
+		txtPrecoVenda.setBounds(130, 185, 165, 25);
 		add(txtPrecoVenda);
 
 		btnSaveChanges = new JButton("Salvar Alterações");
@@ -113,10 +119,10 @@ public class EditProductPanel extends JPanel {
 		add(btnSaveChanges);
 
 		btnBack = new JButton("Voltar");
-		btnBack.setBounds(351, 271, 89, 23);
+		btnBack.setBounds(190, 240, 150, 30);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cardLayout.show(cardPanel, "ProductPanel");
+				cardLayout.show(cardPanel, "ProductsPanel");
 			}
 		});
 		add(btnBack);
@@ -126,11 +132,11 @@ public class EditProductPanel extends JPanel {
 	public void setCurrentProduto(Produto produto) {
 		System.out.println("setCurrentProduto chamado com produto: " + produto);
 		this.currentProduto = produto;
-		txtSKU.setText(String.valueOf(currentProduto.getSku()));
-		txtNome.setText(currentProduto.getNome());
-		cbCategoria.setSelectedItem(currentProduto.getCategoria());
-		cbFornecedor.setSelectedItem(currentProduto.getFornecedor());
-		txtDescricao.setText(currentProduto.getDescricao());
+		txtSKU.setEnabled(false);
+		txtNome.setText(currentProduto.getNome().toUpperCase());
+		cbCategoria.setSelectedItem(currentProduto.getCategoria().toUpperCase());
+		cbFornecedor.setSelectedItem(currentProduto.getFornecedor().toUpperCase());
+		txtDescricao.setText(currentProduto.getDescricao().toUpperCase());
 
 		if (!Double.isNaN(currentProduto.getPrecoCusto())) {
 			txtPrecoCusto.setText(String.valueOf(currentProduto.getPrecoCusto()));
@@ -161,8 +167,8 @@ public class EditProductPanel extends JPanel {
 			return;
 		}
 
-		currentProduto.setNome(txtNome.getText());
-		currentProduto.setDescricao(txtDescricao.getText());
+		currentProduto.setNome(txtNome.getText().toUpperCase());
+		currentProduto.setDescricao(txtDescricao.getText().toUpperCase());
 		currentProduto.setPrecoCusto(precoCusto);
 		currentProduto.setPrecoVenda(precoVenda);
 		currentProduto.setEstoqueDisponivel(estoqueDisponivel);
@@ -182,11 +188,11 @@ public class EditProductPanel extends JPanel {
 		}
 
 		Map<String, Object> produtoData = new HashMap<>();
-		produtoData.put("nome", currentProduto.getNome());
-		produtoData.put("descricao", currentProduto.getDescricao());
-		produtoData.put("fornecedor", currentProduto.getFornecedor());
+		produtoData.put("nome", currentProduto.getNome().toUpperCase());
+		produtoData.put("descricao", currentProduto.getDescricao().toUpperCase());
+		produtoData.put("fornecedor", currentProduto.getFornecedor().toUpperCase());
 		produtoData.put("sku", currentProduto.getSku());
-		produtoData.put("categoria", currentProduto.getCategoria());
+		produtoData.put("categoria", currentProduto.getCategoria().toUpperCase());
 		produtoData.put("preco", currentProduto.getPreco());
 		produtoData.put("preco de custo", currentProduto.getPrecoCusto());
 		produtoData.put("preco de venda", currentProduto.getPrecoVenda());
@@ -205,6 +211,46 @@ public class EditProductPanel extends JPanel {
 
 					JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private void buscarCategorias() {
+		DatabaseReference categoriasRef = FirebaseDatabase.getInstance().getReference("categorias");
+		categoriasRef.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot categoriaSnapshot : dataSnapshot.getChildren()) {
+					Categoria categoria = categoriaSnapshot.getValue(Categoria.class);
+					if (categoria != null) {
+						cbCategoria.addItem(categoria.getNome());
+					}
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				System.err.println("Erro ao buscar categorias: " + databaseError.getMessage());
+			}
+		});
+	}
+
+	private void buscarFornecedores() {
+		DatabaseReference fornecedoresRef = FirebaseDatabase.getInstance().getReference("fornecedores");
+		fornecedoresRef.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				for (DataSnapshot fornecedorSnapshot : dataSnapshot.getChildren()) {
+					Fornecedor fornecedor = fornecedorSnapshot.getValue(Fornecedor.class);
+					if (fornecedor != null) {
+						cbFornecedor.addItem(fornecedor.getNome());
+					}
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				System.err.println("Erro ao buscar fornecedores: " + databaseError.getMessage());
+			}
+		});
 	}
 
 }

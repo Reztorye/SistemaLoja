@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import Manager.ClienteManager;
 import Manager.FornecedorManager;
 import Manager.ProdutoManager;
+import Manager.SalesManager;
 import Manager.Sistema;
 import system.BancodeDados.DataBaseFirebase;
 import system.CRUDCustomers.CustomersPanel;
@@ -31,7 +32,8 @@ public class MainFrame extends JFrame {
 	private Sistema sistema = new Sistema();
 	private ClienteManager clienteManager = new ClienteManager();
 	private ProdutoManager produtoManager = new ProdutoManager();
-	private FornecedorManager fornecedorManager;
+	private FornecedorManager fornecedorManager = new FornecedorManager();
+	private SalesManager salesManager = new SalesManager();
 
 	public MainFrame() {
 		// sistema.inicializarDadosDeTeste();
@@ -55,7 +57,8 @@ public class MainFrame extends JFrame {
 		CustomersPanel customersPanel = new CustomersPanel(cardLayout, cardPanel, clienteManager);
 		cardPanel.add(customersPanel, "CustomersPanel");
 
-		SalesPanel salesPanel = new SalesPanel(sistema, cardLayout, cardPanel, produtoManager, clienteManager);
+		SalesPanel salesPanel = new SalesPanel(sistema, cardLayout, cardPanel, produtoManager, clienteManager,
+				salesManager);
 		cardPanel.add(salesPanel, "SalesPanel");
 
 		PromotionsPanel promotionsPanel = new PromotionsPanel(productsPanel, produtoManager);

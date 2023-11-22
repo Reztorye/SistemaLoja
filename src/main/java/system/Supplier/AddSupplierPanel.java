@@ -45,7 +45,7 @@ public class AddSupplierPanel extends JPanel {
         btnAddFornecedor.setBounds(50, 100, 170, 30);
         btnAddFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String nomeFornecedor = txtNomeFornecedor.getText().trim();
+                String nomeFornecedor = txtNomeFornecedor.getText().trim().toUpperCase();
                 if (!nomeFornecedor.isEmpty()) {
                     Fornecedor fornecedor = sistema.adicionarFornecedorFirebase(nomeFornecedor);
                     if (fornecedor != null) {

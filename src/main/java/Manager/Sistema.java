@@ -43,6 +43,10 @@ public class Sistema {
 
 	}
 
+	public List<Venda> getVendas() {
+		return this.vendas;
+	}
+
 	public List<ProdutoVendido> getTopMaisVendidos(int topN) {
 		return vendas.stream()
 				.flatMap(venda -> venda.getProdutosVendidos().stream())
@@ -92,63 +96,6 @@ public class Sistema {
 					", Nome: " + produto.getNome() +
 					", Preço: " + produto.getPrecoVenda() +
 					", Estoque: " + produto.getEstoqueDisponivel()); // Ajuste esses campos conforme sua classe Produto
-		}
-	}
-
-	public void realizarVenda(Cliente cliente, List<ItemVenda> itensVenda) {
-		boolean estoqueSuficiente = true;
-		int quantidadeTotal = 0;
-
-		for (ItemVenda itemVenda : itensVenda) {
-			Produto produto = itemVenda.getProduto();
-			int quantidade = itemVenda.getQuantidade();
-
-			if (produto.getEstoqueDisponivel() < quantidade) {
-				estoqueSuficiente = false;
-				break;
-			}
-
-			quantidadeTotal += quantidade;
-		}
-
-		if (estoqueSuficiente) {
-			for (ItemVenda itemVenda : itensVenda) {
-				Produto produto = itemVenda.getProduto();
-				int quantidade = itemVenda.getQuantidade();
-				produto.setEstoqueDisponivel(produto.getEstoqueDisponivel() - quantidade);
-			}
-
-			Venda venda = new Venda(cliente, itensVenda, quantidadeTotal, new Date());
-
-			vendas.add(venda);
-
-			System.out.println("Venda realizada com sucesso!");
-		} else {
-			System.out.println("Quantidade insuficiente em estoque para um ou mais produtos.");
-		}
-	}
-
-	public void listarVendas() {
-		for (Venda venda : vendas) {
-			System.out.println(venda);
-		}
-	}
-
-	public void mostrarVendasRealizadas() {
-		System.out.println("Vendas Realizadas:");
-		for (Venda venda : vendas) {
-			System.out.println("ID da Venda: " + venda.getId());
-			System.out.println("Cliente: " + venda.getCliente().getNome());
-			System.out.println("Data: " + venda.getData());
-			System.out.println("Produtos:");
-
-			for (ItemVenda itemVenda : venda.getProdutosVendidos()) {
-				Produto produto = itemVenda.getProduto();
-				int quantidade = itemVenda.getQuantidade();
-				System.out.println("  - " + produto.getNome() + ", Quantidade: " + quantidade);
-			}
-
-			System.out.println("-----------------------");
 		}
 	}
 
@@ -236,10 +183,6 @@ public class Sistema {
 
 	public List<Promocao> getPromocoes() {
 		return promocoes;
-	}
-
-	public List<Venda> getVendas() {
-		return new ArrayList<>(vendas);
 	}
 
 	public List<Cliente> getClientes() {

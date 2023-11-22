@@ -100,10 +100,10 @@ public class AddCustomerPanel extends JPanel {
 
     private void addCustomer() {
         // Obtém os valores dos campos de texto
-        String name = txtName.getText().trim();
-        String address = txtAddress.getText().trim();
-        String phone = txtPhone.getText().trim();
-        String email = txtEmail.getText().trim();
+        String name = txtName.getText().trim().toUpperCase();
+        String address = txtAddress.getText().trim().toUpperCase();
+        String phone = txtPhone.getText().trim().toUpperCase();
+        String email = txtEmail.getText().trim().toUpperCase();
 
         // Verifica se todos os campos foram preenchidos
         if (!name.isEmpty() && !address.isEmpty() && !phone.isEmpty() && !email.isEmpty()) {

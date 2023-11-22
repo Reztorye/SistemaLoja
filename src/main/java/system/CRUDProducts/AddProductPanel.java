@@ -189,13 +189,19 @@ public class AddProductPanel extends JPanel {
         try {
             // Obtain values from text fields
             Integer sku = Integer.valueOf(fieldSKU.getText());
-            String nome = fieldNome.getText();
-            String descricao = fieldDescricao.getText();
+            String nome = fieldNome.getText().toUpperCase();
+            String descricao = fieldDescricao.getText().toUpperCase();
             double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
             double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
             int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
             String nomeCategoria = (String) comboCategoria.getSelectedItem();
             String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
+
+            if (produtoManager.buscarProdutoPorSku(sku) != null) {
+                JOptionPane.showMessageDialog(this, "Um produto com o SKU " + sku + " já existe.", "Erro de SKU",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             // Check if all required fields are filled
             if (!nome.isEmpty() && !descricao.isEmpty() && !nomeCategoria.isEmpty() && !nomeFornecedor.isEmpty()) {

@@ -83,11 +83,7 @@ public class Produto {
 	public static Produto fromSnapshot(DataSnapshot snapshot) {
 		Produto produto = new Produto();
 		produto.setSku(snapshot.child("sku").getValue(Integer.class));
-		// Adicione mensagens de log
 		System.out.println("SKU: " + produto.getSku());
-
-		// Restante do mapeamento...
-
 		return produto;
 	}
 

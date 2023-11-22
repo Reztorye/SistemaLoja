@@ -58,7 +58,7 @@ public class Cliente {
 				.append(" | email: ").append(email).append("\nHistorico de compras:\n");
 
 		for (Venda venda : historicoDeCompras) {
-			sb.append(" - ").append(venda.getId()).append(": ").append(venda.toString()).append("\n");
+			sb.append(" - ").append(venda.getIdLocal()).append(": ").append(venda.toString()).append("\n");
 			// Utilize o método toString() da classe Venda, ou adapte conforme necessário
 		}
 

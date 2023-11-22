@@ -19,10 +19,10 @@ import lombok.Setter;
 @Setter
 public class AddCategoryPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8207909782982191996L;
-	private JTextField txtNomeCategoria;
+     * 
+     */
+    private static final long serialVersionUID = 8207909782982191996L;
+    private JTextField txtNomeCategoria;
     private JButton btnAddCategoria, btnCancelCategoria;
     private Sistema sistema;
     private JButton backButton;
@@ -43,7 +43,7 @@ public class AddCategoryPanel extends JPanel {
         btnAddCategoria.setBounds(50, 100, 180, 30);
         btnAddCategoria.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String nomeCategoria = txtNomeCategoria.getText().trim();
+                String nomeCategoria = txtNomeCategoria.getText().trim().toUpperCase();
                 if (!nomeCategoria.isEmpty()) {
                     Categoria categoria = sistema.adicionarCategoriaFirebase(nomeCategoria);
                     if (categoria != null) {
