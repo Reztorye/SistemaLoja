@@ -8,8 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import Manager.Sistema;
 import entities.Fornecedor;
-import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,10 +18,10 @@ import lombok.Setter;
 @Setter
 public class AddSupplierPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2902349697031729515L;
-	private JTextField txtNomeFornecedor;
+     * 
+     */
+    private static final long serialVersionUID = 2902349697031729515L;
+    private JTextField txtNomeFornecedor;
     private JButton btnAddFornecedor, btnCancelFornecedor;
     private Sistema sistema;
     private JButton backButton;
@@ -60,16 +61,16 @@ public class AddSupplierPanel extends JPanel {
         btnCancelFornecedor.setBounds(250, 100, 150, 30);
         btnCancelFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                txtNomeFornecedor.setText(""); 
-                
+                txtNomeFornecedor.setText("");
+
             }
         });
         add(btnCancelFornecedor);
-        
+
         backButton = new JButton("Voltar");
         backButton.setBounds(360, 9, 80, 30);
         add(backButton);
-        
+
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "MainPanel"));
     }
 }

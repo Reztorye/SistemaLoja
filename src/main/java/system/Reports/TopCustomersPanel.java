@@ -10,30 +10,30 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Manager.Sistema;
 import entities.Cliente;
-import entities.Sistema;
 import entities.Venda;
 
 public class TopCustomersPanel extends JPanel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -1790760558483656958L;
-	private JTable table;
+     * 
+     */
+    private static final long serialVersionUID = -1790760558483656958L;
+    private JTable table;
     private DefaultTableModel tableModel;
     private Sistema sistema;
 
     public TopCustomersPanel(Sistema sistema) {
         this.sistema = sistema;
         setLayout(null);
-        
-        tableModel = new DefaultTableModel(){
-            /**
-			 * 
-			 */
-			private static final long serialVersionUID = -9049266189071413309L;
 
-			@Override
+        tableModel = new DefaultTableModel() {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = -9049266189071413309L;
+
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -45,14 +45,14 @@ public class TopCustomersPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(0, 10, 944, 280);
         add(scrollPane);
-        
+
         loadTopCustomers();
     }
-    
+
     private void loadTopCustomers() {
         Map<Cliente, Double> totalPorCliente = new HashMap<>();
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        
+
         // Calcula o total de compras por cliente
         for (Venda venda : sistema.getVendas()) {
             Cliente cliente = venda.getCliente();
@@ -62,10 +62,11 @@ public class TopCustomersPanel extends JPanel {
 
         // Ordena e adiciona ao modelo da tabela
         totalPorCliente.entrySet().stream()
-            .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
-            .forEach(entry -> {
-                String valorFormatado = currencyFormat.format(entry.getValue()); // Formata o valor para a moeda local
-                tableModel.addRow(new Object[]{entry.getKey().getNome(), valorFormatado});
-            });
+                .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
+                .forEach(entry -> {
+                    String valorFormatado = currencyFormat.format(entry.getValue()); // Formata o valor para a moeda
+                                                                                     // local
+                    tableModel.addRow(new Object[] { entry.getKey().getNome(), valorFormatado });
+                });
     }
 }

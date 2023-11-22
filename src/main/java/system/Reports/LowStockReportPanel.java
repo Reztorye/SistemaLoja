@@ -1,6 +1,6 @@
 package system.Reports;
 
-import java.awt.Color; 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -8,10 +8,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import Manager.ProdutoManager;
 import entities.Produto;
-import entities.Sistema;
 
 public class LowStockReportPanel extends JPanel {
+<<<<<<< HEAD
     private static final long serialVersionUID = 212123;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -23,6 +24,25 @@ public class LowStockReportPanel extends JPanel {
         
         String[] columnNames = {"SKU", "Nome do Produto", "Quantidade em Estoque"};
         tableModel = new DefaultTableModel(columnNames, 0) {
+=======
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 212123;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private ProdutoManager produtoManager;
+
+    public LowStockReportPanel(ProdutoManager produtoManager) {
+        this.produtoManager = produtoManager;
+        setLayout(null);
+
+        String[] columnNames = { "SKU", "Nome do Produto", "Quantidade em Estoque" };
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            /**
+             * 
+             */
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
             private static final long serialVersionUID = -7806541731456304290L;
 
             @Override
@@ -32,20 +52,21 @@ public class LowStockReportPanel extends JPanel {
         };
 
         table = new JTable(tableModel);
-        table.setBounds(10, 10, 480, 300);  
+        table.setBounds(10, 10, 480, 300);
 
         table.setDefaultRenderer(Object.class, new StockCellRenderer());
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 11, 952, 261); 
+        scrollPane.setBounds(0, 11, 952, 261);
         add(scrollPane);
 
-        loadData();  
+        loadData();
     }
 
     private void loadData() {
         tableModel.setRowCount(0);
 
+<<<<<<< HEAD
         for (Produto produto : sistema.getProdutos()) {
             int estoque = produto.getEstoqueDisponivel();  
             if (estoque < 5) {
@@ -53,23 +74,42 @@ public class LowStockReportPanel extends JPanel {
                     produto.getSku(),  
                     produto.getNome(), 
                     estoque
+=======
+        for (Produto produto : produtoManager.getProdutos()) {
+            int estoque = produto.getEstoqueDisponivel();
+            if (estoque < 5) {
+                tableModel.addRow(new Object[] {
+                        produto.getSku(),
+                        produto.getNome(),
+                        estoque
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
                 });
             }
         }
     }
+<<<<<<< HEAD
 
     class StockCellRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = 235563;
 
+=======
+
+    class StockCellRenderer extends DefaultTableCellRenderer {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 235563;
+
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+                boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             if (column == 2) {
                 int stock = (int) value;
                 if (stock < 5) {
-                    c.setBackground(new Color(255, 200, 200)); 
+                    c.setBackground(new Color(255, 200, 200));
                 } else {
                     c.setBackground(Color.WHITE);
                 }

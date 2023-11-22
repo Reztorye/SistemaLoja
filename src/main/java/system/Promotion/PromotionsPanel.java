@@ -16,11 +16,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+<<<<<<< HEAD
 import com.toedter.calendar.JDateChooser;
 
 import entities.Categoria;
+=======
+import Manager.ProdutoManager;
+import Manager.Sistema;
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
 import entities.Produto;
-import entities.Sistema;
 import lombok.Getter;
 import lombok.Setter;
 import system.CRUDProducts.ProductsPanel;
@@ -29,16 +33,24 @@ import system.CRUDProducts.ProductsPanel;
 @Setter
 public class PromotionsPanel extends JPanel {
     /**
+<<<<<<< HEAD
 	 * 
 	 */
 	private static final long serialVersionUID = 3830440178314486669L;
 	private Sistema sistema;
 	private JComboBox<Categoria> comboCategorias;
+=======
+     * 
+     */
+    private static final long serialVersionUID = 3830440178314486669L;
+    private Sistema sistema;
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
     private JComboBox<Produto> comboProdutos;
     private JTextField txtPercentualDesconto;
     private JFormattedTextField txtDataInicio, txtDataFim;
     private JButton btnAdicionarPromocao, btnCancelar;
     private ProductsPanel productsPanel;
+<<<<<<< HEAD
     private JDateChooser dateChooserInicio, dateChooserFim;
     private JButton btnVoltar;
     private CardLayout cardLayout;
@@ -50,6 +62,15 @@ public class PromotionsPanel extends JPanel {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setLayout(null); 
+=======
+    private ProdutoManager produtoManager;
+
+    public PromotionsPanel(ProductsPanel productsPanel, ProdutoManager produtoManager) {
+        this.productsPanel = productsPanel;
+        this.produtoManager = produtoManager;
+
+        setLayout(null);
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         initializeUI();
     }
 
@@ -80,15 +101,17 @@ public class PromotionsPanel extends JPanel {
         lblProduto.setBounds(10, 54, 80, 25);
         add(lblProduto);
 
-        comboProdutos = new JComboBox<Produto>(new DefaultComboBoxModel<Produto>(sistema.getProdutos().toArray(new Produto[0])));
+        comboProdutos = new JComboBox<Produto>(
+                new DefaultComboBoxModel<Produto>(produtoManager.getProdutos().toArray(new Produto[0])));
         comboProdutos.setRenderer(new DefaultListCellRenderer() {
             /**
-			 * 
-			 */
-			private static final long serialVersionUID = -774078213740267784L;
+             * 
+             */
+            private static final long serialVersionUID = -774078213740267784L;
 
-			@Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Produto) {
                     setText(((Produto) value).getNome());
@@ -155,21 +178,32 @@ public class PromotionsPanel extends JPanel {
 
     private void adicionarPromocao() {
         try {
+<<<<<<< HEAD
         	Produto produto = (Produto) comboProdutos.getSelectedItem();
         	double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
             
+=======
+            Produto produto = (Produto) comboProdutos.getSelectedItem();
+            double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
+
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
             produto.setDescontoAtivo(true);
             produto.setValorDesconto(percentualDesconto);
 
-            productsPanel.atualizarTabelaProdutos(); 
-            
             limparFormulario();
 
+<<<<<<< HEAD
             JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+=======
+            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE);
+>>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato",
+                    JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao adicionar a promoção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar a promoção: " + ex.getMessage(), "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -179,7 +213,7 @@ public class PromotionsPanel extends JPanel {
         dateChooserInicio.setCalendar(null);
         dateChooserFim.setCalendar(null);
     }
-    
+
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
@@ -190,8 +224,8 @@ public class PromotionsPanel extends JPanel {
     
     public void atualizarListaProdutos() {
         comboProdutos.removeAllItems();
-        
-        for (Produto produto : sistema.getProdutos()) {
+
+        for (Produto produto : produtoManager.getProdutos()) {
             comboProdutos.addItem(produto);
         }
     }
