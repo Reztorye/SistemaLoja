@@ -1,9 +1,9 @@
 package system.Promotion;
 
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -16,14 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-<<<<<<< HEAD
-import com.toedter.calendar.JDateChooser;
-
-import entities.Categoria;
-=======
 import Manager.ProdutoManager;
 import Manager.Sistema;
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
 import entities.Produto;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,36 +27,15 @@ import system.CRUDProducts.ProductsPanel;
 @Setter
 public class PromotionsPanel extends JPanel {
     /**
-<<<<<<< HEAD
-	 * 
-	 */
-	private static final long serialVersionUID = 3830440178314486669L;
-	private Sistema sistema;
-	private JComboBox<Categoria> comboCategorias;
-=======
      * 
      */
     private static final long serialVersionUID = 3830440178314486669L;
     private Sistema sistema;
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
     private JComboBox<Produto> comboProdutos;
     private JTextField txtPercentualDesconto;
     private JFormattedTextField txtDataInicio, txtDataFim;
     private JButton btnAdicionarPromocao, btnCancelar;
     private ProductsPanel productsPanel;
-<<<<<<< HEAD
-    private JDateChooser dateChooserInicio, dateChooserFim;
-    private JButton btnVoltar;
-    private CardLayout cardLayout;
-    private JPanel cardPanel; 
-
-    public PromotionsPanel(Sistema sistema, ProductsPanel productsPanel, CardLayout cardLayout, JPanel cardPanel) {
-        this.sistema = sistema;
-        this.productsPanel = productsPanel;
-        this.cardLayout = cardLayout;
-        this.cardPanel = cardPanel;
-        setLayout(null); 
-=======
     private ProdutoManager produtoManager;
 
     public PromotionsPanel(ProductsPanel productsPanel, ProdutoManager produtoManager) {
@@ -70,35 +43,12 @@ public class PromotionsPanel extends JPanel {
         this.produtoManager = produtoManager;
 
         setLayout(null);
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         initializeUI();
     }
 
     private void initializeUI() {
-    	
-    	JLabel lblCategoria = new JLabel("Categoria:");
-        lblCategoria.setBounds(10, 10, 80, 25);
-        add(lblCategoria);
-
-        comboCategorias = new JComboBox<Categoria>(new DefaultComboBoxModel<Categoria>(
-        	    sistema.getCategorias().toArray(new Categoria[0])));
-        comboCategorias.setBounds(100, 10, 165, 25);
-        comboCategorias.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Categoria categoriaSelecionada = (Categoria) comboCategorias.getSelectedItem();
-                DefaultComboBoxModel<Produto> produtoModel = new DefaultComboBoxModel<>();
-                for (Produto produto : sistema.getProdutosPorCategoria(categoriaSelecionada)) {
-                    produtoModel.addElement(produto);
-                }
-                comboProdutos.setModel(produtoModel);
-            }
-        });
-        add(comboCategorias);
-        
-    	
         JLabel lblProduto = new JLabel("Produto:");
-        lblProduto.setBounds(10, 54, 80, 25);
+        lblProduto.setBounds(10, 10, 80, 25);
         add(lblProduto);
 
         comboProdutos = new JComboBox<Produto>(
@@ -119,35 +69,34 @@ public class PromotionsPanel extends JPanel {
                 return this;
             }
         });
-        comboProdutos.setBounds(100, 54, 165, 25);
+        comboProdutos.setBounds(100, 10, 165, 25);
         add(comboProdutos);
-        
         JLabel lblPercentualDesconto = new JLabel("Percentual de Desconto:");
-        lblPercentualDesconto.setBounds(10, 90, 150, 25);
+        lblPercentualDesconto.setBounds(10, 45, 150, 25);
         add(lblPercentualDesconto);
 
         txtPercentualDesconto = new JTextField();
-        txtPercentualDesconto.setBounds(170, 90, 95, 25);
+        txtPercentualDesconto.setBounds(170, 45, 95, 25);
         add(txtPercentualDesconto);
 
         JLabel lblDataInicio = new JLabel("Data de Início:");
-        lblDataInicio.setBounds(10, 126, 80, 25);
+        lblDataInicio.setBounds(10, 80, 80, 25);
         add(lblDataInicio);
 
-        dateChooserInicio = new JDateChooser();
-        dateChooserInicio.setBounds(100, 126, 165, 25);
-        add(dateChooserInicio);
+        txtDataInicio = new JFormattedTextField(new SimpleDateFormat("dd/MM/yyyy"));
+        txtDataInicio.setBounds(100, 80, 165, 25);
+        add(txtDataInicio);
 
         JLabel lblDataFim = new JLabel("Data de Fim:");
-        lblDataFim.setBounds(10, 164, 80, 25);
+        lblDataFim.setBounds(10, 115, 80, 25);
         add(lblDataFim);
 
-        dateChooserFim = new JDateChooser();
-        dateChooserFim.setBounds(100, 164, 165, 25);
-        add(dateChooserFim);
+        txtDataFim = new JFormattedTextField(new SimpleDateFormat("dd/MM/yyyy"));
+        txtDataFim.setBounds(100, 115, 165, 25);
+        add(txtDataFim);
 
         btnAdicionarPromocao = new JButton("Adicionar Promoção");
-        btnAdicionarPromocao.setBounds(10, 200, 165, 25);
+        btnAdicionarPromocao.setBounds(10, 150, 165, 25);
         btnAdicionarPromocao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -157,7 +106,7 @@ public class PromotionsPanel extends JPanel {
         add(btnAdicionarPromocao);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(180, 200, 85, 25);
+        btnCancelar.setBounds(180, 150, 85, 25);
         btnCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -165,39 +114,20 @@ public class PromotionsPanel extends JPanel {
             }
         });
         add(btnCancelar);
-       
-        btnVoltar = new JButton("Voltar");
-        btnVoltar.setBounds(351, 271, 89, 23);
-        btnVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "ProductsPanel"); 
-            }
-        });
-        add(btnVoltar);
     }
 
     private void adicionarPromocao() {
         try {
-<<<<<<< HEAD
-        	Produto produto = (Produto) comboProdutos.getSelectedItem();
-        	double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
-            
-=======
             Produto produto = (Produto) comboProdutos.getSelectedItem();
             double percentualDesconto = Double.parseDouble(txtPercentualDesconto.getText().replace(",", "."));
 
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
             produto.setDescontoAtivo(true);
             produto.setValorDesconto(percentualDesconto);
 
             limparFormulario();
 
-<<<<<<< HEAD
-            JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-=======
             JOptionPane.showMessageDialog(this, "Promoção adicionada com sucesso!", "Sucesso",
                     JOptionPane.INFORMATION_MESSAGE);
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira um valor de desconto válido.", "Erro de Formato",
                     JOptionPane.ERROR_MESSAGE);
@@ -210,8 +140,8 @@ public class PromotionsPanel extends JPanel {
     private void limparFormulario() {
         comboProdutos.setSelectedIndex(-1);
         txtPercentualDesconto.setText("");
-        dateChooserInicio.setCalendar(null);
-        dateChooserFim.setCalendar(null);
+        txtDataInicio.setValue(null);
+        txtDataFim.setValue(null);
     }
 
     @Override
@@ -221,7 +151,7 @@ public class PromotionsPanel extends JPanel {
             atualizarListaProdutos();
         }
     }
-    
+
     public void atualizarListaProdutos() {
         comboProdutos.removeAllItems();
 

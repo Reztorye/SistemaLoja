@@ -7,14 +7,22 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import Manager.ProdutoManager;
+import com.google.api.core.ApiFuture;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import Manager.ProdutoManager;
+
+import java.util.concurrent.Executors;
+
 public class DeleteProductPanel extends JPanel {
-	private static final long serialVersionUID = -2368454640878192629L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtSKU;
 	private JButton btnDelete;
 	private DefaultTableModel tableModel;
@@ -24,7 +32,11 @@ public class DeleteProductPanel extends JPanel {
 		this.tableModel = tableModel;
 		this.produtoManager = produtoManager;
 		setLayout(null);
+		initializeUI();
+	}
 
+	private void initializeUI() {
+		setLayout(null);
 		JLabel lblSKU = new JLabel("SKU para deletar:");
 		lblSKU.setBounds(10, 10, 150, 25);
 		add(lblSKU);
@@ -42,45 +54,73 @@ public class DeleteProductPanel extends JPanel {
 			}
 		});
 		add(btnDelete);
+
 	}
 
 	private void deleteProduct() {
-		String skuToDelete = txtSKU.getText();
-		if (skuToDelete.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Por favor, insira o SKU do produto a ser deletado.", "SKU Vazio",
-					JOptionPane.WARNING_MESSAGE);
+		String productSku = txtSKU.getText();
+
+		if (productSku.isEmpty()) {
 			return;
 		}
 
 		try {
-			int sku = Integer.parseInt(skuToDelete);
+			Integer skuId = Integer.parseInt(productSku);
 
-			// Remove do gerenciador
-			produtoManager.removerProduto(sku);
+			// Obtém o firebaseId associado ao SKU
+			String firebaseId = produtoManager.getFirebaseIdBySKU(skuId);
 
-			// Remove do Firebase
-			DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-			String firebaseId = produtoManager.getFirebaseId(sku);
 			if (firebaseId != null) {
-				ref.child(firebaseId).removeValueAsync();
+				DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("produtos");
+				ApiFuture<Void> future = dbRef.child(firebaseId).removeValueAsync();
+
+				future.addListener(() -> {
+					try {
+						// Remova a chamada future.get(), ela está bloqueando a execução
+						if (removeFromTableModel(productSku)) {
+							produtoManager.removeProdutoSkuMapping(skuId);
+
+							// Mensagem de sucesso na EDT
+							SwingUtilities.invokeLater(() -> {
+								JOptionPane.showMessageDialog(this, "Produto deletado com sucesso.", "Sucesso",
+										JOptionPane.INFORMATION_MESSAGE);
+							});
+						}
+					} catch (Exception e) {
+						// Mensagem de erro na EDT
+						SwingUtilities.invokeLater(() -> {
+							JOptionPane.showMessageDialog(this,
+									"Falha ao deletar produto do Firebase: " + e.getMessage(), "Erro",
+									JOptionPane.ERROR_MESSAGE);
+						});
+					}
+				}, Executors.newSingleThreadExecutor());
+			} else {
+				// Mensagem de erro na EDT
+
+				SwingUtilities.invokeLater(() -> {
+					JOptionPane.showMessageDialog(this, "SKU não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+				});
 			}
-
-			// Remove da tabela
-			for (int i = 0; i < tableModel.getRowCount(); i++) {
-				if (tableModel.getValueAt(i, 0).equals(sku)) {
-					tableModel.removeRow(i);
-					break;
-				}
-			}
-
-			JOptionPane.showMessageDialog(this, "Produto deletado com sucesso.", "Produto Deletado",
-					JOptionPane.INFORMATION_MESSAGE);
-			txtSKU.setText("");
-
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(this, "Por favor, insira um SKU válido (apenas números).", "Erro de Formato",
-					JOptionPane.ERROR_MESSAGE);
+			// Mensagem de erro na EDT
+
+			SwingUtilities.invokeLater(() -> {
+				JOptionPane.showMessageDialog(this, "Por favor, insira um SKU válido.", "Erro de Formato",
+						JOptionPane.ERROR_MESSAGE);
+			});
 		}
+	}
+
+	private boolean removeFromTableModel(String productSku) {
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			if (String.valueOf(tableModel.getValueAt(i, 0)).equals(productSku)) {
+				tableModel.removeRow(i);
+				txtSKU.setText("");
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

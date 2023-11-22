@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DataBaseFirebase",
+            "request": "launch",
+            "mainClass": "system.BancodeDados.DataBaseFirebase",
+            "projectName": "lombok"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "teste.Main",

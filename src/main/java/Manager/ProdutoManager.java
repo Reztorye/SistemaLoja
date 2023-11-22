@@ -1,25 +1,28 @@
 package Manager;
 
+import com.google.api.core.ApiFuture;
 import com.google.firebase.database.*;
-import entities.Categoria;
-import entities.Fornecedor;
-import entities.Produto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.awt.Component;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import entities.Produto;
 
 public class ProdutoManager {
     private List<Produto> produtos;
     private Map<Integer, String> produtoSkuMap;
     private String skuMapKey;
-    private List<FirebaseDataChangeListener> listeners = new ArrayList<>();
 
     public ProdutoManager() {
         this.produtos = new ArrayList<>();
         this.produtoSkuMap = new HashMap<>();
+
     }
 
     public void setSkuMapKey(String skuMapKey) {
@@ -30,84 +33,47 @@ public class ProdutoManager {
         return this.skuMapKey;
     }
 
-    public void mapProdutoSku(Integer sku, String firebaseId) {
-        produtoSkuMap.put(sku, firebaseId);
+    public Map<Integer, String> getProdutoSkuMap() {
+        return produtoSkuMap;
     }
 
-    public String getFirebaseId(Integer sku) {
-        return produtoSkuMap.get(sku);
+    public List<Produto> getProdutos() {
+        return this.produtos;
     }
 
     public void removeProdutoSkuMapping(Integer sku) {
         produtoSkuMap.remove(sku);
     }
 
+    public void mapProdutoSku(Integer sku, String firebaseId) {
+        produtoSkuMap.put(sku, firebaseId);
+    }
+
+    public String getFirebaseIdBySKU(Integer sku) {
+        return produtoSkuMap.get(sku);
+    }
+
     public Produto adicionarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda,
-            int estoqueDisponivel, Categoria categoria, Fornecedor fornecedor) {
+            int estoqueDisponivel, String categoria, String fornecedor, Runnable onSuccess) {
         Produto produto = new Produto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria,
                 fornecedor);
         produtos.add(produto);
 
-        // Adicionar ao Firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-        ref.child(String.valueOf(sku)).setValueAsync(produto);
-
-        // Mapear SKU para Firebase ID
-        mapProdutoSku(sku, String.valueOf(sku));
+        if (onSuccess != null) {
+            onSuccess.run();
+        }
 
         return produto;
     }
 
-    public void atualizarProduto(Integer sku, String nome, String descricao, double precoVenda, String nomeCategoria,
-            String nomeFornecedor) {
-        Produto produto = buscarProdutoPorSku(sku);
-        if (produto != null) {
-            produto.setNome(nome);
-            produto.setDescricao(descricao);
-            produto.setPrecoVenda(precoVenda);
-            produto.getCategoria().setNome(nomeCategoria);
-            produto.getFornecedor().setNome(nomeFornecedor);
-
-            // Atualizar no Firebase
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-            ref.child(String.valueOf(sku)).setValueAsync(produto);
-
-            // Atualizar mapeamento
-            if (produtoSkuMap.containsKey(sku)) {
-                removeProdutoSkuMapping(sku);
+    public void atualizarProduto(Produto produto) {
+        for (int i = 0; i < produtos.size(); i++) {
+            if (produtos.get(i).getSku() == produto.getSku()) {
+                produtos.set(i, produto);
+                deleteProductAfterAddition(produto.getSku(), null);
+                return;
             }
-            mapProdutoSku(sku, String.valueOf(sku));
-
-            System.out.println("Produto atualizado: " + produto.getNome());
-        } else {
-            System.out.println("Produto não encontrado: " + sku);
         }
-    }
-
-    public void removerProduto(int sku) {
-        produtos.removeIf(produto -> produto.getSku().equals(sku));
-
-        // Remover do Firebase
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-        ref.child(String.valueOf(sku)).removeValueAsync();
-
-        // Remover mapeamento
-        if (produtoSkuMap.containsKey(sku)) {
-            removeProdutoSkuMapping(sku);
-        }
-
-        System.out.println("Produto removido: SKU " + sku);
-    }
-
-    public Produto buscarProdutoPorSku(int skuProduto) {
-        return produtos.stream()
-                .filter(produto -> produto.getSku() == skuProduto)
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Produto> getProdutos() {
-        return new ArrayList<>(produtos);
     }
 
     public void listarProdutos() {
@@ -116,67 +82,137 @@ public class ProdutoManager {
         }
     }
 
-    public void listarProdutosEmFalta() {
+    public void removerProduto(Integer sku) {
+        boolean removido = produtos.removeIf(c -> c.getSku() == sku);
+        if (removido) {
+            System.out.println("Produto removido: SKU " + sku);
+
+        } else {
+            System.out.println("Produto não encontrado: SKU " + sku);
+        }
+
+    }
+
+    public Produto buscarProdutoPorSku(int sku) {
+        return produtos.stream()
+                .filter(produto -> produto.getSku() == sku)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void atualizarProduto(Integer sku, String nome, String descricao, double precoCusto, double precoVenda,
+            int estoqueDisponivel, String categoria, String fornecedor) {
         for (Produto produto : produtos) {
-            if (produto.getEstoqueDisponivel() <= 5) {
-                System.out.println(produto);
+            if (produto.getSku() == sku) {
+                produto.setNome(nome);
+                produto.setDescricao(descricao);
+                produto.setPrecoCusto(precoCusto);
+                produto.setPrecoVenda(precoVenda);
+                produto.setEstoqueDisponivel(estoqueDisponivel);
+                produto.setCategoria(categoria);
+                produto.setFornecedor(fornecedor);
+                return;
             }
         }
     }
 
-    public void atualizarProdutoFirebase(Produto produto) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-        DatabaseReference produtoRef = ref.child(produto.getSku().toString());
+    public Produto obterProdutoDaLinha(int linha) {
+        if (linha >= 0 && linha < produtos.size()) {
+            return produtos.get(linha);
+        }
+        return null; // ou lançar uma exceção adequada
+    }
 
-        // Executar a operação de atualização em uma thread separada
-        Executors.newSingleThreadExecutor().execute(() -> {
+    public Produto buscarProdutoPorFirebaseId(Integer produtoSku) {
+        for (Produto produto : produtos) {
+            if (produtoSku.toString().equals(getFirebaseIdBySKU(produto.getSku()))) {
+                return produto;
+            }
+        }
+        return null;
+    }
+
+    public void deleteProductAfterAddition(Integer sku, Component parentComponent) {
+        String firebaseId = getFirebaseIdBySKU(sku);
+        System.out.println("Deletando produto com SKU: " + sku);
+
+        if (firebaseId != null) {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("produtos");
+            ApiFuture<Void> future = dbRef.child(firebaseId).removeValueAsync();
+
+            CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+            future.addListener(() -> {
+                try {
+                    future.get(); // Aguarda a operação ser concluída
+
+                    // Remova o SKU do mapa
+                    removeProdutoSkuMapping(sku);
+
+                    // Mensagem de sucesso na EDT
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(parentComponent, "Produto deletado com sucesso.", "Sucesso",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    });
+
+                    completableFuture.complete(null);
+                } catch (Exception e) {
+                    // Mensagem de erro na EDT
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(parentComponent,
+                                "Falha ao deletar produto do Firebase: " + e.getMessage(), "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                    });
+
+                    e.printStackTrace(); // Adiciona a stack trace ao log de erro
+                    completableFuture.completeExceptionally(e);
+                }
+            }, Executors.newSingleThreadExecutor());
+
+            // Aguarda a conclusão da operação assíncrona
             try {
-                produtoRef.setValueAsync(produto).get(); // Aguarda a conclusão da operação
-                System.out.println("Produto atualizado com sucesso no Firebase.");
+                completableFuture.join();
             } catch (Exception e) {
-                System.err.println("Erro ao atualizar produto no Firebase.");
+                // Log para identificar exceções durante o join
                 e.printStackTrace();
             }
-        });
-    }
-
-    public void addFirebaseDataChangeListener(FirebaseDataChangeListener listener) {
-        listeners.add(listener);
-    }
-
-    private void notifyDataChange(List<Produto> produtos) {
-        for (FirebaseDataChangeListener listener : listeners) {
-            listener.onDataChange(produtos);
+        } else {
+            // Mensagem de erro na EDT
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(parentComponent, "SKU não encontrado.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            });
         }
     }
 
-    public void fetchProdutosFromFirebase() {
+    public void fetchProdutosFromFirebase(Consumer<List<Produto>> callback) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("produtos");
-        ValueEventListener listener = new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Produto> fetchedProdutos = new ArrayList<>();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    Produto produto = child.getValue(Produto.class);
-                    if (produto != null) {
+
+                produtoSkuMap.clear();
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Produto produto = snapshot.getValue(Produto.class);
+                    if (produto != null && produto.getSku() != 0) {
+                        produto.setFirebaseId(snapshot.getKey());
                         fetchedProdutos.add(produto);
-                        mapProdutoSku(produto.getSku(), child.getKey());
+
+                        produtoSkuMap.put(produto.getSku(), snapshot.getKey());
+                        System.out.println("SKU: " + produto.getSku() + ", Firebase ID: " + snapshot.getKey());
                     }
                 }
-                produtos = fetchedProdutos;
-                notifyDataChange(produtos);
+                callback.accept(fetchedProdutos);
+                produtos.addAll(fetchedProdutos);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.err.println("Erro ao buscar produtos: " + databaseError.getMessage());
+                callback.accept(null);
             }
-        };
-
-        ref.addValueEventListener(listener);
-    }
-
-    public interface FirebaseDataChangeListener {
-        void onDataChange(List<Produto> produtos);
+        });
     }
 }

@@ -1,11 +1,7 @@
 package system.Reports;
-<<<<<<< HEAD
-import java.util.Collections;
+import java.util.Collections; 
 import java.util.Comparator;
 import java.util.List;
-=======
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,6 +18,7 @@ public class ProfitabilityAnalysisPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private ProdutoManager produtoManager;
+    
 
     public ProfitabilityAnalysisPanel(ProdutoManager produtoManager) {
         this.produtoManager = produtoManager;
@@ -49,8 +46,7 @@ public class ProfitabilityAnalysisPanel extends JPanel {
     }
 
     private void loadProductData() {
-<<<<<<< HEAD
-        List<Produto> produtos = sistema.getProdutos();
+        List<Produto> produtos = produtoManager.getProdutos();
 
         // Ordenando a lista de produtos com base na margem de lucro percentual
         Collections.sort(produtos, new Comparator<Produto>() {
@@ -62,11 +58,8 @@ public class ProfitabilityAnalysisPanel extends JPanel {
             }
         });
 
-        // Adicionando os produtos ordenados ao modelo de tabela
-        for (Produto produto : produtos) {
-=======
-        for (Produto produto : produtoManager.getProdutos()) {
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
+        // Preenchendo o modelo da tabela com dados dos produtos
+        for (Produto produto : produtos) { 
             double custo = produto.getPrecoCusto();
             double venda = produto.getPrecoVenda();
             double margem = venda - custo;
@@ -75,7 +68,7 @@ public class ProfitabilityAnalysisPanel extends JPanel {
                     produto.getNome(),
                     String.format("R$ %.2f", custo),
                     String.format("R$ %.2f", venda),
-                    String.format("R$ %.2f (%.2f%%)", margem, margem / custo * 100)
+                    String.format("R$ %.2f (%.2f%%)", margem, (margem / custo) * 100)
             });
         }
     }

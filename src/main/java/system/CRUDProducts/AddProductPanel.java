@@ -14,9 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import Manager.ProdutoManager;
 import Manager.Sistema;
 import entities.Categoria;
 import entities.Fornecedor;
@@ -39,12 +43,18 @@ public class AddProductPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private JButton btnVoltar;
+    private ProductsPanel productsPanel;
+    private ProdutoManager produtoManager;
+    String categoria = "valor_da_categoria";
+    String fornecedor = "valor_do_fornecedor";
 
-    public AddProductPanel(CardLayout cardLayout, JPanel cardPanel, DefaultTableModel tableModel, Sistema sistema) {
+    public AddProductPanel(CardLayout cardLayout, JPanel cardPanel, DefaultTableModel tableModel, Sistema sistema,
+            ProdutoManager produtoManager) {
         this.sistema = sistema;
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         this.tableModel = tableModel;
+        this.produtoManager = produtoManager;
         setLayout(null);
 
         JLabel labelSKU = new JLabel("SKU:");
@@ -117,112 +127,54 @@ public class AddProductPanel extends JPanel {
         comboFornecedor.setBounds(100, 220, 165, 25);
         add(comboFornecedor);
 
-<<<<<<< HEAD
-	        btnConfirmar = new JButton("Confirmar");
-	        btnConfirmar.setBounds(10, 270, 255, 25);
-	        btnConfirmar.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	                try {
-	                    Integer sku = Integer.valueOf(fieldSKU.getText());
-	                    String nome = fieldNome.getText();
-	                    String descricao = fieldDescricao.getText();
-	                    double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
-	                    double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
-	                    int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
-	                    String nomeCategoria = (String) comboCategoria.getSelectedItem();
-	                    String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
-	
-	                    Categoria categoria = sistema.buscarCategoriaPorNome(nomeCategoria);
-	                    Fornecedor fornecedor = sistema.buscarFornecedorPorNome(nomeFornecedor);
-	                    
-	                    
-	                    if (categoria == null || fornecedor == null) {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-	                        return;
-	                    }
-	                    	                    
-	                    Produto novoProduto = sistema.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel, categoria, fornecedor);
-	
-	                    Object[] rowData = {sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda, estoqueDisponivel};
-	                    tableModel.addRow(rowData);
-	                    if (novoProduto != null) {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Produto adicionado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-	                    } else {
-	                        JOptionPane.showMessageDialog(AddProductPanel.this, "Não foi possível adicionar o produto", "Erro", JOptionPane.ERROR_MESSAGE);
-	                    }
-	                } catch (NumberFormatException nfe) {
-	                    JOptionPane.showMessageDialog(AddProductPanel.this, "Por favor, insira números válidos nos campos de preço e estoque.", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
-	                } catch (Exception ex) {
-	                    JOptionPane.showMessageDialog(AddProductPanel.this, "Erro ao adicionar o produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-	                }
-	            }
-	        });
-	        add(btnConfirmar);
-                   
-=======
+        // Buscar Categorias no Firebase
+        DatabaseReference categoriasRef = FirebaseDatabase.getInstance().getReference("categorias");
+        categoriasRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot categoriaSnapshot : dataSnapshot.getChildren()) {
+                    Categoria categoria = categoriaSnapshot.getValue(Categoria.class);
+                    if (categoria != null) {
+                        comboCategoria.addItem(categoria.getNome());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Tratar erros, se necessário
+            }
+        });
+
+        // Buscar Fornecedores no Firebase
+        DatabaseReference fornecedoresRef = FirebaseDatabase.getInstance().getReference("fornecedores");
+        fornecedoresRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot fornecedorSnapshot : dataSnapshot.getChildren()) {
+                    Fornecedor fornecedor = fornecedorSnapshot.getValue(Fornecedor.class);
+                    if (fornecedor != null) {
+                        comboFornecedor.addItem(fornecedor.getNome());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Tratar erros, se necessário
+            }
+        });
+
         btnConfirmar = new JButton("Confirmar");
         btnConfirmar.setBounds(10, 270, 255, 25);
         btnConfirmar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Integer sku = Integer.valueOf(fieldSKU.getText());
-                    String nome = fieldNome.getText();
-                    String descricao = fieldDescricao.getText();
-                    double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
-                    double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
-                    int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
-                    String nomeCategoria = (String) comboCategoria.getSelectedItem();
-                    String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
-
-                    Categoria categoria = sistema.buscarCategoriaPorNome(nomeCategoria);
-                    Fornecedor fornecedor = sistema.buscarFornecedorPorNome(nomeFornecedor);
-
-                    if (categoria == null || fornecedor == null) {
-                        JOptionPane.showMessageDialog(AddProductPanel.this, "Categoria ou Fornecedor não encontrado.",
-                                "Erro", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    // Preparando os dados do produto para enviar ao Firebase
-                    Map<String, Object> produtoData = new HashMap<>();
-                    produtoData.put("sku", sku);
-                    produtoData.put("nome", nome);
-                    produtoData.put("descricao", descricao);
-                    produtoData.put("precoCusto", precoCusto);
-                    produtoData.put("precoVenda", precoVenda);
-                    produtoData.put("estoqueDisponivel", estoqueDisponivel);
-                    produtoData.put("categoria", nomeCategoria);
-                    produtoData.put("fornecedor", nomeFornecedor);
-
-                    // Obtendo uma referência para a coleção "produtos" no Firebase
-                    DatabaseReference produtosRef = FirebaseDatabase.getInstance().getReference("produtos");
-
-                    // Adicionando os dados ao Firebase e obtendo o ID único gerado automaticamente
-                    DatabaseReference novoProdutoRef = produtosRef.push();
-
-                    // Adicionando os dados ao Firebase usando o ID único
-                    novoProdutoRef.setValueAsync(produtoData);
-
-                    // Atualiza a tabela local
-                    Object[] rowData = { sku, nome, categoria, fornecedor, descricao, precoCusto, precoVenda,
-                            estoqueDisponivel };
-                    tableModel.addRow(rowData);
-
-                    JOptionPane.showMessageDialog(AddProductPanel.this, "Produto adicionado com sucesso", "Sucesso",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } catch (NumberFormatException nfe) {
-                    JOptionPane.showMessageDialog(AddProductPanel.this,
-                            "Por favor, insira números válidos nos campos de preço e estoque.", "Erro de Formato",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(AddProductPanel.this,
-                            "Erro ao adicionar o produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-                }
+                addProduto();
             }
         });
+
         add(btnConfirmar);
 
->>>>>>> e80df3cd23d116cfb38213981269f0699c1e44a5
         btnVoltar = new JButton("Voltar");
         btnVoltar.setBounds(351, 271, 89, 23);
         btnVoltar.addActionListener(new ActionListener() {
@@ -232,4 +184,73 @@ public class AddProductPanel extends JPanel {
         });
         add(btnVoltar);
     }
+
+    private void addProduto() {
+        try {
+            // Obtain values from text fields
+            Integer sku = Integer.valueOf(fieldSKU.getText());
+            String nome = fieldNome.getText();
+            String descricao = fieldDescricao.getText();
+            double precoCusto = Double.valueOf(fieldPrecoCusto.getText());
+            double precoVenda = Double.valueOf(fieldPrecoVenda.getText());
+            int estoqueDisponivel = Integer.valueOf(fieldEstoqueDisponivel.getText());
+            String nomeCategoria = (String) comboCategoria.getSelectedItem();
+            String nomeFornecedor = (String) comboFornecedor.getSelectedItem();
+
+            // Check if all required fields are filled
+            if (!nome.isEmpty() && !descricao.isEmpty() && !nomeCategoria.isEmpty() && !nomeFornecedor.isEmpty()) {
+
+                this.produtoManager.adicionarProduto(sku, nome, descricao, precoCusto, precoVenda, estoqueDisponivel,
+                        categoria, fornecedor, () -> {
+                        });
+
+                // Reference to the 'produtos' collection in Firebase
+                DatabaseReference produtosRef = FirebaseDatabase.getInstance().getReference("produtos");
+
+                // Generate a unique ID in Firebase
+                String firebaseId = produtosRef.push().getKey();
+
+                // Save the product in Firebase using a custom structure
+                Map<String, Object> produtoData = new HashMap<>();
+                produtoData.put("categoria", nomeCategoria);
+                produtoData.put("descricao", descricao);
+                produtoData.put("estoqueDisponivel", estoqueDisponivel);
+                produtoData.put("fornecedor", nomeFornecedor);
+                produtoData.put("nome", nome);
+                produtoData.put("precoCusto", precoCusto);
+                produtoData.put("precoVenda", precoVenda);
+                produtoData.put("sku", sku);
+
+                produtosRef.child(firebaseId).setValueAsync(produtoData);
+
+                // Add a new row to the table with the product data
+                produtoManager.mapProdutoSku(sku, firebaseId);
+                Object[] rowData = { sku, nome, nomeCategoria, nomeFornecedor, descricao, precoCusto, precoVenda,
+                        estoqueDisponivel };
+                tableModel.addRow(rowData);
+
+                // Clear text fields for new entries
+                fieldSKU.setText("");
+                fieldNome.setText("");
+                fieldDescricao.setText("");
+                fieldPrecoCusto.setText("");
+                fieldPrecoVenda.setText("");
+                fieldEstoqueDisponivel.setText("");
+
+                // Display a success message
+                JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso", "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Display an error message if any field is empty
+                JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception ex) {
+            // Display an error message if an exception occurs
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar o produto: " + ex.getMessage(), "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

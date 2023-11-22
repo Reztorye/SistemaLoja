@@ -31,7 +31,6 @@ public class DeleteCustomerPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private JButton btnBack;
-    private CustomersPanel customersPanel;
 
     public DeleteCustomerPanel(ClienteManager clienteManager, DefaultTableModel tableModel, CardLayout cardLayout,
             JPanel cardPanel,
@@ -106,7 +105,7 @@ public class DeleteCustomerPanel extends JPanel {
                             SwingUtilities.invokeLater(() -> {
                                 JOptionPane.showMessageDialog(this, "Cliente deletado com sucesso.", "Cliente Deletado",
                                         JOptionPane.INFORMATION_MESSAGE);
-                                customersPanel.refreshCustomerTable();
+
                             });
                         }
                     } catch (Exception e) {

@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Manager.FornecedorManager;
 import Manager.Sistema;
 import entities.Fornecedor;
 import lombok.Getter;
@@ -17,9 +18,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddSupplierPanel extends JPanel {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2902349697031729515L;
     private JTextField txtNomeFornecedor;
     private JButton btnAddFornecedor, btnCancelFornecedor;
@@ -27,9 +25,12 @@ public class AddSupplierPanel extends JPanel {
     private JButton backButton;
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private FornecedorManager fornecedorManager; // Corrigido para o tipo adequado
 
-    public AddSupplierPanel(Sistema sistema, CardLayout cardLayout, JPanel cardPanel) {
+    public AddSupplierPanel(Sistema sistema, CardLayout cardLayout, JPanel cardPanel,
+            FornecedorManager fornecedorManager) {
         this.sistema = sistema;
+        this.fornecedorManager = fornecedorManager; // Corrigido para o tipo adequado
         setLayout(null);
 
         JLabel lblNomeFornecedor = new JLabel("Nome do Fornecedor:");
@@ -45,14 +46,26 @@ public class AddSupplierPanel extends JPanel {
         btnAddFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nomeFornecedor = txtNomeFornecedor.getText().trim();
-                Fornecedor fornecedor = sistema.adicionarFornecedor(nomeFornecedor);
-                if (fornecedor != null) {
+                if (!nomeFornecedor.isEmpty()) {
+                    Fornecedor fornecedor = sistema.adicionarFornecedorFirebase(nomeFornecedor);
+                    if (fornecedor != null) {
+                        JOptionPane.showMessageDialog(AddSupplierPanel.this,
+                                "Fornecedor adicionado com sucesso: " + fornecedor.getNome(),
+                                "Fornecedor Adicionado",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(AddSupplierPanel.this,
+                                "Erro ao adicionar fornecedor.",
+                                "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                    txtNomeFornecedor.setText("");
+                } else {
                     JOptionPane.showMessageDialog(AddSupplierPanel.this,
-                            "Fornecedor adicionado: " + fornecedor.getNome(),
-                            "Fornecedor Adicionado",
-                            JOptionPane.INFORMATION_MESSAGE);
+                            "O nome do fornecedor não pode ser vazio.",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-                txtNomeFornecedor.setText("");
             }
         });
         add(btnAddFornecedor);
@@ -62,7 +75,6 @@ public class AddSupplierPanel extends JPanel {
         btnCancelFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 txtNomeFornecedor.setText("");
-
             }
         });
         add(btnCancelFornecedor);

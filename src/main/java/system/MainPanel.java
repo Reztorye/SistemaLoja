@@ -15,8 +15,9 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
+import Manager.ProdutoManager;
+import Manager.Sistema;
 import entities.Produto;
-import entities.Sistema;
 import entities.Venda;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,16 +30,18 @@ import lombok.Setter;
 	    private DefaultTableModel tableModelVendas;
 	    private JTable table; 
 	    private DefaultTableModel tableModel;
+	    private ProdutoManager produtoManager;
 	    private Sistema sistema;
 	    
-	    public MainPanel(Sistema sistema) {
-	    	 Timer timer = new Timer(5000, e -> updateLowStockTable(sistema));
+	    public MainPanel(Sistema sistema, ProdutoManager produtoManager) {
+	    	this.produtoManager = produtoManager;
+	    	 Timer timer = new Timer(5000, e -> updateLowStockTable());
 	    	    timer.start();
 	    	
 	    	 Timer timer1 = new Timer(1000, e ->atualizarTabelaVendas());
 	    	 timer1.start(); 
 	    	
-	        this.sistema = sistema;
+	    	 this.sistema = sistema;
 	        setLayout(null);
 	        setBackground(new Color(245, 245, 245));
 	        setBounds(0, 0, 800, 600);
@@ -68,7 +71,7 @@ import lombok.Setter;
 	        String[] columnNames = {"SKU", "Nome do Produto", "Quantidade"};
 	        tableModel = new DefaultTableModel(columnNames, 0);
 	        table = new JTable(tableModel);
-	        updateLowStockTable(sistema);
+	        updateLowStockTable();
 	        table.getColumnModel().getColumn(0).setPreferredWidth(10);
 	        
 	        JScrollPane scrollPane = new JScrollPane(table);
@@ -104,14 +107,14 @@ import lombok.Setter;
 	        add(topSellingPanel);    
 	    }
 	    
-	    private void updateLowStockTable(Sistema sistema) {
+	    private void updateLowStockTable() {
 	        tableModel.setRowCount(0);
-	        for (Produto produto : sistema.getProdutos()) {
+	        for (Produto produto : produtoManager.getProdutos()) { // Usando o ProdutoManager
 	            int estoque = produto.getEstoqueDisponivel();  
 	            if (estoque < 5) {
 	                tableModel.addRow(new Object[]{
-	                    produto.getSku(),  
-	                    produto.getNome(), 
+	                    produto.getSku(),
+	                    produto.getNome(),
 	                    estoque
 	                });
 	            }

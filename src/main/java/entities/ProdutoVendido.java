@@ -2,16 +2,15 @@ package entities;
 
 public class ProdutoVendido {
     private Produto produto;
-    private int quantidadeVendida;
+    private int quantidade;
 
-    // Atualize o construtor para aceitar um Produto e a quantidade vendida
-    public ProdutoVendido(Produto produto, int quantidadeVendida) {
+    public ProdutoVendido(Produto produto, int quantidade) {
         this.produto = produto;
-        this.quantidadeVendida = quantidadeVendida;
+        this.quantidade = quantidade;
     }
 
     public void incrementarQuantidade(int quantidade) {
-        this.quantidadeVendida += quantidade;
+        this.quantidade += quantidade;
     }
 
     public Produto getProduto() {
@@ -19,7 +18,6 @@ public class ProdutoVendido {
     }
 
     public int getQuantidadeVendida() {
-        return quantidadeVendida;
+        return quantidade;
     }
-
 }

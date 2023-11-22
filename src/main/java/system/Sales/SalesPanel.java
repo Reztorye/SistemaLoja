@@ -226,8 +226,8 @@ public class SalesPanel extends JPanel {
             tableModel.addRow(new Object[] {
                     produto.getSku(),
                     produto.getNome(),
-                    produto.getCategoria().getNome(),
-                    produto.getFornecedor().getNome(),
+                    produto.getCategoria(),
+                    produto.getFornecedor(),
                     produto.getDescricao(),
                     produto.getPrecoCusto(),
                     produto.getPrecoVendaComDesconto(),

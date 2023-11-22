@@ -57,7 +57,7 @@ public class TopCustomersPanel extends JPanel {
         for (Venda venda : sistema.getVendas()) {
             Cliente cliente = venda.getCliente();
             double total = venda.calcularValorTotal();
-            totalPorCliente.merge(cliente, total, Double::sum);
+            totalPorCliente.merge(cliente, total, (valorAntigo, valorNovo) -> valorAntigo + valorNovo);
         }
 
         // Ordena e adiciona ao modelo da tabela
